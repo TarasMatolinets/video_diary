@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fl_splash_main">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blue"
+        android:id="@+id/fl_splash"
+        android:clipChildren="false"
+        tools:ignore="UselessParent">
+
+        <view
+            class="com.mti.videodiary.animation.SkewableTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/splash_welcome"
+            android:id="@+id/tv_welcome"
+            android:textColor="@color/white"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/extra_huge"
+            android:textStyle="bold" />
+
+        <view
+            class="com.mti.videodiary.animation.SkewableTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/splash_app_name"
+            android:id="@+id/tv_title"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/extra_huge"
+            android:visibility="invisible"
+            android:textStyle="bold" />
+
+        <EditText
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:layout_margin="@dimen/edge_above"
+            android:id="@+id/et_name"
+            android:hint="@string/splash_personal_name"
+            android:textColor="@color/gray"
+            android:textColorHint="@color/gray"
+            android:background="@color/white"
+            android:layout_centerHorizontal="true"
+            android:textSize="@dimen/text_medium"
+            android:visibility="gone"
+            android:layout_below="@+id/tv_title"
+            android:focusable="true" />
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="@string/splash_next"
+            android:id="@+id/splash_bt_click_next"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            android:gravity="center"
+            android:layout_below="@+id/et_name"
+            android:textSize="@dimen/text_mini_normal"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+</FrameLayout>
