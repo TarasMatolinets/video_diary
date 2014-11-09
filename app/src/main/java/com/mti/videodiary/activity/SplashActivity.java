@@ -24,6 +24,7 @@ import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.daimajia.androidanimations.library.Techniques;
@@ -50,7 +51,7 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
     private SkewableTextView mWelcome;
     private RelativeLayout mContainer;
     private EditText mPersonalName;
-    private Button mClickNext;
+    private ImageButton mClickNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
         mName = (SkewableTextView) findViewById(R.id.tv_title);
         mWelcome = (SkewableTextView) findViewById(R.id.tv_welcome);
         mPersonalName = (EditText) findViewById(R.id.et_name);
-        mClickNext = (Button) findViewById(R.id.splash_bt_click_next);
+        mClickNext = (ImageButton) findViewById(R.id.splash_bt_click_next);
     }
 
     private void setListeners() {
@@ -164,23 +165,26 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
             public void onAnimationEnd(Animator animation) {
                 sleep(1000);
 
-                moveViewToScreenCenter(nextView);
+                moveViewToScreenCenter(nextView, -nextView.getHeight() * 4,true);
             }
         });
         fullSet.start();
     }
 
-    private void moveViewToScreenCenter(View view) {
+    private void moveViewToScreenCenter(View view, int height,boolean isLisenerEnable) {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
 
         int originalPos[] = new int[2];
         view.getLocationOnScreen(originalPos);
 
-        TranslateAnimation anim = new TranslateAnimation(0, 0, 0, -view.getHeight() * 2);
+        TranslateAnimation anim = new TranslateAnimation(0, 0, 0, height);
         anim.setDuration(1000);
         anim.setFillAfter(true);
+
+        if(isLisenerEnable)
         anim.setAnimationListener(mMoveOnScreenListener);
+
         view.startAnimation(anim);
     }
 
@@ -214,20 +218,26 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-        if (count > 0)
-            mClickNext.setVisibility(View.VISIBLE);
-        else
+        if (count > 0) {
+
+            if(mClickNext.getVisibility() != View.VISIBLE) {
+                mClickNext.setVisibility(View.VISIBLE);
+            }
+
+        }
+            else {
+
             mClickNext.setVisibility(View.GONE);
+
+        }
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-
     }
 }

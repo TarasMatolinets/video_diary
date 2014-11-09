@@ -56,16 +56,21 @@
             android:layout_below="@+id/tv_title"
             android:focusable="true" />
 
-        <Button
-            android:layout_width="120dp"
+        <ImageButton
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/splash_next"
             android:id="@+id/splash_bt_click_next"
             android:layout_centerHorizontal="true"
             android:visibility="gone"
             android:gravity="center"
-            android:layout_below="@+id/et_name"
+            android:background="@drawable/next"
             android:textSize="@dimen/text_mini_normal"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:layout_toRightOf="@+id/et_name"
+            android:layout_alignBottom="@+id/et_name"
+            android:layout_alignTop="@+id/et_name"/>
+
     </RelativeLayout>
+
 </FrameLayout>
