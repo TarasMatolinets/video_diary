@@ -11,5 +11,8 @@
     <string name="splash_name">Sign your name</string>
     <string name="splash_personal_name">Your Personal Name</string>
     <string name="splash_next">Next</string>
+    <string name="splash_set_color">Set Color</string>
+    <string name="splash_customise_app">Customise app</string>
+    <string name="splash_skip">Skip</string>
 
 </resources>

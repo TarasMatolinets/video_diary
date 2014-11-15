@@ -7,12 +7,12 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.TimeInterpolator;
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
@@ -25,18 +25,21 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.larswerkman.holocolorpicker.ColorPicker;
 import com.mti.videodiary.animation.SkewableTextView;
+import com.mti.videodiary.utils.UserHelper;
 
 import mti.com.videodiary.R;
 
 /**
  * Created by Taras  Matolinets on 04.11.14.
  */
-public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDrawListener, TextWatcher {
+public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDrawListener, TextWatcher, View.OnClickListener, ColorPicker.OnColorChangedListener {
 
     public static final long MEDIUM_DURATION = 1000;
     private static final long SMALL_DURATION = 500;
@@ -47,6 +50,10 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
     private static final TimeInterpolator mOvershooter = new OvershootInterpolator();
     private static final DecelerateInterpolator mDecelerator = new DecelerateInterpolator();
 
+    private ColorPicker mPicker;
+    private Button mButtonCustomise;
+    private Button mButtonSkip;
+    private LinearLayout mLayoutButtons;
     private SkewableTextView mName;
     private SkewableTextView mWelcome;
     private RelativeLayout mContainer;
@@ -71,11 +78,19 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
         mWelcome = (SkewableTextView) findViewById(R.id.tv_welcome);
         mPersonalName = (EditText) findViewById(R.id.et_name);
         mClickNext = (ImageButton) findViewById(R.id.splash_bt_click_next);
+        mPicker = (ColorPicker) findViewById(R.id.picker);
+        mLayoutButtons = (LinearLayout) findViewById(R.id.ll_buttons);
+        mButtonCustomise = (Button) findViewById(R.id.bt_customise_app);
+        mButtonSkip = (Button) findViewById(R.id.bt_skip);
     }
 
     private void setListeners() {
         mContainer.getViewTreeObserver().addOnPreDrawListener(this);
         mPersonalName.addTextChangedListener(this);
+        mClickNext.setOnClickListener(this);
+        mPicker.setOnColorChangedListener(this);
+        mButtonCustomise.setOnClickListener(this);
+        mButtonSkip.setOnClickListener(this);
     }
 
     @Override
@@ -88,6 +103,7 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
         animationProperty.scaleX(1).scaleY(1);
         animationProperty.setInterpolator(new OvershootInterpolator());
 
+        YoYo.with(Techniques.ZoomIn).playOn(mWelcome);
         animateView();
 
         return true;
@@ -128,7 +144,7 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
     private AnimatorListenerAdapter mSlideToNextAnimation = new AnimatorListenerAdapter() {
         @Override
         public void onAnimationEnd(Animator animation) {
-            //  super.onAnimationEnd(animation);
+            super.onAnimationEnd(animation);
             slideToNext(mWelcome, mName);
         }
     };
@@ -163,27 +179,27 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
         fullSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                sleep(1000);
+                UserHelper.sleep(1000);
 
-                moveViewToScreenCenter(nextView, -nextView.getHeight() * 4,true);
+                moveViewToScreenCenter(nextView, -nextView.getHeight() * 4,0,true);
             }
         });
         fullSet.start();
     }
 
-    private void moveViewToScreenCenter(View view, int height,boolean isLisenerEnable) {
+    private void moveViewToScreenCenter(View view, int height, int width,boolean isLisenerEnable) {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
 
         int originalPos[] = new int[2];
         view.getLocationOnScreen(originalPos);
 
-        TranslateAnimation anim = new TranslateAnimation(0, 0, 0, height);
+        TranslateAnimation anim = new TranslateAnimation(width, 0, 0, height);
         anim.setDuration(1000);
         anim.setFillAfter(true);
 
-        if(isLisenerEnable)
-        anim.setAnimationListener(mMoveOnScreenListener);
+        if (isLisenerEnable && view.getId() == R.id.tv_title)
+            anim.setAnimationListener(mMoveOnScreenListener);
 
         view.startAnimation(anim);
     }
@@ -207,14 +223,6 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
         }
     };
 
-    public static void sleep(long time) {
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -225,19 +233,84 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
 
         if (count > 0) {
 
-            if(mClickNext.getVisibility() != View.VISIBLE) {
+            if (mClickNext.getVisibility() != View.VISIBLE) {
                 mClickNext.setVisibility(View.VISIBLE);
             }
-
-        }
-            else {
-
+        } else {
             mClickNext.setVisibility(View.GONE);
-
         }
     }
 
     @Override
     public void afterTextChanged(Editable s) {
     }
-}
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.splash_bt_click_next:
+                mClickNext.setVisibility(View.GONE);
+                UserHelper.hideKeyboard(this, mClickNext);
+
+                YoYo.AnimationComposer persnalAnim = YoYo.with(Techniques.RollOut);
+                persnalAnim.duration(700);
+                persnalAnim.withListener(mPersonalNameAnimation);
+                persnalAnim.playOn(mPersonalName);
+
+                break;
+
+            case R.id.bt_customise_app:
+                mPicker.setVisibility(View.VISIBLE);
+
+                mButtonCustomise.setVisibility(View.GONE);
+                YoYo.AnimationComposer picker = YoYo.with(Techniques.ZoomInUp);
+                picker.duration(700);
+                picker.playOn(mPicker);
+
+                mButtonSkip.setText(getResources().getText(R.string.splash_set_color));
+
+                YoYo.AnimationComposer buttonSkip = YoYo.with(Techniques.FadeIn);
+                buttonSkip.duration(700);
+                buttonSkip.playOn(mButtonSkip);
+
+                mPicker.setShowOldCenterColor(false);
+                mPicker.setNewCenterColor(Color.TRANSPARENT);
+
+                break;
+
+            case R.id.bt_skip:
+
+                break;
+        }
+    }
+
+    private com.nineoldandroids.animation.Animator.AnimatorListener mPersonalNameAnimation = new com.nineoldandroids.animation.Animator.AnimatorListener() {
+
+        @Override
+        public void onAnimationStart(com.nineoldandroids.animation.Animator animation) {
+        }
+
+        @Override
+        public void onAnimationEnd(com.nineoldandroids.animation.Animator animation) {
+            mLayoutButtons.setVisibility(View.VISIBLE);
+
+            YoYo.AnimationComposer picker = YoYo.with(Techniques.ZoomIn);
+            picker.duration(700);
+            picker.playOn(mLayoutButtons);
+        }
+
+        @Override
+        public void onAnimationCancel(com.nineoldandroids.animation.Animator animation) {
+        }
+
+        @Override
+        public void onAnimationRepeat(com.nineoldandroids.animation.Animator animation) {
+        }
+    };
+
+    @Override
+    public void onColorChanged(int i) {
+        mContainer.setBackgroundColor(i);
+        mButtonSkip.setTextColor(i);
+    }
+    }
