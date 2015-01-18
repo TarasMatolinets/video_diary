@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fl_splash_main">
+    android:id="@+id/flSsplashMain">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/blue"
-        android:id="@+id/fl_splash"
+        android:background="@drawable/gradient_splash"
+        android:id="@+id/flSplash"
         android:clipChildren="false"
         tools:ignore="UselessParent">
 
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/splash_welcome"
-            android:id="@+id/tv_welcome"
+            android:id="@+id/tvWelcome"
             android:textColor="@color/white"
             android:layout_centerInParent="true"
             android:textSize="@dimen/extra_huge"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/splash_app_name"
-            android:id="@+id/tv_title"
+            android:id="@+id/tvTitle"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:textColor="@color/white"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:layout_margin="@dimen/edge_above"
-            android:id="@+id/et_name"
+            android:id="@+id/etName"
             android:hint="@string/splash_personal_name"
             android:textColor="@color/gray"
             android:textColorHint="@color/gray"
@@ -53,23 +53,23 @@
             android:layout_centerHorizontal="true"
             android:textSize="@dimen/text_medium"
             android:visibility="gone"
-            android:layout_below="@+id/tv_title"
+            android:layout_below="@+id/tvTitle"
             android:focusable="true" />
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/splash_next"
-            android:id="@+id/splash_bt_click_next"
+            android:id="@+id/splashBtClickNext"
             android:layout_centerHorizontal="true"
             android:visibility="gone"
             android:gravity="center"
             android:background="@drawable/next"
             android:textSize="@dimen/text_mini_normal"
             android:textColor="@color/white"
-            android:layout_toRightOf="@+id/et_name"
-            android:layout_alignBottom="@+id/et_name"
-            android:layout_alignTop="@+id/et_name"
+            android:layout_toRightOf="@+id/etName"
+            android:layout_alignBottom="@+id/etName"
+            android:layout_alignTop="@+id/etName"
             tools:ignore="ContentDescription" />
 
         <com.larswerkman.holocolorpicker.ColorPicker
@@ -77,15 +77,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:id="@+id/ll_buttons"
+            android:id="@+id/llButtonsActions"
             android:background="@null"
             android:visibility="gone"
             android:layout_below="@+id/picker"
@@ -95,23 +94,71 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/splash_customise_app"
-                android:id="@+id/bt_customise_app"
+                android:id="@+id/btCustomiseApp"
                 android:background="@drawable/button_selector"
                 android:layout_weight="1"
                 android:layout_marginRight="@dimen/edge_above"
-                android:textColor="@color/blue"
-                />
+                android:textColor="@color/blue" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginLeft="@dimen/edge_above"
-                android:text="@string/splash_skip"
-                android:id="@+id/bt_skip"
+                android:text="@string/splash_random"
+                android:id="@+id/btSkip"
                 android:background="@drawable/button_selector"
-                android:textColor="@color/blue"
-                />
+                android:textColor="@color/blue" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/llButtonsGradient"
+            android:visibility="gone"
+            android:gravity="top">
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/splash_gradient_left"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_medium"
+                android:textStyle="normal"
+                android:layout_weight="1"
+                android:id="@+id/cbGradientLeft" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_medium"
+                android:textStyle="normal"
+                android:text="@string/splash_gradient_top"
+                android:id="@+id/cbGradientCenter" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_medium"
+                android:textStyle="normal"
+                android:text="@string/splash_gradient_right"
+                android:id="@+id/cbGradientRight" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/splash_gradient_bottom"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_medium"
+                android:textStyle="normal"
+                android:layout_weight="1"
+                android:id="@+id/chGradientBottom" />
+
         </LinearLayout>
 
     </RelativeLayout>

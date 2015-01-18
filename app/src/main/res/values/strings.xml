@@ -13,6 +13,11 @@
     <string name="splash_next">Next</string>
     <string name="splash_set_color">Set Color</string>
     <string name="splash_customise_app">Customise app</string>
-    <string name="splash_skip">Skip</string>
+    <string name="splash_random">Random</string>
+    <string name="splash_gradient_left">Left</string>
+    <string name="splash_gradient_right">Right</string>
+    <string name="splash_gradient_top">Top</string>
+    <string name="splash_gradient_bottom">Bottom</string>
+
 
 </resources>

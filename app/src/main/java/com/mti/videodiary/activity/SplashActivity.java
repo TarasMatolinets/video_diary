@@ -6,8 +6,11 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.TimeInterpolator;
-import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -23,6 +26,8 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -39,26 +44,35 @@ import mti.com.videodiary.R;
 /**
  * Created by Taras  Matolinets on 04.11.14.
  */
-public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDrawListener, TextWatcher, View.OnClickListener, ColorPicker.OnColorChangedListener {
+public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnPreDrawListener, TextWatcher, View.OnClickListener, ColorPicker.OnColorChangedListener, CompoundButton.OnCheckedChangeListener {
 
     public static final long MEDIUM_DURATION = 1000;
     private static final long SMALL_DURATION = 500;
 
+    private boolean mChangeGradientSides;
+
     private static final AccelerateInterpolator sAccelerator = new AccelerateInterpolator();
     private static final LinearInterpolator sLinearInterpolator = new LinearInterpolator();
 
-    private static final TimeInterpolator mOvershooter = new OvershootInterpolator();
+    private static final TimeInterpolator mOverShooter = new OvershootInterpolator();
     private static final DecelerateInterpolator mDecelerator = new DecelerateInterpolator();
 
     private ColorPicker mPicker;
     private Button mButtonCustomise;
     private Button mButtonSkip;
-    private LinearLayout mLayoutButtons;
+    private LinearLayout mLayoutButtonsAction;
     private SkewableTextView mName;
     private SkewableTextView mWelcome;
     private RelativeLayout mContainer;
     private EditText mPersonalName;
     private ImageButton mClickNext;
+    private ShapeDrawable mDrawableGradient;
+    private CheckBox mLefttColorGradiet;
+    private CheckBox mRightColorGradient;
+    private CheckBox mTopColorGradient;
+    private CheckBox mButtomtColorGradient;
+    private LinearLayout mLayoutButtonsChangeGradient;
+    private GradientDrawable gradientDrawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,31 +80,48 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
 
         setContentView(R.layout.activity_splash);
 
-        getActionBar().hide();
+
+        gradientDrawable = new GradientDrawable();
+        mDrawableGradient = new ShapeDrawable(new RectShape());
+        getSupportActionBar().hide();
 
         initViews();
         setListeners();
     }
 
     private void initViews() {
-        mContainer = (RelativeLayout) findViewById(R.id.fl_splash);
-        mName = (SkewableTextView) findViewById(R.id.tv_title);
-        mWelcome = (SkewableTextView) findViewById(R.id.tv_welcome);
-        mPersonalName = (EditText) findViewById(R.id.et_name);
-        mClickNext = (ImageButton) findViewById(R.id.splash_bt_click_next);
+        mContainer = (RelativeLayout) findViewById(R.id.flSplash);
+        mName = (SkewableTextView) findViewById(R.id.tvTitle);
+        mWelcome = (SkewableTextView) findViewById(R.id.tvWelcome);
+        mPersonalName = (EditText) findViewById(R.id.etName);
+        mClickNext = (ImageButton) findViewById(R.id.splashBtClickNext);
         mPicker = (ColorPicker) findViewById(R.id.picker);
-        mLayoutButtons = (LinearLayout) findViewById(R.id.ll_buttons);
-        mButtonCustomise = (Button) findViewById(R.id.bt_customise_app);
-        mButtonSkip = (Button) findViewById(R.id.bt_skip);
+        mLayoutButtonsAction = (LinearLayout) findViewById(R.id.llButtonsActions);
+        mLayoutButtonsChangeGradient = (LinearLayout) findViewById(R.id.llButtonsGradient);
+
+        mButtonCustomise = (Button) findViewById(R.id.btCustomiseApp);
+        mButtonSkip = (Button) findViewById(R.id.btSkip);
+
+        mLefttColorGradiet = (CheckBox) findViewById(R.id.cbGradientLeft);
+        mRightColorGradient = (CheckBox) findViewById(R.id.cbGradientRight);
+        mTopColorGradient = (CheckBox) findViewById(R.id.cbGradientCenter);
+        mButtomtColorGradient = (CheckBox) findViewById(R.id.chGradientBottom);
     }
+
 
     private void setListeners() {
         mContainer.getViewTreeObserver().addOnPreDrawListener(this);
-        mPersonalName.addTextChangedListener(this);
-        mClickNext.setOnClickListener(this);
         mPicker.setOnColorChangedListener(this);
+        mPersonalName.addTextChangedListener(this);
+
+        mClickNext.setOnClickListener(this);
         mButtonCustomise.setOnClickListener(this);
         mButtonSkip.setOnClickListener(this);
+
+        mLefttColorGradiet.setOnCheckedChangeListener(this);
+        mRightColorGradient.setOnCheckedChangeListener(this);
+        mTopColorGradient.setOnCheckedChangeListener(this);
+        mButtomtColorGradient.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -168,7 +199,7 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
         nextMover.setDuration(MEDIUM_DURATION);
 
         ObjectAnimator nextSkewer = ObjectAnimator.ofFloat(nextView, "skewX", 0);
-        nextSkewer.setInterpolator(mOvershooter);
+        nextSkewer.setInterpolator(mOverShooter);
 
         AnimatorSet moverSet = new AnimatorSet();
         moverSet.playTogether(currentMover, nextMover);
@@ -181,13 +212,13 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
             public void onAnimationEnd(Animator animation) {
                 UserHelper.sleep(1000);
 
-                moveViewToScreenCenter(nextView, -nextView.getHeight() * 4,0,true);
+                moveViewToScreenCenter(nextView, -nextView.getHeight() * 4, 0, true);
             }
         });
         fullSet.start();
     }
 
-    private void moveViewToScreenCenter(View view, int height, int width,boolean isLisenerEnable) {
+    private void moveViewToScreenCenter(View view, int height, int width, boolean isLisenerEnable) {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
 
@@ -198,7 +229,7 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
         anim.setDuration(1000);
         anim.setFillAfter(true);
 
-        if (isLisenerEnable && view.getId() == R.id.tv_title)
+        if (isLisenerEnable && view.getId() == R.id.tvTitle)
             anim.setAnimationListener(mMoveOnScreenListener);
 
         view.startAnimation(anim);
@@ -248,40 +279,53 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.splash_bt_click_next:
-                mClickNext.setVisibility(View.GONE);
-                UserHelper.hideKeyboard(this, mClickNext);
-
-                YoYo.AnimationComposer persnalAnim = YoYo.with(Techniques.RollOut);
-                persnalAnim.duration(700);
-                persnalAnim.withListener(mPersonalNameAnimation);
-                persnalAnim.playOn(mPersonalName);
-
+            case R.id.splashBtClickNext:
+                splashClickNext();
                 break;
 
-            case R.id.bt_customise_app:
-                mPicker.setVisibility(View.VISIBLE);
-
-                mButtonCustomise.setVisibility(View.GONE);
-                YoYo.AnimationComposer picker = YoYo.with(Techniques.ZoomInUp);
-                picker.duration(700);
-                picker.playOn(mPicker);
-
-                mButtonSkip.setText(getResources().getText(R.string.splash_set_color));
-
-                YoYo.AnimationComposer buttonSkip = YoYo.with(Techniques.FadeIn);
-                buttonSkip.duration(700);
-                buttonSkip.playOn(mButtonSkip);
-
-                mPicker.setShowOldCenterColor(false);
-                mPicker.setNewCenterColor(Color.TRANSPARENT);
-
+            case R.id.btCustomiseApp:
+                customiseApp();
                 break;
 
-            case R.id.bt_skip:
-
+            case R.id.btSkip:
+                skip();
                 break;
         }
+    }
+
+    private void splashClickNext() {
+        mClickNext.setVisibility(View.GONE);
+        UserHelper.hideKeyboard(this, mClickNext);
+
+        YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.RollOut);
+        personalAnim.duration(700);
+        personalAnim.withListener(mPersonalNameAnimation);
+        personalAnim.playOn(mPersonalName);
+    }
+
+
+    private void customiseApp() {
+        mPicker.setVisibility(View.VISIBLE);
+        mLayoutButtonsChangeGradient.setVisibility(View.VISIBLE);
+
+        mButtonCustomise.setVisibility(View.GONE);
+        YoYo.AnimationComposer picker = YoYo.with(Techniques.ZoomInUp);
+        picker.duration(700);
+        picker.playOn(mPicker);
+
+        mButtonSkip.setText(getResources().getText(R.string.splash_set_color));
+
+        YoYo.AnimationComposer buttonSkip = YoYo.with(Techniques.FadeIn);
+        buttonSkip.duration(700);
+        buttonSkip.playOn(mButtonSkip);
+
+        mPicker.setShowOldCenterColor(false);
+        mPicker.setNewCenterColor(Color.TRANSPARENT);
+    }
+
+    private void skip() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     private com.nineoldandroids.animation.Animator.AnimatorListener mPersonalNameAnimation = new com.nineoldandroids.animation.Animator.AnimatorListener() {
@@ -292,11 +336,11 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
 
         @Override
         public void onAnimationEnd(com.nineoldandroids.animation.Animator animation) {
-            mLayoutButtons.setVisibility(View.VISIBLE);
+            mLayoutButtonsAction.setVisibility(View.VISIBLE);
 
             YoYo.AnimationComposer picker = YoYo.with(Techniques.ZoomIn);
             picker.duration(700);
-            picker.playOn(mLayoutButtons);
+            picker.playOn(mLayoutButtonsAction);
         }
 
         @Override
@@ -310,7 +354,46 @@ public class SplashActivity extends Activity implements ViewTreeObserver.OnPreDr
 
     @Override
     public void onColorChanged(int i) {
-        mContainer.setBackgroundColor(i);
+        int colors[] = {i, i};
+
+        if (mLefttColorGradiet.isChecked()) {
+            gradientDrawable .setOrientation( GradientDrawable.Orientation.LEFT_RIGHT);
+            gradientDrawable.setColors(new int[]{getResources().getColor(R.color.black),getResources().getColor(R.color.white)});
+        } else if (mRightColorGradient.isChecked()) {
+            gradientDrawable.setOrientation(GradientDrawable.Orientation.RIGHT_LEFT);
+            gradientDrawable.setColors(new int[]{getResources().getColor(android.R.color.holo_green_dark),getResources().getColor(android.R.color.holo_red_dark),Color.WHITE,Color.BLACK});
+        } else if (mTopColorGradient.isChecked()) {
+            gradientDrawable.setOrientation( GradientDrawable.Orientation.TOP_BOTTOM);
+            gradientDrawable.setColors(new int[]{getResources().getColor(android.R.color.holo_green_dark),getResources().getColor(android.R.color.holo_red_dark)});
+        } else if (mButtomtColorGradient.isChecked()) {
+            gradientDrawable.setOrientation( GradientDrawable.Orientation.BOTTOM_TOP);
+            gradientDrawable.setColors(new int[]{getResources().getColor(android.R.color.holo_red_dark),getResources().getColor(android.R.color.holo_orange_dark)});
+        }
+
+        mContainer.setBackgroundDrawable(gradientDrawable);
         mButtonSkip.setTextColor(i);
     }
+
+//    private GradientDrawable getGradientDrawable(int[] colors, GradientDrawable.Orientation orientation) {
+//        GradientDrawable gradientDrawable;
+//        gradientDrawable = new GradientDrawable(
+//                orientation, colors);
+//        return gradientDrawable;
+ //   }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        buttonView.setChecked(isChecked);
+//        switch (buttonView.getId()) {
+//            case R.id.cbGradientLeft:
+//                mLefttColorGradiet.setChecked(isChecked);
+//                break;
+//            case R.id.cbGradientCenter:
+//                mTopColorGradient.setChecked(isChecked);
+//                break;
+//            case R.id.cbGradientRight:
+//                mRightColorGradient.setChecked(isChecked);
+//                break;
+//        }
     }
+}
