@@ -401,7 +401,7 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
             addColorGradient(mTopColorGradient, i, GradientDrawable.Orientation.TOP_BOTTOM);
 
         else if (mButtomColorGradient.isChecked())
-            addColorGradient(mButtomColorGradient,i, GradientDrawable.Orientation.BOTTOM_TOP);
+            addColorGradient(mButtomColorGradient, i, GradientDrawable.Orientation.BOTTOM_TOP);
 
         mContainer.setBackgroundDrawable(gradientDrawable);
         mButtonSkip.setTextColor(i);
@@ -420,7 +420,7 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
 
             mGlobalGradientColor.append(viewId, colorList);
 
-        } else if ( mGlobalGradientColor.size() == 0) {
+        } else if (mGlobalGradientColor.size() == 0) {
             ArrayList<Integer> colorList = new ArrayList<>();
 
             colorList.add(color);
@@ -429,7 +429,7 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
             mGlobalGradientColor.append(viewId, colorList);
         }
 
-        for (int i = 0; i <mGlobalGradientColor.size(); i++) {
+        for (int i = 0; i < mGlobalGradientColor.size(); i++) {
             ArrayList<Integer> list = mGlobalGradientColor.get(viewId);
 
             for (Integer elem : list)
