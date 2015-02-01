@@ -122,11 +122,11 @@
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/splash_gradient_left"
+                android:layout_weight="1"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_medium"
                 android:textStyle="normal"
-                android:layout_weight="1"
+                android:text="@string/splash_gradient_left"
                 android:id="@+id/cbGradientLeft" />
 
             <CheckBox
@@ -137,17 +137,19 @@
                 android:textSize="@dimen/text_medium"
                 android:textStyle="normal"
                 android:text="@string/splash_gradient_top"
-                android:id="@+id/cbGradientCenter" />
+                android:id="@+id/cbGradientTop" />
+
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:text="@string/splash_gradient_right"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_medium"
                 android:textStyle="normal"
-                android:text="@string/splash_gradient_right"
+                android:layout_weight="1"
                 android:id="@+id/cbGradientRight" />
+
 
             <CheckBox
                 android:layout_width="wrap_content"

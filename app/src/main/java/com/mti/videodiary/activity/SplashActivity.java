@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.SparseArray;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
@@ -39,15 +41,22 @@ import com.larswerkman.holocolorpicker.ColorPicker;
 import com.mti.videodiary.animation.SkewableTextView;
 import com.mti.videodiary.utils.UserHelper;
 
+import java.lang.Integer;
+import java.util.ArrayList;
+import java.util.List;
+
 import mti.com.videodiary.R;
 
 /**
  * Created by Taras  Matolinets on 04.11.14.
  */
-public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnPreDrawListener, TextWatcher, View.OnClickListener, ColorPicker.OnColorChangedListener, CompoundButton.OnCheckedChangeListener {
+public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnPreDrawListener, TextWatcher, View.OnClickListener, ColorPicker.OnColorChangedListener {
 
     public static final long MEDIUM_DURATION = 1000;
     private static final long SMALL_DURATION = 500;
+
+    private int XColor;
+    private int YColor;
 
     private boolean mChangeGradientSides;
 
@@ -56,6 +65,9 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
 
     private static final TimeInterpolator mOverShooter = new OvershootInterpolator();
     private static final DecelerateInterpolator mDecelerator = new DecelerateInterpolator();
+
+    private ArrayList<Integer> mColorsGradientList = new ArrayList<Integer>();
+    private SparseArray<ArrayList<Integer>> mGlobalGradientColor = new SparseArray();
 
     private ColorPicker mPicker;
     private Button mButtonCustomise;
@@ -70,7 +82,7 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
     private CheckBox mLefttColorGradiet;
     private CheckBox mRightColorGradient;
     private CheckBox mTopColorGradient;
-    private CheckBox mButtomtColorGradient;
+    private CheckBox mButtomColorGradient;
     private LinearLayout mLayoutButtonsChangeGradient;
     private GradientDrawable gradientDrawable;
 
@@ -79,7 +91,6 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_splash);
-
 
         gradientDrawable = new GradientDrawable();
         mDrawableGradient = new ShapeDrawable(new RectShape());
@@ -104,8 +115,8 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
 
         mLefttColorGradiet = (CheckBox) findViewById(R.id.cbGradientLeft);
         mRightColorGradient = (CheckBox) findViewById(R.id.cbGradientRight);
-        mTopColorGradient = (CheckBox) findViewById(R.id.cbGradientCenter);
-        mButtomtColorGradient = (CheckBox) findViewById(R.id.chGradientBottom);
+        mTopColorGradient = (CheckBox) findViewById(R.id.cbGradientTop);
+        mButtomColorGradient = (CheckBox) findViewById(R.id.chGradientBottom);
     }
 
 
@@ -118,10 +129,10 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
         mButtonCustomise.setOnClickListener(this);
         mButtonSkip.setOnClickListener(this);
 
-        mLefttColorGradiet.setOnCheckedChangeListener(this);
-        mRightColorGradient.setOnCheckedChangeListener(this);
-        mTopColorGradient.setOnCheckedChangeListener(this);
-        mButtomtColorGradient.setOnCheckedChangeListener(this);
+        mLefttColorGradiet.setOnClickListener(this);
+        mRightColorGradient.setOnClickListener(this);
+        mTopColorGradient.setOnClickListener(this);
+        mButtomColorGradient.setOnClickListener(this);
     }
 
     @Override
@@ -290,6 +301,31 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
             case R.id.btSkip:
                 skip();
                 break;
+
+            case R.id.cbGradientLeft:
+                mLefttColorGradiet.setChecked(true);
+                mTopColorGradient.setChecked(false);
+                mButtomColorGradient.setChecked(false);
+                mRightColorGradient.setChecked(false);
+                break;
+            case R.id.cbGradientTop:
+                mTopColorGradient.setChecked(true);
+                mLefttColorGradiet.setChecked(false);
+                mButtomColorGradient.setChecked(false);
+                mRightColorGradient.setChecked(false);
+                break;
+            case R.id.cbGradientRight:
+                mRightColorGradient.setChecked(true);
+                mLefttColorGradiet.setChecked(false);
+                mButtomColorGradient.setChecked(false);
+                mTopColorGradient.setChecked(false);
+                break;
+            case R.id.chGradientBottom:
+                mButtomColorGradient.setChecked(true);
+                mRightColorGradient.setChecked(false);
+                mLefttColorGradiet.setChecked(false);
+                mTopColorGradient.setChecked(false);
+                break;
         }
     }
 
@@ -354,46 +390,62 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
 
     @Override
     public void onColorChanged(int i) {
-        int colors[] = {i, i};
 
-        if (mLefttColorGradiet.isChecked()) {
-            gradientDrawable .setOrientation( GradientDrawable.Orientation.LEFT_RIGHT);
-            gradientDrawable.setColors(new int[]{getResources().getColor(R.color.black),getResources().getColor(R.color.white)});
-        } else if (mRightColorGradient.isChecked()) {
-            gradientDrawable.setOrientation(GradientDrawable.Orientation.RIGHT_LEFT);
-            gradientDrawable.setColors(new int[]{getResources().getColor(android.R.color.holo_green_dark),getResources().getColor(android.R.color.holo_red_dark),Color.WHITE,Color.BLACK});
-        } else if (mTopColorGradient.isChecked()) {
-            gradientDrawable.setOrientation( GradientDrawable.Orientation.TOP_BOTTOM);
-            gradientDrawable.setColors(new int[]{getResources().getColor(android.R.color.holo_green_dark),getResources().getColor(android.R.color.holo_red_dark)});
-        } else if (mButtomtColorGradient.isChecked()) {
-            gradientDrawable.setOrientation( GradientDrawable.Orientation.BOTTOM_TOP);
-            gradientDrawable.setColors(new int[]{getResources().getColor(android.R.color.holo_red_dark),getResources().getColor(android.R.color.holo_orange_dark)});
-        }
+        if (mLefttColorGradiet.isChecked())
+            addColorGradient(mLefttColorGradiet, i, GradientDrawable.Orientation.LEFT_RIGHT);
+
+        else if (mRightColorGradient.isChecked())
+            addColorGradient(mRightColorGradient, i, GradientDrawable.Orientation.RIGHT_LEFT);
+
+        else if (mTopColorGradient.isChecked())
+            addColorGradient(mTopColorGradient, i, GradientDrawable.Orientation.TOP_BOTTOM);
+
+        else if (mButtomColorGradient.isChecked())
+            addColorGradient(mButtomColorGradient,i, GradientDrawable.Orientation.BOTTOM_TOP);
 
         mContainer.setBackgroundDrawable(gradientDrawable);
         mButtonSkip.setTextColor(i);
     }
 
-//    private GradientDrawable getGradientDrawable(int[] colors, GradientDrawable.Orientation orientation) {
-//        GradientDrawable gradientDrawable;
-//        gradientDrawable = new GradientDrawable(
-//                orientation, colors);
-//        return gradientDrawable;
- //   }
+    private void addColorGradient(CompoundButton checkBox, int color, GradientDrawable.Orientation orientation) {
+        int viewId = checkBox.getId();
+        ArrayList<Integer> arrayListColors = new ArrayList<>();
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        buttonView.setChecked(isChecked);
-//        switch (buttonView.getId()) {
-//            case R.id.cbGradientLeft:
-//                mLefttColorGradiet.setChecked(isChecked);
-//                break;
-//            case R.id.cbGradientCenter:
-//                mTopColorGradient.setChecked(isChecked);
-//                break;
-//            case R.id.cbGradientRight:
-//                mRightColorGradient.setChecked(isChecked);
-//                break;
-//        }
+        if ((mGlobalGradientColor.size() > 0)) {
+
+            ArrayList<Integer> colorList = new ArrayList<>();
+
+            colorList.add(color);
+            colorList.add(Color.TRANSPARENT);
+
+            mGlobalGradientColor.append(viewId, colorList);
+
+        } else if ( mGlobalGradientColor.size() == 0) {
+            ArrayList<Integer> colorList = new ArrayList<>();
+
+            colorList.add(color);
+            colorList.add(Color.TRANSPARENT);
+
+            mGlobalGradientColor.append(viewId, colorList);
+        }
+
+        for (int i = 0; i <mGlobalGradientColor.size(); i++) {
+            ArrayList<Integer> list = mGlobalGradientColor.get(viewId);
+
+            for (Integer elem : list)
+                arrayListColors.add(elem);
+        }
+
+        gradientDrawable.setColors(convertIntegers(mGlobalGradientColor.get(viewId)));
+        gradientDrawable.setOrientation(orientation);
     }
+
+    public static int[] convertIntegers(List<Integer> integers) {
+        int[] ret = new int[integers.size()];
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = integers.get(i).intValue();
+        }
+        return ret;
+    }
+
 }
