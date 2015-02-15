@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/flSsplashMain">
+    android:id="@+id/flSplashMain">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -71,97 +71,6 @@
             android:layout_alignBottom="@+id/etName"
             android:layout_alignTop="@+id/etName"
             tools:ignore="ContentDescription" />
-
-        <com.larswerkman.holocolorpicker.ColorPicker
-            android:id="@+id/picker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:id="@+id/llButtonsActions"
-            android:background="@null"
-            android:visibility="gone"
-            android:layout_below="@+id/picker"
-            android:layout_margin="@dimen/edge_above">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/splash_customise_app"
-                android:id="@+id/btCustomiseApp"
-                android:background="@drawable/button_selector"
-                android:layout_weight="1"
-                android:layout_marginRight="@dimen/edge_above"
-                android:textColor="@color/blue" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="@dimen/edge_above"
-                android:text="@string/splash_random"
-                android:id="@+id/btSkip"
-                android:background="@drawable/button_selector"
-                android:textColor="@color/blue" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/llButtonsGradient"
-            android:visibility="gone"
-            android:gravity="top">
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_medium"
-                android:textStyle="normal"
-                android:text="@string/splash_gradient_left"
-                android:id="@+id/cbGradientLeft" />
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_medium"
-                android:textStyle="normal"
-                android:text="@string/splash_gradient_top"
-                android:id="@+id/cbGradientTop" />
-
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/splash_gradient_right"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_medium"
-                android:textStyle="normal"
-                android:layout_weight="1"
-                android:id="@+id/cbGradientRight" />
-
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/splash_gradient_bottom"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_medium"
-                android:textStyle="normal"
-                android:layout_weight="1"
-                android:id="@+id/chGradientBottom" />
-
-        </LinearLayout>
 
     </RelativeLayout>
 

@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/VideoDailyTheme" >
+        android:theme="@style/Theme.AppCompat.NoActionBar" >
         <activity
             android:name="com.mti.videodiary.activity.SplashActivity"
             android:label="@string/app_name"
