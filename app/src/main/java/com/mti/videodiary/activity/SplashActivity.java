@@ -3,24 +3,16 @@ package com.mti.videodiary.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
-import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.TimeInterpolator;
-import android.animation.ValueAnimator;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.TransitionDrawable;
-import android.graphics.drawable.shapes.RectShape;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.SparseArray;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
@@ -30,23 +22,15 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.larswerkman.holocolorpicker.ColorPicker;
 import com.mti.videodiary.animation.SkewableTextView;
+import com.mti.videodiary.data.VideoDailySharedPreferences;
 import com.mti.videodiary.utils.UserHelper;
-
-import java.lang.Integer;
-import java.util.ArrayList;
-import java.util.List;
 
 import mti.com.videodiary.R;
 
@@ -63,6 +47,8 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
 
     private static final TimeInterpolator mOverShooter = new OvershootInterpolator();
     private static final DecelerateInterpolator mDecelerator = new DecelerateInterpolator();
+
+    private static final String KEY_NAME = "com.video.daily.personal.name";
 
     private SkewableTextView mName;
     private SkewableTextView mWelcome;
@@ -91,7 +77,6 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
     private void setListeners() {
         mContainer.getViewTreeObserver().addOnPreDrawListener(this);
         mPersonalName.addTextChangedListener(this);
-
         mClickNext.setOnClickListener(this);
     }
 
@@ -104,6 +89,12 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
         ViewPropertyAnimator animationProperty = mContainer.animate();
         animationProperty.scaleX(1).scaleY(1);
         animationProperty.setInterpolator(new OvershootInterpolator());
+
+        SharedPreferences preferences = getSharedPreferences(VideoDailySharedPreferences.VIDEO_DAILY_PREFERENCE, MODE_PRIVATE);
+        String name = preferences.getString(KEY_NAME, null);
+
+        if (name != null)
+            mName.setText(name);
 
         YoYo.with(Techniques.ZoomIn).playOn(mWelcome);
         animateView();
@@ -147,6 +138,7 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
         @Override
         public void onAnimationEnd(Animator animation) {
             super.onAnimationEnd(animation);
+
             slideToNext(mWelcome, mName);
         }
     };
@@ -183,7 +175,18 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
             public void onAnimationEnd(Animator animation) {
                 UserHelper.sleep(1000);
 
-                moveViewToScreenCenter(nextView, -nextView.getHeight() * 4, 0, true);
+                SharedPreferences preferences = getSharedPreferences(VideoDailySharedPreferences.VIDEO_DAILY_PREFERENCE, MODE_PRIVATE);
+                String name = preferences.getString(KEY_NAME, null);
+
+                if (name == null)
+                    moveViewToScreenCenter(nextView, -nextView.getHeight() * 4, 0, true);
+                else {
+                    YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.FadeOut);
+                    personalAnim.duration(700);
+                    personalAnim.withListener(mPersonalNameAnimation);
+                    personalAnim.playOn(mName);
+                }
+
             }
         });
         fullSet.start();
@@ -250,6 +253,16 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.splashBtClickNext:
+
+                SharedPreferences preferences = getSharedPreferences(VideoDailySharedPreferences.VIDEO_DAILY_PREFERENCE, MODE_PRIVATE);
+                String name = preferences.getString(KEY_NAME, null);
+
+                if (name == null) {
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString(KEY_NAME, mPersonalName.getText().toString());
+                    editor.apply();
+                }
+
                 splashClickNext();
                 break;
         }
@@ -261,13 +274,8 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
 
         YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.RollOut);
         personalAnim.duration(700);
+        personalAnim.withListener(mPersonalNameAnimation);
         personalAnim.playOn(mPersonalName);
-    }
-
-
-    private void skip() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 
     private com.nineoldandroids.animation.Animator.AnimatorListener mPersonalNameAnimation = new com.nineoldandroids.animation.Animator.AnimatorListener() {
@@ -278,10 +286,7 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
 
         @Override
         public void onAnimationEnd(com.nineoldandroids.animation.Animator animation) {
-
-            YoYo.AnimationComposer picker = YoYo.with(Techniques.ZoomIn);
-            picker.duration(700);
-       //     picker.playOn(mLayoutButtonsAction);
+            showMainMenu();
         }
 
         @Override
@@ -292,4 +297,9 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
         public void onAnimationRepeat(com.nineoldandroids.animation.Animator animation) {
         }
     };
+
+    private void showMainMenu() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 }
