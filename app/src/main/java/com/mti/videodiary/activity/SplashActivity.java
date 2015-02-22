@@ -29,7 +29,7 @@ import android.widget.RelativeLayout;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.mti.videodiary.animation.SkewableTextView;
-import com.mti.videodiary.data.VideoDailySharedPreferences;
+import com.mti.videodiary.utils.SharedPreferenceWrapper;
 import com.mti.videodiary.utils.UserHelper;
 
 import mti.com.videodiary.R;
@@ -90,7 +90,7 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
         animationProperty.scaleX(1).scaleY(1);
         animationProperty.setInterpolator(new OvershootInterpolator());
 
-        SharedPreferences preferences = getSharedPreferences(VideoDailySharedPreferences.VIDEO_DAILY_PREFERENCE, MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(SharedPreferenceWrapper.VIDEO_DAILY_PREFERENCE, MODE_PRIVATE);
         String name = preferences.getString(KEY_NAME, null);
 
         if (name != null)
@@ -175,7 +175,7 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
             public void onAnimationEnd(Animator animation) {
                 UserHelper.sleep(1000);
 
-                SharedPreferences preferences = getSharedPreferences(VideoDailySharedPreferences.VIDEO_DAILY_PREFERENCE, MODE_PRIVATE);
+                SharedPreferences preferences = getSharedPreferences(SharedPreferenceWrapper.VIDEO_DAILY_PREFERENCE, MODE_PRIVATE);
                 String name = preferences.getString(KEY_NAME, null);
 
                 if (name == null)
@@ -254,7 +254,7 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
         switch (v.getId()) {
             case R.id.splashBtClickNext:
 
-                SharedPreferences preferences = getSharedPreferences(VideoDailySharedPreferences.VIDEO_DAILY_PREFERENCE, MODE_PRIVATE);
+                SharedPreferences preferences = getSharedPreferences(SharedPreferenceWrapper.VIDEO_DAILY_PREFERENCE, MODE_PRIVATE);
                 String name = preferences.getString(KEY_NAME, null);
 
                 if (name == null) {
