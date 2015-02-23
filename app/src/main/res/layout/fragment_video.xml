@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/menu_act_no_videos"
-        android:drawableLeft="@drawable/ic_videocam_off"
+        android:drawableLeft="@drawable/ic_videocam_off_white"
         android:drawablePadding="@dimen/edge_normal"
         android:gravity="center"
         android:textColor="@color/white"

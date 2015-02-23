@@ -19,8 +19,8 @@
     <dimen name="text_normal">20sp</dimen>
     <dimen name="text_medium">24sp</dimen>
     <dimen name="text_large">28sp</dimen>
-    <dimen name="text_huge">42sp</dimen>
-    <dimen name="extra_huge">48sp</dimen>
+    <dimen name="text_huge">36sp</dimen>
+    <dimen name="extra_huge">64sp</dimen>
 
     <!-- editText padding huge sizes -->
     <dimen name="et_large_size">80dp</dimen>

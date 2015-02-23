@@ -10,12 +10,12 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/menu_act_no_notes"
-        android:drawableLeft="@drawable/ic_create"
+        android:drawableLeft="@drawable/ic_create_white"
         android:drawablePadding="@dimen/edge_normal"
         android:gravity="center"
         android:textColor="@color/white"
         android:textStyle="normal"
-        android:textSize="@dimen/text_large"
+        android:textSize="@dimen/text_huge"
         android:layout_centerInParent="true"
         android:id="@+id/tvCreateView" />
 </RelativeLayout>

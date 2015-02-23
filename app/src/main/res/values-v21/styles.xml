@@ -12,7 +12,8 @@
         <item name="colorPrimaryDark">@color/darkblue</item>
         <item name="colorPrimary">@color/blue</item>
         <item name="colorAccent">#FFFFFF</item>
-        <item name="sectionColorIcon">#00F</item>
+        <item name="android:actionBarStyle">@style/VideoDailyActionBarStyle</item>
+        <item name="android:actionBarTabTextStyle">@style/MyActionBarTabText</item>
         <item name="drawerType">@integer/DRAWERTYPE_CUSTOM</item>
     </style>
 
@@ -22,11 +23,17 @@
         <item name="android:textSize">@dimen/text_normal</item>
     </style>
 
-    <style name="VideoDailyActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
+    <style name="VideoDailyActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:actionBarItemBackground">@drawable/action_bar_selector</item>
+        <item name="android:selectableItemBackground">@drawable/action_bar_selector</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/text_normal</item>
+
+        <item name="android:textSize">@dimen/text_huge</item>
     </style>
 
+    <style name="MyActionBarTabText"
+        parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:textColor">@color/red</item>
+    </style>
 
 </resources>
