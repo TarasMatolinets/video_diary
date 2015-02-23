@@ -41,14 +41,13 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
 
     public static final long MEDIUM_DURATION = 1000;
     private static final long SMALL_DURATION = 500;
+    private static final String KEY_NAME = "com.video.daily.personal.name";
 
     private static final AccelerateInterpolator sAccelerator = new AccelerateInterpolator();
     private static final LinearInterpolator sLinearInterpolator = new LinearInterpolator();
 
     private static final TimeInterpolator mOverShooter = new OvershootInterpolator();
     private static final DecelerateInterpolator mDecelerator = new DecelerateInterpolator();
-
-    private static final String KEY_NAME = "com.video.daily.personal.name";
 
     private SkewableTextView mName;
     private SkewableTextView mWelcome;
@@ -299,7 +298,7 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
     };
 
     private void showMainMenu() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
     }
 }

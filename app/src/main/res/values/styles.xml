@@ -3,6 +3,34 @@
     <!-- Base application theme. -->
     <style name="VideoDailyTheme" parent="@style/Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
+        <item name="colorPrimaryDark">@color/darkblue</item>
+        <item name="colorPrimary">@color/black</item>
+
+    </style>
+
+    <style name="MyNavigationDrawerTheme" parent="MaterialNavigationDrawerTheme.Light.DarkActionBar">
+        <item name="colorPrimaryDark">@color/darkblue</item>
+        <item name="colorPrimary">@color/blue</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_medium</item>
+        <item name="drawerType">@integer/DRAWERTYPE_CUSTOM</item>
+        <item name="sectionColorIcon">#00F</item>
+        <item name="android:actionBarStyle">@style/VideoDailyActionBarStyle</item>
+        <item name="rippleBackport">true</item>
+    </style>
+    
+    <!--text style-->
+    <style name="VideoDailyTextStyle">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_normal</item>
+    </style>
+
+    <style name="VideoDailyActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@drawable/gradient_dark_blue</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_normal</item>
     </style>
 
 </resources>

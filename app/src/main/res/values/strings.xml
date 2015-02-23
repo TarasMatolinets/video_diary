@@ -11,13 +11,21 @@
     <string name="splash_name">Sign your name</string>
     <string name="splash_personal_name">Your Personal Name</string>
     <string name="splash_next">Next</string>
-    <string name="splash_set_color">Set Color</string>
-    <string name="splash_customise_app">Customise app</string>
-    <string name="splash_random">Random</string>
-    <string name="splash_gradient_left">Left</string>
-    <string name="splash_gradient_right">Right</string>
-    <string name="splash_gradient_top">Top</string>
-    <string name="splash_gradient_bottom">Bottom</string>
+
+    <!--menu activity-->
+    <string name="menu_act_no_videos">No video records</string>
+    <string name="menu_act_no_notes">No notes</string>
+    <string name="menu_act_choice_image">Tap to choice picture</string>
+
+
+    <string name="menu_search">Search</string>
+    <string name="menu_record">Record</string>
+
+    <string name="menu_notes">Notes</string>
+    <string name="menu_records">Records</string>
+
+    <string name="menu_no_record">No Video Records</string>
+    <string name="menu_no_notes">No Notes</string>
 
 
 </resources>
