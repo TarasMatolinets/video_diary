@@ -13,7 +13,6 @@
         <item name="colorPrimary">@color/blue</item>
         <item name="colorAccent">#FFFFFF</item>
         <item name="android:actionBarStyle">@style/VideoDailyActionBarStyle</item>
-        <item name="android:actionBarTabTextStyle">@style/MyActionBarTabText</item>
         <item name="drawerType">@integer/DRAWERTYPE_CUSTOM</item>
     </style>
 
@@ -29,11 +28,6 @@
         <item name="android:textStyle">normal</item>
 
         <item name="android:textSize">@dimen/text_huge</item>
-    </style>
-
-    <style name="MyActionBarTabText"
-        parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="android:textColor">@color/red</item>
     </style>
 
 </resources>
