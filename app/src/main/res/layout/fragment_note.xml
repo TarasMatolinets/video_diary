@@ -40,6 +40,6 @@
         android:layout_marginRight="@dimen/edge_large"
         android:background="@color/blue"
         materialdesign:animate="true"
-        materialdesign:iconDrawable="@drawable/ic_action_blue" />
+        materialdesign:iconDrawable="@drawable/ic_action_new" />
 
 </RelativeLayout>
