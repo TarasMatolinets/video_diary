@@ -34,4 +34,7 @@
     <dimen name="round_corner">4dp</dimen>
     <!-- padding  editText -->
     <dimen name="edit_text_padding">38dp</dimen>
+
+    <dimen name="image_size">120dp</dimen>
+
 </resources>

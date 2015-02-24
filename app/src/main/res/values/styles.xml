@@ -1,11 +1,9 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="VideoDailyTheme" parent="@style/Theme.AppCompat.Light">
+    <style name="VideoDailyNoActionBar" parent="@style/Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimaryDark">@color/darkblue</item>
-        <item name="colorPrimary">@color/black</item>
-
+        <item name="colorPrimaryDark">@color/blue</item>
     </style>
 
     <style name="MyNavigationDrawerTheme" parent="MaterialNavigationDrawerTheme.Light.DarkActionBar.TranslucentKitKatStatusBar">

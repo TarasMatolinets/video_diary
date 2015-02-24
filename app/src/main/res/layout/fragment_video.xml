@@ -1,21 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_menu"
     android:id="@+id/rlMain">
+
+    <ImageView
+        android:layout_width="@dimen/image_size"
+        android:layout_height="@dimen/image_size"
+        android:id="@+id/ivCameraOff"
+        android:background="@drawable/ic_videocam_off_white"
+        android:layout_centerInParent="true"
+        android:alpha="0.2"
+        android:contentDescription="" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/menu_act_no_videos"
-        android:drawableLeft="@drawable/ic_videocam_off_white"
-        android:drawablePadding="@dimen/edge_normal"
-        android:gravity="center"
         android:textColor="@color/white"
         android:textStyle="normal"
         android:textSize="@dimen/text_large"
-        android:layout_centerInParent="true"
-        android:id="@+id/tvCreateView" />
+        android:id="@+id/tvCreateView"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/ivCameraOff" />
+
+
+    <com.gc.materialdesign.views.ButtonFloat
+        android:id="@+id/buttonFloat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="@dimen/edge_large"
+        android:background="@color/blue"
+        materialdesign:animate="true"
+        materialdesign:iconDrawable="@drawable/ic_action_new" />
+
+
 </RelativeLayout>
