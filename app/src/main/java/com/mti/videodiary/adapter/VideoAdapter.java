@@ -1,6 +1,7 @@
 package com.mti.videodiary.adapter;
 
 import android.database.Cursor;
+import android.os.Debug;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -21,5 +22,11 @@ public class VideoAdapter  extends CursorRecyclerAdapter<RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return null;
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return super.getItemCount();
     }
 }

@@ -37,4 +37,6 @@
 
     <dimen name="image_size">120dp</dimen>
 
+    <dimen name="card_view_height">200dp</dimen>
+
 </resources>

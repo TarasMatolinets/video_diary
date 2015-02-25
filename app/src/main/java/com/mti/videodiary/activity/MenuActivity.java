@@ -1,6 +1,5 @@
 package com.mti.videodiary.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -34,8 +33,8 @@ public class MenuActivity extends MaterialNavigationDrawer {
 
         addBottomSection(newSection(getString(R.string.menu_settings), R.drawable.ic_settings_black, new SettingFragment()).setSectionColor(selectedColor));
 
-        String videoFolder = BaseActivity.VIDEO_DAILY_DIRECTORY + BaseActivity.DIVIDER + BaseActivity.VIDEO;
-        String noteFolder = BaseActivity.VIDEO_DAILY_DIRECTORY + BaseActivity.DIVIDER + BaseActivity.NOTE;
+        String videoFolder = BaseActivity.VIDEO_DAILY_DIRECTORY +BaseActivity.VIDEO_DIR;
+        String noteFolder = BaseActivity.VIDEO_DAILY_DIRECTORY + BaseActivity.NOTE_DIR;
 
         createFolder(videoFolder);
         createFolder(noteFolder);
