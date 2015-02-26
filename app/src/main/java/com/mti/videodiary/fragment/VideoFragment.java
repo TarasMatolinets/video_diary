@@ -1,7 +1,10 @@
 package com.mti.videodiary.fragment;
 
+import android.app.LoaderManager;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -37,7 +40,7 @@ import mti.com.videodiary.R;
 /**
  * Created by Taras Matolinets on 23.02.15.
  */
-public class VideoFragment extends BaseFragment implements View.OnClickListener, TextWatcher {
+public class VideoFragment extends BaseFragment implements View.OnClickListener, TextWatcher,LoaderManager.LoaderCallbacks<Cursor> {
     private static final int VIDEO_CAPTURE = 101;
     private static final int THUMB_SIZE = 200;
 
@@ -210,10 +213,13 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
         if (mCardView.getVisibility() == View.VISIBLE) {
             mCardView.setVisibility(View.GONE);
 
+            getActivity().invalidateOptionsMenu();
+
             YoYo.AnimationComposer composer = YoYo.with(Techniques.ZoomOut);
             composer.duration(1500);
             composer.playOn(mCardView);
-        }
+        } else
+            getActivity().moveTaskToBack(true);
     }
 
     @Override
@@ -232,6 +238,21 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public void afterTextChanged(Editable s) {
+
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
 
     }
 }
