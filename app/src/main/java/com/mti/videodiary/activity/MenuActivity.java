@@ -2,6 +2,7 @@ package com.mti.videodiary.activity;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -12,11 +13,11 @@ import com.mti.videodiary.fragment.VideoFragment;
 import java.io.File;
 
 import it.neokree.materialnavigationdrawer.MaterialNavigationDrawer;
+import it.neokree.materialnavigationdrawer.elements.MaterialSection;
 import mti.com.videodiary.R;
 
 
 public class MenuActivity extends MaterialNavigationDrawer {
-
 
     @Override
     public void init(Bundle bundle) {
@@ -33,17 +34,20 @@ public class MenuActivity extends MaterialNavigationDrawer {
 
         addBottomSection(newSection(getString(R.string.menu_settings), R.drawable.ic_settings_black, new SettingFragment()).setSectionColor(selectedColor));
 
-        String videoFolder = BaseActivity.VIDEO_DAILY_DIRECTORY +BaseActivity.VIDEO_DIR;
+        String videoFolder = BaseActivity.VIDEO_DAILY_DIRECTORY + BaseActivity.VIDEO_DIR;
         String noteFolder = BaseActivity.VIDEO_DAILY_DIRECTORY + BaseActivity.NOTE_DIR;
 
         createFolder(videoFolder);
         createFolder(noteFolder);
 
+        setBackPattern(MaterialNavigationDrawer.BACKPATTERN_CUSTOM);
     }
 
-    /**create folders for feature files
+    /**
+     * create folders for feature files
+     *
      * @param nameFolder folder name
-     * */
+     */
     private void createFolder(String nameFolder) {
         File f = new File(Environment.getExternalStorageDirectory(), nameFolder);
 
@@ -61,4 +65,34 @@ public class MenuActivity extends MaterialNavigationDrawer {
             closeDrawer();
     }
 
+
+    @Override
+    protected MaterialSection backToSection(MaterialSection currentSection) {
+        MaterialSection section;
+        int sectionPos = currentSection.getPosition();
+
+        switch (sectionPos) {
+            case 0:
+                section = getSectionAtCurrentPosition(sectionPos);
+                Fragment fragment = (Fragment) section.getTargetFragment();
+
+                if (fragment instanceof VideoFragment)
+                    ((VideoFragment) fragment).onBackPress();
+
+                break;
+            case 1:
+                section = getSectionAtCurrentPosition(sectionPos);
+
+                break;
+            case 2:
+                section = getSectionAtCurrentPosition(sectionPos);
+
+                break;
+            default:
+                section = super.backToSection(currentSection);
+                break;
+        }
+
+        return section;
+    }
 }

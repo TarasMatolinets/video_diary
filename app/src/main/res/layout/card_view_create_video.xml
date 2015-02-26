@@ -5,47 +5,82 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     card_view:cardCornerRadius="@dimen/edge_normal"
-    android:visibility="gone"
-    >
+    android:visibility="gone">
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/rlVideoCreate">
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollCard">
 
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/card_view_height"
-            android:id="@+id/ivVideoThumbnail"
-            android:layout_margin="@dimen/edge_medium" />
-
-        <EditText
-            android:id="@+id/etName"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/ivVideoThumbnail"
-            android:layout_margin="@dimen/edge_medium"
-            android:maxLines="3"
-            android:inputType="text"
-            android:textSize="@dimen/text_medium"
-            android:textStyle="normal"
-            android:textColor="@color/black"
-            android:ellipsize="end"
-            android:hint="@string/fragment_create_title" />
+            android:orientation="vertical"
+            android:id="@+id/llCard">
 
-        <EditText
-            android:id="@+id/etDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/etName"
-            android:layout_margin="@dimen/edge_medium"
-            android:inputType="text"
-            android:textSize="@dimen/text_normal"
-            android:textStyle="normal"
-            android:textColor="@color/black"
-            android:hint="@string/fragment_description" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/rlVideoCreate">
 
-    </RelativeLayout>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/card_view_height"
+                    android:id="@+id/ivVideoThumbnail"
+                    android:scaleType="centerCrop"
+                    android:layout_margin="@dimen/edge_medium" />
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ivClose"
+                    android:background="@drawable/ic_clear_white"
+                    android:layout_alignTop="@+id/ivVideoThumbnail"
+                    android:layout_alignRight="@+id/ivVideoThumbnail"
+                    android:layout_margin="@dimen/edge_normal"
+                   />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ivDone"
+                    android:background="@drawable/ic_done_white"
+                    android:layout_alignTop="@+id/ivVideoThumbnail"
+                    android:layout_alignLeft="@+id/ivVideoThumbnail"
+                    android:layout_margin="@dimen/edge_normal"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/etTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ivVideoThumbnail"
+                    android:layout_margin="@dimen/edge_medium"
+                    android:maxLines="3"
+                    android:textCursorDrawable="@drawable/keyboard_cursor_color"
+                    android:inputType="text"
+                    android:textSize="@dimen/text_medium"
+                    android:textStyle="normal"
+                    android:textColor="@color/black"
+                    android:ellipsize="end"
+                    android:hint="@string/fragment_create_title" />
+
+                <EditText
+                    android:id="@+id/etDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/etTitle"
+                    android:layout_margin="@dimen/edge_medium"
+                    android:inputType="text"
+                    android:textCursorDrawable="@drawable/keyboard_cursor_color"
+                    android:textSize="@dimen/text_normal"
+                    android:textStyle="normal"
+                    android:textColor="@color/black"
+                    android:hint="@string/fragment_description" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </android.support.v7.widget.CardView>

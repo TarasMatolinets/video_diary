@@ -3,14 +3,14 @@ package com.mti.videodiary.fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.widget.CardView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,23 +18,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.gc.materialdesign.views.ButtonFloat;
 import com.mti.videodiary.activity.BaseActivity;
+import com.mti.videodiary.activity.MenuActivity;
 import com.mti.videodiary.application.VideoDiaryApplication;
-import com.mti.videodiary.utils.UserHelper;
 
 import java.io.File;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 import mti.com.videodiary.R;
 
 /**
  * Created by Taras Matolinets on 23.02.15.
  */
-public class VideoFragment extends BaseFragment implements View.OnClickListener {
+public class VideoFragment extends BaseFragment implements View.OnClickListener, TextWatcher {
     private static final int VIDEO_CAPTURE = 101;
     private static final int THUMB_SIZE = 200;
 
@@ -43,6 +46,11 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener 
 
     private View mView;
     private CardView mCardView;
+    private ImageView mIvThumbnail;
+    private ImageView mIvDone;
+    private ImageView ivClose;
+    private EditText mEtTitle;
+    private EditText mEtDescription;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,8 +67,20 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener 
 
         mCardView = (CardView) mView.findViewById(R.id.cardViewCreateVideo);
 
+        mEtTitle = (EditText) mCardView.findViewById(R.id.etTitle);
+        mEtDescription = (EditText) mCardView.findViewById(R.id.etDescription);
+        mIvThumbnail = (ImageView) mCardView.findViewById(R.id.ivVideoThumbnail);
+        mIvDone = (ImageView) mCardView.findViewById(R.id.ivDone);
+        ivClose = (ImageView) mCardView.findViewById(R.id.ivClose);
+
+        ivClose.setOnClickListener(this);
+        mIvDone.setOnClickListener(this);
+        mEtTitle.addTextChangedListener(this);
+
         if (!hasCamera())
             buttonFloat.setEnabled(false);
+        else
+            Crouton.makeText(getActivity(), R.string.fragment_broken_camera_warning, Style.ALERT);
 
         return mView;
     }
@@ -109,7 +129,24 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener 
                 startActivityForResult(intent, VIDEO_CAPTURE);
 
                 break;
+
+            case R.id.ivClose:
+                animateZoomOutCard();
+                break;
+            case R.id.ivDone:
+                animateZoomOutCard();
+                break;
         }
+    }
+
+    private void animateZoomOutCard() {
+        mCardView.setVisibility(View.GONE);
+
+        YoYo.AnimationComposer composer = YoYo.with(Techniques.ZoomOut);
+        composer.duration(1500);
+        composer.playOn(mCardView);
+
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -119,6 +156,11 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener 
             if (resultCode == getActivity().RESULT_OK) {
                 mCardView.setVisibility(View.VISIBLE);
 
+                mEtTitle.setText("");
+                mEtDescription.setText("");
+
+                getActivity().invalidateOptionsMenu();
+
                 YoYo.AnimationComposer composer = YoYo.with(Techniques.ZoomIn);
                 composer.duration(1500);
                 composer.playOn(mCardView);
@@ -127,20 +169,18 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener 
 
                 final File file = new File(videoUri.getPath());
 
-                final ImageView image = (ImageView) mCardView.findViewById(R.id.ivVideoThumbnail);
-
-                image.post(new Runnable() {
+                mIvThumbnail.post(new Runnable() {
                     @Override
                     public void run() {
-                        int width = image.getWidth();
-                        int height = image.getHeight();
+                        int width = mIvThumbnail.getWidth();
+                        int height = mIvThumbnail.getHeight();
 
                         if (width > 0 && height > 0) {
 
                             Bitmap bMap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
-                            Bitmap newImage = Bitmap.createScaledBitmap(bMap,width,height,false);
+                            Bitmap newImage = Bitmap.createScaledBitmap(bMap, width, height, false);
 
-                            image.setImageBitmap(newImage);
+                            mIvThumbnail.setImageBitmap(newImage);
                         }
                     }
                 });
@@ -156,5 +196,42 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener 
         }
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (mCardView.getVisibility() == View.VISIBLE)
+            ((MenuActivity) getActivity()).getSupportActionBar().hide();
+        else
+            ((MenuActivity) getActivity()).getSupportActionBar().show();
+    }
 
+    public void onBackPress() {
+
+        if (mCardView.getVisibility() == View.VISIBLE) {
+            mCardView.setVisibility(View.GONE);
+
+            YoYo.AnimationComposer composer = YoYo.with(Techniques.ZoomOut);
+            composer.duration(1500);
+            composer.playOn(mCardView);
+        }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (mEtTitle.getText().length() > 0)
+            mIvDone.setVisibility(View.VISIBLE);
+        else
+            mIvDone.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
 }

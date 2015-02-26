@@ -69,7 +69,7 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
         mContainer = (RelativeLayout) findViewById(R.id.flSplash);
         mName = (SkewableTextView) findViewById(R.id.tvTitle);
         mWelcome = (SkewableTextView) findViewById(R.id.tvWelcome);
-        mPersonalName = (EditText) findViewById(R.id.etName);
+        mPersonalName = (EditText) findViewById(R.id.etTitle);
         mClickNext = (ImageButton) findViewById(R.id.splashBtClickNext);
     }
 
@@ -299,6 +299,7 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
 
     private void showMainMenu() {
         Intent intent = new Intent(this, MenuActivity.class);
+      //  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }

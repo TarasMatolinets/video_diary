@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="VideoDailyNoActionBar" parent="@style/Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="android:colorPrimaryDark">@color/blue</item>
+        <item name="android:colorPrimaryDark">@color/darkblue</item>
     </style>
 
     <style name="MyNavigationDrawerTheme" parent="MaterialNavigationDrawerTheme.Light.DarkActionBar">
@@ -12,6 +12,8 @@
         <item name="colorAccent">#FFFFFF</item>
         <item name="android:actionBarStyle">@style/VideoDailyActionBarStyle</item>
         <item name="drawerType">@integer/DRAWERTYPE_CUSTOM</item>
+        <item name="android:elevation">0dp</item>
+
     </style>
 
     <style name="VideoDailyTextStyle">
@@ -24,7 +26,6 @@
         <item name="android:actionBarItemBackground">@drawable/action_bar_selector</item>
         <item name="android:selectableItemBackground">@drawable/action_bar_selector</item>
         <item name="android:textStyle">normal</item>
-
         <item name="android:textSize">@dimen/text_huge</item>
     </style>
 

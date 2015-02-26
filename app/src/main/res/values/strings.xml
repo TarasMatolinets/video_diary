@@ -29,9 +29,10 @@
     <!--fragment video -->
     <string name="fragment_create_title">Sign your video</string>
     <string name="fragment_description">Tell more about this video</string>
-    
+
     <string name="menu_no_record">No Video Records</string>
     <string name="menu_no_notes">No Notes</string>
 
-
+    <!--warnings-->
+    <string name="fragment_broken_camera_warning">Something going wrong with your camera</string>
 </resources>

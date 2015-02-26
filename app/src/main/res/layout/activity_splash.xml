@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient_menu"
+        android:background="@drawable/gradient_dark_blue"
         android:id="@+id/flSplash"
         android:clipChildren="false"
         tools:ignore="UselessParent">
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:layout_margin="@dimen/edge_above"
-            android:id="@+id/etName"
+            android:id="@+id/etTitle"
             android:hint="@string/splash_personal_name"
             android:textColor="@color/gray"
             android:textColorHint="@color/gray"
@@ -67,9 +67,9 @@
             android:background="@drawable/next"
             android:textSize="@dimen/text_mini_normal"
             android:textColor="@color/white"
-            android:layout_toRightOf="@+id/etName"
-            android:layout_alignBottom="@+id/etName"
-            android:layout_alignTop="@+id/etName"
+            android:layout_toRightOf="@+id/etTitle"
+            android:layout_alignBottom="@+id/etTitle"
+            android:layout_alignTop="@+id/etTitle"
             tools:ignore="ContentDescription" />
 
     </RelativeLayout>
