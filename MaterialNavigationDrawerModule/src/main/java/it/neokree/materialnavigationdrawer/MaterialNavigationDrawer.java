@@ -864,18 +864,17 @@ public abstract class MaterialNavigationDrawer<Fragment> extends ActionBarActivi
                     MaterialSection backedSection = backToSection(getCurrentSection());
 
                     if (currentSection != backedSection)
-                        //super.onBackPressed();
-//                    else {
+                      {
                         if (backedSection.getTarget() != MaterialSection.TARGET_FRAGMENT) {
                             throw new RuntimeException("The restored section must have a fragment as target");
                         }
                         backedSection.select();
-                        //onClick(backedSection);
+                        onClick(backedSection);
 
                         setFragment((Fragment) backedSection.getTargetFragment(), backedSection.getTitle(), (Fragment) currentSection.getTargetFragment());
                         afterFragmentSetted((Fragment) backedSection.getTargetFragment(),backedSection.getTitle());
                         syncSectionsState(backedSection);
-//                    }
+                    }
                     break;
             }
         }
