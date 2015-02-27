@@ -1,10 +1,7 @@
 package com.mti.videodiary.fragment;
 
-import android.app.LoaderManager;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -12,6 +9,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,15 +23,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.gc.materialdesign.views.ButtonFloat;
 import com.mti.videodiary.activity.BaseActivity;
 import com.mti.videodiary.activity.MenuActivity;
+import com.mti.videodiary.adapter.VideoAdapter;
 import com.mti.videodiary.application.VideoDiaryApplication;
+import com.mti.videodiary.data.DataBaseManager;
+import com.mti.videodiary.data.dao.Video;
 
 import java.io.File;
+import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -40,12 +45,11 @@ import mti.com.videodiary.R;
 /**
  * Created by Taras Matolinets on 23.02.15.
  */
-public class VideoFragment extends BaseFragment implements View.OnClickListener, TextWatcher,LoaderManager.LoaderCallbacks<Cursor> {
+public class VideoFragment extends BaseFragment implements View.OnClickListener, TextWatcher {
     private static final int VIDEO_CAPTURE = 101;
-    private static final int THUMB_SIZE = 200;
+    private static final String FILE_FORMAT = ".mp4";
 
-    private String VIDEO_NAME = "/video-daily.mp4";
-
+    private String VIDEO_FILE_NAME = BaseActivity.DIVIDER + "video-daily" + FILE_FORMAT;
 
     private View mView;
     private CardView mCardView;
@@ -54,38 +58,88 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
     private ImageView ivClose;
     private EditText mEtTitle;
     private EditText mEtDescription;
+    private RecyclerView mRecyclerView;
+    private VideoAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ButtonFloat mButtonFloat;
+    private ImageView mIvCameraOff;
+    private TextView mTvNoRecords;
+    private String mVideoFilePath;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        DataBaseManager.init(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_video, container, false);
 
-        ButtonFloat buttonFloat = (ButtonFloat) mView.findViewById(R.id.buttonFloat);
-        buttonFloat.setOnClickListener(this);
+        initViews();
+        initListeners();
+        setupRecycleView();
+        showEmptyView();
 
+        checkCamera();
+
+        return mView;
+    }
+
+    private void showEmptyView() {
+        final List<Video> listVideos = DataBaseManager.getInstance().getAllVideosList();
+
+        if (listVideos.isEmpty()) {
+            mIvCameraOff.setVisibility(View.VISIBLE);
+            mTvNoRecords.setVisibility(View.VISIBLE);
+        } else {
+            mIvCameraOff.setVisibility(View.GONE);
+            mTvNoRecords.setVisibility(View.GONE);
+        }
+    }
+
+    private void initViews() {
+        mIvCameraOff = (ImageView) mView.findViewById(R.id.ivCameraOff);
+        mTvNoRecords = (TextView) mView.findViewById(R.id.tvNoRecords);
+
+        mRecyclerView = (RecyclerView) mView.findViewById(R.id.videoRecycleView);
         mCardView = (CardView) mView.findViewById(R.id.cardViewCreateVideo);
-
         mEtTitle = (EditText) mCardView.findViewById(R.id.etTitle);
         mEtDescription = (EditText) mCardView.findViewById(R.id.etDescription);
         mIvThumbnail = (ImageView) mCardView.findViewById(R.id.ivVideoThumbnail);
         mIvDone = (ImageView) mCardView.findViewById(R.id.ivDone);
         ivClose = (ImageView) mCardView.findViewById(R.id.ivClose);
+        mButtonFloat = (ButtonFloat) mView.findViewById(R.id.buttonFloat);
+    }
 
+    private void initListeners() {
         ivClose.setOnClickListener(this);
         mIvDone.setOnClickListener(this);
         mEtTitle.addTextChangedListener(this);
+        mButtonFloat.setOnClickListener(this);
+    }
 
+    private void setupRecycleView() {
+        final List<Video> listVideos = DataBaseManager.getInstance().getAllVideosList();
+
+        mRecyclerView.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        mAdapter = new VideoAdapter(getActivity(), listVideos);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void checkCamera() {
         if (!hasCamera())
-            buttonFloat.setEnabled(false);
+            mButtonFloat.setEnabled(false);
         else
             Crouton.makeText(getActivity(), R.string.fragment_broken_camera_warning, Style.ALERT);
-
-        return mView;
     }
 
     @Override
@@ -120,7 +174,7 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
         switch (v.getId()) {
             case R.id.buttonFloat:
 
-                final File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + BaseActivity.VIDEO_DAILY_DIRECTORY + BaseActivity.VIDEO_DIR + VIDEO_NAME);
+                final File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + BaseActivity.DIVIDER + BaseActivity.VIDEO_DAILY_DIRECTORY + BaseActivity.DIVIDER + BaseActivity.VIDEO_DIR + VIDEO_FILE_NAME + FILE_FORMAT);
 
                 Uri fileUri = Uri.fromFile(mediaFile);
 
@@ -138,6 +192,28 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
                 break;
             case R.id.ivDone:
                 animateZoomOutCard();
+
+                VIDEO_FILE_NAME = mEtTitle.getText().toString();
+
+                File oldFileName = new File(mVideoFilePath);
+                File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + BaseActivity.VIDEO_DAILY_DIRECTORY + BaseActivity.VIDEO_DIR + BaseActivity.DIVIDER + VIDEO_FILE_NAME + FILE_FORMAT);
+
+                boolean success = oldFileName.renameTo(newFileName);
+
+                if (success) {
+                    Video video = new Video();
+
+                    video.setVideoUrl(newFileName.getAbsolutePath());
+                    video.setTitle(mEtTitle.getText().toString());
+                    video.setDescription(mEtDescription.getText().toString());
+
+                    DataBaseManager.getInstance().createVideo(video);
+
+                    final List<Video> listVideos = DataBaseManager.getInstance().getAllVideosList();
+                    mAdapter.setListVideos(listVideos);
+
+                    mAdapter.notifyDataSetChanged();
+                }
                 break;
         }
     }
@@ -169,8 +245,9 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
                 composer.playOn(mCardView);
 
                 final Uri videoUri = data.getData();
+                mVideoFilePath = videoUri.getPath();
 
-                final File file = new File(videoUri.getPath());
+                final File file = new File(mVideoFilePath);
 
                 mIvThumbnail.post(new Runnable() {
                     @Override
@@ -241,18 +318,4 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
 
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
 }

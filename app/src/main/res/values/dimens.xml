@@ -37,6 +37,8 @@
 
     <dimen name="image_size">120dp</dimen>
 
-    <dimen name="card_view_height">200dp</dimen>
+    <dimen name="video_view_height">300dp</dimen>
+
+    <dimen name="view_height_adapter">100dp</dimen>
 
 </resources>

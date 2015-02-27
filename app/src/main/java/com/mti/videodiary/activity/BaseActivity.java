@@ -11,6 +11,7 @@ import android.view.View;
  */
 public class BaseActivity extends ActionBarActivity {
 
+    public static final String DIVIDER = "/";
     public static final String VIDEO_DAILY_DIRECTORY = "/videoDaily";
     public static final String VIDEO_DIR = "/video";
     public static final String NOTE_DIR = "/note";
