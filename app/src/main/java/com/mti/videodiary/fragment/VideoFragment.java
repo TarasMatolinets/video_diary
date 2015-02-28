@@ -2,6 +2,7 @@ package com.mti.videodiary.fragment;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
@@ -34,6 +37,8 @@ import com.mti.videodiary.adapter.VideoAdapter;
 import com.mti.videodiary.application.VideoDiaryApplication;
 import com.mti.videodiary.data.DataBaseManager;
 import com.mti.videodiary.data.dao.Video;
+
+import org.lucasr.twowayview.widget.SpannableGridLayoutManager;
 
 import java.io.File;
 import java.util.List;
@@ -52,7 +57,7 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
     private String VIDEO_FILE_NAME = BaseActivity.DIVIDER + "video-daily" + FILE_FORMAT;
 
     private View mView;
-    private CardView mCardView;
+    private ScrollView mCardView;
     private ImageView mIvThumbnail;
     private ImageView mIvDone;
     private ImageView ivClose;
@@ -60,7 +65,7 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
     private EditText mEtDescription;
     private RecyclerView mRecyclerView;
     private VideoAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private StaggeredGridLayoutManager mLayoutManager;
     private ButtonFloat mButtonFloat;
     private ImageView mIvCameraOff;
     private TextView mTvNoRecords;
@@ -105,7 +110,7 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
         mTvNoRecords = (TextView) mView.findViewById(R.id.tvNoRecords);
 
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.videoRecycleView);
-        mCardView = (CardView) mView.findViewById(R.id.cardViewCreateVideo);
+        mCardView = (ScrollView) mView.findViewById(R.id.scrollCard);
         mEtTitle = (EditText) mCardView.findViewById(R.id.etTitle);
         mEtDescription = (EditText) mCardView.findViewById(R.id.etDescription);
         mIvThumbnail = (ImageView) mCardView.findViewById(R.id.ivVideoThumbnail);
@@ -126,7 +131,9 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
 
         mRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager = new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL);
+        mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -140,6 +147,17 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
             mButtonFloat.setEnabled(false);
         else
             Crouton.makeText(getActivity(), R.string.fragment_broken_camera_warning, Style.ALERT);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mLayoutManager.setSpanCount(2);
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            mLayoutManager.setSpanCount(1);
+        }
     }
 
     @Override

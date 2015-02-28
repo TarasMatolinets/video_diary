@@ -27,8 +27,9 @@
 
         <activity
             android:name="com.mti.videodiary.activity.MenuActivity"
-            android:theme="@style/MyNavigationDrawerTheme">
-
+            android:theme="@style/MyNavigationDrawerTheme"
+            android:configChanges="orientation|screenSize"
+            >
         </activity>
 
     </application>
