@@ -1,41 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:id="@+id/flMain"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/gradient_menu"
-    android:id="@+id/rlMain">
+    android:layout_height="match_parent">
 
-    <include
-        layout="@layout/empty_view"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/videoRecycleView"
+        android:layout_height="match_parent"
         android:background="@drawable/gradient_menu"
-        android:scrollbars="vertical"
+        android:id="@+id/rlMain">
 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
-    <com.gc.materialdesign.views.ButtonFloat
-        android:id="@+id/buttonFloat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="@dimen/edge_large"
-        android:background="@color/blue"
-        materialdesign:animate="true"
-        materialdesign:iconDrawable="@drawable/ic_action_new" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/videoRecycleView"
+            android:background="@drawable/gradient_menu"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    <include
-        layout="@layout/card_view_create_video"
-        android:layout_margin="@dimen/edge_above"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <include
+            layout="@layout/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-</RelativeLayout>
+
+        <com.gc.materialdesign.views.ButtonFloat
+            android:id="@+id/buttonFloat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="@dimen/edge_large"
+            android:background="@color/blue"
+            materialdesign:animate="true"
+            materialdesign:iconDrawable="@drawable/ic_action_new" />
+
+    </RelativeLayout>
+</FrameLayout>

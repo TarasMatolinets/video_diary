@@ -1,21 +1,17 @@
-package com.mti.videodiary.fragment;
+package com.mti.videodialy.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,22 +19,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.gc.materialdesign.views.ButtonFloat;
-import com.mti.videodiary.activity.BaseActivity;
-import com.mti.videodiary.activity.MenuActivity;
-import com.mti.videodiary.adapter.VideoAdapter;
-import com.mti.videodiary.application.VideoDiaryApplication;
-import com.mti.videodiary.data.DataBaseManager;
-import com.mti.videodiary.data.dao.Video;
-
-import org.lucasr.twowayview.widget.SpannableGridLayoutManager;
+import com.mti.videodialy.activity.BaseActivity;
+import com.mti.videodialy.activity.CreateVideoNoteActivity;
+import com.mti.videodialy.activity.MenuActivity;
+import com.mti.videodialy.adapter.VideoAdapter;
+import com.mti.videodialy.application.VideoDiaryApplication;
+import com.mti.videodialy.data.DataBaseManager;
+import com.mti.videodialy.data.dao.Video;
+import com.mti.videodialy.listeners.SwipeDismissRecyclerViewTouchListener;
 
 import java.io.File;
 import java.util.List;
@@ -50,26 +42,20 @@ import mti.com.videodiary.R;
 /**
  * Created by Taras Matolinets on 23.02.15.
  */
-public class VideoFragment extends BaseFragment implements View.OnClickListener, TextWatcher {
+public class VideoFragment extends BaseFragment implements View.OnClickListener, SwipeDismissRecyclerViewTouchListener.DismissCallbacks {
     private static final int VIDEO_CAPTURE = 101;
-    private static final String FILE_FORMAT = ".mp4";
-
-    private String VIDEO_FILE_NAME = BaseActivity.DIVIDER + "video-daily" + FILE_FORMAT;
+    public static final String FILE_FORMAT = ".mp4";
+    public static final String UPDATE_ADAPTER = "com.mti.video-daily.update-adapter";
+    public static String VIDEO_FILE_NAME = BaseActivity.DIVIDER + "video-daily" + FILE_FORMAT;
+    public static final String KEY_VIDEO_PATH = "com.mti.video-daily.key-video-file-path";
 
     private View mView;
-    private ScrollView mCardView;
-    private ImageView mIvThumbnail;
-    private ImageView mIvDone;
-    private ImageView ivClose;
-    private EditText mEtTitle;
-    private EditText mEtDescription;
     private RecyclerView mRecyclerView;
     private VideoAdapter mAdapter;
     private StaggeredGridLayoutManager mLayoutManager;
     private ButtonFloat mButtonFloat;
     private ImageView mIvCameraOff;
     private TextView mTvNoRecords;
-    private String mVideoFilePath;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,8 +70,8 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
         mView = inflater.inflate(R.layout.fragment_video, container, false);
 
         initViews();
-        initListeners();
         setupRecycleView();
+        initListeners();
         showEmptyView();
 
         checkCamera();
@@ -108,22 +94,20 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
     private void initViews() {
         mIvCameraOff = (ImageView) mView.findViewById(R.id.ivCameraOff);
         mTvNoRecords = (TextView) mView.findViewById(R.id.tvNoRecords);
-
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.videoRecycleView);
-        mCardView = (ScrollView) mView.findViewById(R.id.scrollCard);
-        mEtTitle = (EditText) mCardView.findViewById(R.id.etTitle);
-        mEtDescription = (EditText) mCardView.findViewById(R.id.etDescription);
-        mIvThumbnail = (ImageView) mCardView.findViewById(R.id.ivVideoThumbnail);
-        mIvDone = (ImageView) mCardView.findViewById(R.id.ivDone);
-        ivClose = (ImageView) mCardView.findViewById(R.id.ivClose);
+
         mButtonFloat = (ButtonFloat) mView.findViewById(R.id.buttonFloat);
     }
 
     private void initListeners() {
-        ivClose.setOnClickListener(this);
-        mIvDone.setOnClickListener(this);
-        mEtTitle.addTextChangedListener(this);
         mButtonFloat.setOnClickListener(this);
+
+        SwipeDismissRecyclerViewTouchListener touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this);
+        mRecyclerView.setOnTouchListener(touchListener);
+
+        // Setting this scroll listener is required to ensure that during ListView scrolling,
+        // we don't look for swipes.
+        mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
     }
 
     private void setupRecycleView() {
@@ -131,7 +115,7 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
 
         mRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL);
+        mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -155,7 +139,7 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
 
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mLayoutManager.setSpanCount(2);
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             mLayoutManager.setSpanCount(1);
         }
     }
@@ -204,46 +188,7 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
                 startActivityForResult(intent, VIDEO_CAPTURE);
 
                 break;
-
-            case R.id.ivClose:
-                animateZoomOutCard();
-                break;
-            case R.id.ivDone:
-                animateZoomOutCard();
-
-                VIDEO_FILE_NAME = mEtTitle.getText().toString();
-
-                File oldFileName = new File(mVideoFilePath);
-                File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + BaseActivity.VIDEO_DAILY_DIRECTORY + BaseActivity.VIDEO_DIR + BaseActivity.DIVIDER + VIDEO_FILE_NAME + FILE_FORMAT);
-
-                boolean success = oldFileName.renameTo(newFileName);
-
-                if (success) {
-                    Video video = new Video();
-
-                    video.setVideoUrl(newFileName.getAbsolutePath());
-                    video.setTitle(mEtTitle.getText().toString());
-                    video.setDescription(mEtDescription.getText().toString());
-
-                    DataBaseManager.getInstance().createVideo(video);
-
-                    final List<Video> listVideos = DataBaseManager.getInstance().getAllVideosList();
-                    mAdapter.setListVideos(listVideos);
-
-                    mAdapter.notifyDataSetChanged();
-                }
-                break;
         }
-    }
-
-    private void animateZoomOutCard() {
-        mCardView.setVisibility(View.GONE);
-
-        YoYo.AnimationComposer composer = YoYo.with(Techniques.ZoomOut);
-        composer.duration(1500);
-        composer.playOn(mCardView);
-
-        getActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -251,37 +196,13 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == getActivity().RESULT_OK) {
-                mCardView.setVisibility(View.VISIBLE);
-
-                mEtTitle.setText("");
-                mEtDescription.setText("");
-
-                getActivity().invalidateOptionsMenu();
-
-                YoYo.AnimationComposer composer = YoYo.with(Techniques.ZoomIn);
-                composer.duration(1500);
-                composer.playOn(mCardView);
-
                 final Uri videoUri = data.getData();
-                mVideoFilePath = videoUri.getPath();
+                String videoFilePath = videoUri.getPath();
 
-                final File file = new File(mVideoFilePath);
+                Intent intent = new Intent(getActivity(), CreateVideoNoteActivity.class);
+                intent.putExtra(KEY_VIDEO_PATH, videoFilePath);
 
-                mIvThumbnail.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        int width = mIvThumbnail.getWidth();
-                        int height = mIvThumbnail.getHeight();
-
-                        if (width > 0 && height > 0) {
-
-                            Bitmap bMap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
-                            Bitmap newImage = Bitmap.createScaledBitmap(bMap, width, height, false);
-
-                            mIvThumbnail.setImageBitmap(newImage);
-                        }
-                    }
-                });
+                startActivityForResult(intent, MenuActivity.UPDATE_VIDEO_ADAPTER);
 
                 Log.i(VideoDiaryApplication.TAG, "Video has been saved to: " + data.getData());
             } else if (resultCode == getActivity().RESULT_CANCELED) {
@@ -291,49 +212,42 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
 
                 Log.e(VideoDiaryApplication.TAG, "Failed to record video");
             }
+        } else if (requestCode == MenuActivity.UPDATE_VIDEO_ADAPTER) {
+            List<Video> listVideo = DataBaseManager.getInstance().getAllVideosList();
+            mAdapter.setListVideos(listVideo);
+
+            mAdapter.notifyDataSetChanged();
+            showEmptyView();
         }
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        if (mCardView.getVisibility() == View.VISIBLE)
-            ((MenuActivity) getActivity()).getSupportActionBar().hide();
-        else
-            ((MenuActivity) getActivity()).getSupportActionBar().show();
-    }
-
-    public void onBackPress() {
-
-        if (mCardView.getVisibility() == View.VISIBLE) {
-            mCardView.setVisibility(View.GONE);
-
-            getActivity().invalidateOptionsMenu();
-
-            YoYo.AnimationComposer composer = YoYo.with(Techniques.ZoomOut);
-            composer.duration(1500);
-            composer.playOn(mCardView);
-        } else
-            getActivity().moveTaskToBack(true);
+    public boolean canDismiss(int position) {
+        return true;
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
+        Video video = null;
+        int pos = 0;
 
-    }
+        for (int position : reverseSortedPositions) {
+            pos = position;
+            video = DataBaseManager.getInstance().getVideoByPosition(position);
+        }
+        // do not call notifyItemRemoved for every item, it will cause gaps on deleting items
 
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (mEtTitle.getText().length() > 0)
-            mIvDone.setVisibility(View.VISIBLE);
-        else
-            mIvDone.setVisibility(View.GONE);
+        DataBaseManager.getInstance().deleteVideoById(video.getId());
 
-    }
+        File file = new File(video.getVideoUrl());
 
-    @Override
-    public void afterTextChanged(Editable s) {
+        if (file.exists())
+            file.delete();
 
+        List<Video> listVideo = DataBaseManager.getInstance().getAllVideosList();
+
+        mAdapter.setListVideos(listVideo);
+        mAdapter.notifyItemRemoved(pos);
     }
 
 }

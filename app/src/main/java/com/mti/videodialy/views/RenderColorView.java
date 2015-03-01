@@ -1,4 +1,4 @@
-package com.mti.videodiary.views;
+package com.mti.videodialy.views;
 
 import android.content.Context;
 import android.view.SurfaceHolder;

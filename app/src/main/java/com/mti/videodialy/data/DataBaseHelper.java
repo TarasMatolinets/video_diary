@@ -1,4 +1,4 @@
-package com.mti.videodiary.data;
+package com.mti.videodialy.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,8 +8,8 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.mti.videodiary.application.VideoDiaryApplication;
-import com.mti.videodiary.data.dao.Video;
+import com.mti.videodialy.application.VideoDiaryApplication;
+import com.mti.videodialy.data.dao.Video;
 
 import java.sql.SQLException;
 

@@ -1,14 +1,13 @@
-package com.mti.videodiary.activity;
+package com.mti.videodialy.activity;
 
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.mti.videodiary.fragment.AboutMeFragment;
-import com.mti.videodiary.fragment.NoteFragment;
-import com.mti.videodiary.fragment.VideoFragment;
+import com.mti.videodialy.fragment.AboutMeFragment;
+import com.mti.videodialy.fragment.NoteFragment;
+import com.mti.videodialy.fragment.VideoFragment;
 
 import java.io.File;
 
@@ -18,6 +17,8 @@ import mti.com.videodiary.R;
 
 
 public class MenuActivity extends MaterialNavigationDrawer {
+
+    public static final int UPDATE_VIDEO_ADAPTER = 22;
 
     @Override
     public void init(Bundle bundle) {
@@ -74,11 +75,6 @@ public class MenuActivity extends MaterialNavigationDrawer {
         switch (sectionPos) {
             case 0:
                 section = getSectionAtCurrentPosition(sectionPos);
-                Fragment fragment = (Fragment) section.getTargetFragment();
-
-                if (fragment instanceof VideoFragment)
-                    ((VideoFragment) fragment).onBackPress();
-
                 break;
             case 1:
                 section = getSectionAtCurrentPosition(sectionPos);

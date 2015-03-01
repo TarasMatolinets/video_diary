@@ -1,4 +1,4 @@
-package com.mti.videodiary.fragment;
+package com.mti.videodialy.fragment;
 
 import android.support.v4.app.Fragment;
 
@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 public class BaseFragment extends Fragment {
 
     /*backPress interface*/
-    public interface onBackPress
+    public interface OnBackPress
     {
         void onBackPress();
     }

@@ -1,4 +1,4 @@
-package com.mti.videodiary.fragment;
+package com.mti.videodialy.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package com.mti.videodiary.data.dao;
+package com.mti.videodialy.data.dao;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

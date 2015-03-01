@@ -1,4 +1,4 @@
-package com.mti.videodiary.application;
+package com.mti.videodialy.application;
 
 import android.app.Application;
 

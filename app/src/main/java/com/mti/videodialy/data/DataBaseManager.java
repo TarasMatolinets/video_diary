@@ -1,9 +1,9 @@
-package com.mti.videodiary.data;
+package com.mti.videodialy.data;
 
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
-import com.mti.videodiary.data.dao.Video;
+import com.mti.videodialy.data.dao.Video;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -64,15 +64,18 @@ public class DataBaseManager {
         }
     }
 
-    public Video getVideoById(int wishListId) {
+    public Video getVideoByPosition(int id) {
         Video video = null;
         try {
-            video = getHelper().getVideoListDao().queryForId(wishListId);
+            List<Video> videoList = getHelper().getVideoListDao().queryForAll();
+            video = videoList.get(id);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return video;
     }
+
 
     public void createVideo(Video video) {
         try {

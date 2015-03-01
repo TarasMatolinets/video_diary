@@ -1,4 +1,4 @@
-package com.mti.videodiary.activity;
+package com.mti.videodialy.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -28,9 +28,9 @@ import android.widget.RelativeLayout;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.mti.videodiary.animation.SkewableTextView;
-import com.mti.videodiary.utils.SharedPreferenceWrapper;
-import com.mti.videodiary.utils.UserHelper;
+import com.mti.videodialy.animation.SkewableTextView;
+import com.mti.videodialy.utils.SharedPreferenceWrapper;
+import com.mti.videodialy.utils.UserHelper;
 
 import mti.com.videodiary.R;
 

@@ -1,4 +1,4 @@
-package com.mti.videodiary.adapter;
+package com.mti.videodialy.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,9 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.mti.videodiary.data.dao.Video;
+import com.mti.videodialy.data.dao.Video;
 
 import java.util.List;
 
@@ -30,8 +29,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.elem_view_video, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.elem_view_video, parent, false);
 
         ViewHolder vh = new ViewHolder(v);
 
@@ -41,6 +39,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Video video = mListVideos.get(position);
+
+        holder.tvDescription.clearFocus();
+        holder.tvTitle.clearFocus();
 
         holder.tvDescription.setText(video.getDescription());
         holder.tvTitle.setText(video.getTitle());

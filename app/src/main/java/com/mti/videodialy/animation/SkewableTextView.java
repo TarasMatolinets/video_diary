@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mti.videodiary.animation;
+package com.mti.videodialy.animation;
 
 import android.content.Context;
 import android.graphics.Canvas;

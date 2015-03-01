@@ -1,4 +1,4 @@
-package com.mti.videodiary.utils;
+package com.mti.videodialy.utils;
 
 /**
  * Created by taras on 15.11.14.

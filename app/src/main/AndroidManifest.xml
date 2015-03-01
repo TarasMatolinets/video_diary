@@ -6,7 +6,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
 
     <application
@@ -14,7 +15,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name">
         <activity
-            android:name="com.mti.videodiary.activity.SplashActivity"
+            android:name="com.mti.videodialy.activity.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:noHistory="true"
@@ -26,11 +27,14 @@
         </activity>
 
         <activity
-            android:name="com.mti.videodiary.activity.MenuActivity"
+            android:name="com.mti.videodialy.activity.MenuActivity"
             android:theme="@style/MyNavigationDrawerTheme"
-            android:configChanges="orientation|screenSize"
-            >
-        </activity>
+            android:configChanges="orientation|screenSize"></activity>
+
+        <activity
+            android:name="com.mti.videodialy.activity.CreateVideoNoteActivity"
+            android:theme="@style/VideoDailyActionBar"
+            android:configChanges="orientation|screenSize"></activity>
 
     </application>
 

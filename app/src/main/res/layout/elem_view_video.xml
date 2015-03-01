@@ -3,7 +3,9 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardViewCreateVideo"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/edge_medium"
+    card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="@dimen/edge_normal">
 
     <RelativeLayout
@@ -13,7 +15,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/video_view_height"
+            android:layout_height="100dp"
             android:id="@+id/ivVideoThumbnail"
             android:scaleType="centerCrop"
             android:layout_margin="@dimen/edge_medium" />
@@ -23,8 +25,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ivVideoThumbnail"
+            android:focusableInTouchMode="false"
             android:layout_margin="@dimen/edge_medium"
             android:maxLines="3"
+            android:focusable="false"
             android:textCursorDrawable="@drawable/keyboard_cursor_color"
             android:inputType="text"
             android:textSize="@dimen/text_medium"
@@ -38,13 +42,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/etTitle"
+            android:focusableInTouchMode="false"
             android:layout_margin="@dimen/edge_medium"
+            android:focusable="false"
             android:inputType="text"
             android:maxLines="3"
             android:ellipsize="end"
             android:textCursorDrawable="@drawable/keyboard_cursor_color"
             android:textSize="@dimen/text_normal"
             android:textStyle="normal"
+            android:gravity="top"
             android:textColor="@color/black" />
 
     </RelativeLayout>

@@ -1,20 +1,17 @@
-package com.mti.videodiary.activity;
+package com.mti.videodialy.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.mti.videodiary.fragment.BaseFragment;
 
 import mti.com.videodiary.R;
 
 /**
  * Created by taras on 24.02.15.
  */
-public class SettingFragment extends BaseFragment {
+
+public class AboutMeFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,7 +21,7 @@ public class SettingFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_setting, container, false);
+        View view = inflater.inflate(R.layout.fragment_about_me, container, false);
 
         return view;
     }
