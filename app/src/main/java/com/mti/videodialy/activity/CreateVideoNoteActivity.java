@@ -1,7 +1,7 @@
 package com.mti.videodialy.activity;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import com.mti.videodialy.data.DataBaseManager;
 import com.mti.videodialy.data.dao.Video;
 import com.mti.videodialy.fragment.VideoFragment;
+import com.mti.videodialy.utils.UserHelper;
 
 import java.io.File;
 
@@ -37,9 +38,9 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.fragment_create_video_note);
-
         DataBaseManager.init(this);
+
+        setContentView(R.layout.fragment_create_video_note);
 
         initViews();
         initListeners();
@@ -75,6 +76,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                 if (width > 0 && height > 0) {
 
                     Bitmap bMap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
+
                     Bitmap newImage = Bitmap.createScaledBitmap(bMap, width, height, false);
 
                     mIvThumbnail.setImageBitmap(newImage);
@@ -125,6 +127,8 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                 saveVideoNote();
                 break;
             case android.R.id.home:
+                deleteVideoFile();
+
                 finish();
                 break;
         }
@@ -132,13 +136,29 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         return false;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        deleteVideoFile();
+    }
+
+    private void deleteVideoFile() {
+        String videoFilePath = getIntent().getExtras().getString(VideoFragment.KEY_VIDEO_PATH);
+
+        File file = new File(videoFilePath);
+        if (file.exists())
+            file.delete();
+    }
+
     private void saveVideoNote() {
         String videoFilePath = getIntent().getExtras().getString(VideoFragment.KEY_VIDEO_PATH);
 
         VideoFragment.VIDEO_FILE_NAME = mEtTitle.getText().toString();
 
+        Bitmap bitmap = ((BitmapDrawable) mIvThumbnail.getDrawable()).getBitmap();
+
         File oldFileName = new File(videoFilePath);
-        File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + BaseActivity.VIDEO_DAILY_DIRECTORY + BaseActivity.VIDEO_DIR + BaseActivity.DIVIDER + VideoFragment.VIDEO_FILE_NAME + VideoFragment.FILE_FORMAT);
+        File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + BaseActivity.APPLICATION_DIRECTORY + BaseActivity.VIDEO_DIR + File.separator + VideoFragment.VIDEO_FILE_NAME + VideoFragment.FILE_FORMAT);
 
         boolean success = oldFileName.renameTo(newFileName);
 
@@ -148,6 +168,9 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             video.setVideoUrl(newFileName.getAbsolutePath());
             video.setTitle(mEtTitle.getText().toString());
             video.setDescription(mEtDescription.getText().toString());
+
+            String imageUrl = UserHelper.savaBitmapToSD(bitmap);
+            video.setImageUrl(imageUrl);
 
             DataBaseManager.getInstance().createVideo(video);
 

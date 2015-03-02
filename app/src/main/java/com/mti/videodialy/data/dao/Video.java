@@ -14,9 +14,19 @@ public class Video {
     @DatabaseField
     private String videoUrl;
     @DatabaseField
+    private String imageUrl;
+    @DatabaseField
     private String title;
     @DatabaseField
     private String description;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public void setId(int id) {
         this.id = id;
@@ -30,7 +40,7 @@ public class Video {
         return id;
     }
 
-    public String getVideoUrl() {
+    public String getVideoName() {
         return videoUrl;
     }
 

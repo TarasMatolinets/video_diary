@@ -1,6 +1,10 @@
 package com.mti.videodialy.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +12,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.mti.videodialy.activity.BaseActivity;
 import com.mti.videodialy.data.dao.Video;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.io.File;
 import java.util.List;
 
 import mti.com.videodiary.R;
@@ -19,6 +29,7 @@ import mti.com.videodiary.R;
  */
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> {
 
+    private static final String FILE = "file:///";
     private Context mContext;
     private List<Video> mListVideos;
 
@@ -37,7 +48,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         Video video = mListVideos.get(position);
 
         holder.tvDescription.clearFocus();
@@ -45,7 +56,27 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
         holder.tvDescription.setText(video.getDescription());
         holder.tvTitle.setText(video.getTitle());
+
+        ImageLoader.getInstance().displayImage(FILE + video.getImageUrl(), holder.imIcon, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+                holder.progress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                holder.progress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                holder.progress.setVisibility(View.GONE);
+
+                holder.imIcon.setImageBitmap(loadedImage);
+            }
+        });
     }
+
 
     @Override
     public int getItemCount() {
@@ -61,6 +92,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         public EditText tvTitle;
         public EditText tvDescription;
         public ImageView imIcon;
+        public ProgressBarCircularIndeterminate progress;
 
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
@@ -68,6 +100,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             tvTitle = (EditText) itemLayoutView.findViewById(R.id.etDescription);
             tvDescription = (EditText) itemLayoutView.findViewById(R.id.etTitle);
             imIcon = (ImageView) itemLayoutView.findViewById(R.id.ivVideoThumbnail);
+            progress = (ProgressBarCircularIndeterminate) itemLayoutView.findViewById(R.id.progressBar);
         }
     }
 }

@@ -35,11 +35,13 @@ public class MenuActivity extends MaterialNavigationDrawer {
 
         addBottomSection(newSection(getString(R.string.menu_settings), R.drawable.ic_settings_black, new SettingFragment()).setSectionColor(selectedColor));
 
-        String videoFolder = BaseActivity.VIDEO_DAILY_DIRECTORY + BaseActivity.VIDEO_DIR;
-        String noteFolder = BaseActivity.VIDEO_DAILY_DIRECTORY + BaseActivity.NOTE_DIR;
+        String videoFolder = BaseActivity.APPLICATION_DIRECTORY + BaseActivity.VIDEO_DIR;
+        String noteFolder = BaseActivity.APPLICATION_DIRECTORY + BaseActivity.NOTE_DIR;
+        String imageDir = BaseActivity.APPLICATION_DIRECTORY + BaseActivity.IMAGE_DIR;
 
         createFolder(videoFolder);
         createFolder(noteFolder);
+        createFolder(imageDir);
 
         setBackPattern(MaterialNavigationDrawer.BACKPATTERN_CUSTOM);
     }

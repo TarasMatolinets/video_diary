@@ -32,6 +32,8 @@
     <dimen name="survey_row_height">48dp</dimen>
     <!-- rounded corners -->
     <dimen name="round_corner">4dp</dimen>
+
+    <dimen name="progress_size">64dp</dimen>
     <!-- padding  editText -->
     <dimen name="edit_text_padding">38dp</dimen>
 

@@ -1,7 +1,5 @@
 package com.mti.videodialy.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -45,8 +43,7 @@ import mti.com.videodiary.R;
 public class VideoFragment extends BaseFragment implements View.OnClickListener, SwipeDismissRecyclerViewTouchListener.DismissCallbacks {
     private static final int VIDEO_CAPTURE = 101;
     public static final String FILE_FORMAT = ".mp4";
-    public static final String UPDATE_ADAPTER = "com.mti.video-daily.update-adapter";
-    public static String VIDEO_FILE_NAME = BaseActivity.DIVIDER + "video-daily" + FILE_FORMAT;
+    public static String VIDEO_FILE_NAME = File.separator + "video-daily" + FILE_FORMAT;
     public static final String KEY_VIDEO_PATH = "com.mti.video-daily.key-video-file-path";
 
     private View mView;
@@ -57,12 +54,14 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
     private ImageView mIvCameraOff;
     private TextView mTvNoRecords;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
 
         DataBaseManager.init(getActivity());
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -176,7 +175,7 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
         switch (v.getId()) {
             case R.id.buttonFloat:
 
-                final File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + BaseActivity.DIVIDER + BaseActivity.VIDEO_DAILY_DIRECTORY + BaseActivity.DIVIDER + BaseActivity.VIDEO_DIR + VIDEO_FILE_NAME + FILE_FORMAT);
+                final File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + VIDEO_FILE_NAME);
 
                 Uri fileUri = Uri.fromFile(mediaFile);
 
@@ -214,9 +213,10 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
             }
         } else if (requestCode == MenuActivity.UPDATE_VIDEO_ADAPTER) {
             List<Video> listVideo = DataBaseManager.getInstance().getAllVideosList();
-            mAdapter.setListVideos(listVideo);
 
+            mAdapter.setListVideos(listVideo);
             mAdapter.notifyDataSetChanged();
+
             showEmptyView();
         }
     }
@@ -228,26 +228,31 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
-        Video video = null;
-        int pos = 0;
 
         for (int position : reverseSortedPositions) {
-            pos = position;
-            video = DataBaseManager.getInstance().getVideoByPosition(position);
+
+            Video video = DataBaseManager.getInstance().getVideoByPosition(position);
+
+            File videoFile = new File(video.getVideoName());
+            File fileImage = new File(video.getImageUrl());
+
+            deleteFile(videoFile);
+            deleteFile(fileImage);
+            DataBaseManager.getInstance().deleteVideoById(video.getId());
+
+            List<Video> listVideo = DataBaseManager.getInstance().getAllVideosList();
+            mAdapter.setListVideos(listVideo);
+
         }
         // do not call notifyItemRemoved for every item, it will cause gaps on deleting items
+        mAdapter.notifyDataSetChanged();
 
-        DataBaseManager.getInstance().deleteVideoById(video.getId());
+        showEmptyView();
+    }
 
-        File file = new File(video.getVideoUrl());
-
-        if (file.exists())
-            file.delete();
-
-        List<Video> listVideo = DataBaseManager.getInstance().getAllVideosList();
-
-        mAdapter.setListVideos(listVideo);
-        mAdapter.notifyItemRemoved(pos);
+    private void deleteFile(File fileImage) {
+        if (fileImage.exists())
+            fileImage.delete();
     }
 
 }
