@@ -1,22 +1,31 @@
 package com.mti.videodialy.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.view.Display;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,7 +37,6 @@ import com.mti.videodialy.adapter.VideoAdapter;
 import com.mti.videodialy.application.VideoDiaryApplication;
 import com.mti.videodialy.data.DataBaseManager;
 import com.mti.videodialy.data.dao.Video;
-import com.mti.videodialy.listeners.SwipeDismissRecyclerViewTouchListener;
 
 import java.io.File;
 import java.util.List;
@@ -40,9 +48,10 @@ import mti.com.videodiary.R;
 /**
  * Created by Taras Matolinets on 23.02.15.
  */
-public class VideoFragment extends BaseFragment implements View.OnClickListener, SwipeDismissRecyclerViewTouchListener.DismissCallbacks {
+public class VideoFragment extends BaseFragment implements View.OnClickListener {
     private static final int VIDEO_CAPTURE = 101;
     public static final String FILE_FORMAT = ".mp4";
+    public static final String UPDATE_ADAPTER = "com.mti.video.daily.update.adapter";
     public static String VIDEO_FILE_NAME = File.separator + "video-daily" + FILE_FORMAT;
     public static final String KEY_VIDEO_PATH = "com.mti.video-daily.key-video-file-path";
 
@@ -62,6 +71,23 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
         DataBaseManager.init(getActivity());
 
         setHasOptionsMenu(true);
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver,
+                new IntentFilter(UPDATE_ADAPTER));
+    }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            showEmptyView();
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
+        super.onDestroy();
     }
 
     @Override
@@ -100,13 +126,6 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
 
     private void initListeners() {
         mButtonFloat.setOnClickListener(this);
-
-        SwipeDismissRecyclerViewTouchListener touchListener = new SwipeDismissRecyclerViewTouchListener(mRecyclerView, this);
-        mRecyclerView.setOnTouchListener(touchListener);
-
-        // Setting this scroll listener is required to ensure that during ListView scrolling,
-        // we don't look for swipes.
-        mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
     }
 
     private void setupRecycleView() {
@@ -114,15 +133,20 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
 
         mRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        Display display = ((WindowManager) getActivity().getSystemService(MenuActivity.WINDOW_SERVICE)).getDefaultDisplay();
+
+        if (display.getOrientation() == Surface.ROTATION_90)
+            mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        else
+            mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+
         mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mAdapter = new VideoAdapter(getActivity(), listVideos);
         mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     private void checkCamera() {
@@ -130,6 +154,26 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
             mButtonFloat.setEnabled(false);
         else
             Crouton.makeText(getActivity(), R.string.fragment_broken_camera_warning, Style.ALERT);
+    }
+
+    final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            showEmptyView();
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.registerAdapterDataObserver(observer);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mAdapter.unregisterAdapterDataObserver(observer);
     }
 
     @Override
@@ -215,44 +259,10 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener,
             List<Video> listVideo = DataBaseManager.getInstance().getAllVideosList();
 
             mAdapter.setListVideos(listVideo);
-            mAdapter.notifyDataSetChanged();
+            mAdapter.notifyItemInserted(listVideo.size());
 
             showEmptyView();
         }
-    }
-
-    @Override
-    public boolean canDismiss(int position) {
-        return true;
-    }
-
-    @Override
-    public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
-
-        for (int position : reverseSortedPositions) {
-
-            Video video = DataBaseManager.getInstance().getVideoByPosition(position);
-
-            File videoFile = new File(video.getVideoName());
-            File fileImage = new File(video.getImageUrl());
-
-            deleteFile(videoFile);
-            deleteFile(fileImage);
-            DataBaseManager.getInstance().deleteVideoById(video.getId());
-
-            List<Video> listVideo = DataBaseManager.getInstance().getAllVideosList();
-            mAdapter.setListVideos(listVideo);
-
-        }
-        // do not call notifyItemRemoved for every item, it will cause gaps on deleting items
-        mAdapter.notifyDataSetChanged();
-
-        showEmptyView();
-    }
-
-    private void deleteFile(File fileImage) {
-        if (fileImage.exists())
-            fileImage.delete();
     }
 
 }

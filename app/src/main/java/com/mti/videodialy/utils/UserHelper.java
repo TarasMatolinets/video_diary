@@ -82,12 +82,12 @@ public class UserHelper {
         }
     }
 
-    public static String savaBitmapToSD(Bitmap finalBitmap) {
+    public static String saveBitmapToSD(Bitmap finalBitmap) {
         String root = Environment.getExternalStorageDirectory().toString();
 
-        File imageDir = new File(root + BaseActivity.IMAGE_DIR);
+        File imageDir = new File(root + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.IMAGE_DIR);
 
-        if(!imageDir.exists())
+        if (!imageDir.exists())
             imageDir.mkdirs();
 
         Random generator = new Random();
@@ -109,7 +109,7 @@ public class UserHelper {
         return file.getAbsolutePath();
     }
 
-    public static Bitmap decodeSampledBitmapFromResource(String path ) {
+    public static Bitmap decodeSampledBitmapFromResource(String path) {
         //Adjust image resolution to 200 x 200.
         int IMAGE_RESOLUTION = 200;
 

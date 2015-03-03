@@ -77,8 +77,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
                     Bitmap bMap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
 
-                    Bitmap newImage = Bitmap.createScaledBitmap(bMap, width, height, false);
-
+                    Bitmap newImage = UserHelper.cropImage(bMap, width, height);
                     mIvThumbnail.setImageBitmap(newImage);
                 }
             }
@@ -157,6 +156,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
         Bitmap bitmap = ((BitmapDrawable) mIvThumbnail.getDrawable()).getBitmap();
 
+
         File oldFileName = new File(videoFilePath);
         File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + BaseActivity.APPLICATION_DIRECTORY + BaseActivity.VIDEO_DIR + File.separator + VideoFragment.VIDEO_FILE_NAME + VideoFragment.FILE_FORMAT);
 
@@ -169,7 +169,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             video.setTitle(mEtTitle.getText().toString());
             video.setDescription(mEtDescription.getText().toString());
 
-            String imageUrl = UserHelper.savaBitmapToSD(bitmap);
+            String imageUrl = UserHelper.saveBitmapToSD(bitmap);
             video.setImageUrl(imageUrl);
 
             DataBaseManager.getInstance().createVideo(video);
