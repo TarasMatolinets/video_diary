@@ -3,8 +3,7 @@
     android:id="@+id/swipe"
     android:layout_width="match_parent"
     android:layout_margin="@dimen/edge_medium"
-
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:background="@null"
@@ -40,19 +39,12 @@
                 android:id="@+id/flVideoCreate">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:id="@+id/ivVideoThumbnail"
-                    android:scaleType="centerCrop"
+                    android:scaleType="fitXY"
+                    android:adjustViewBounds="true"
                     android:layout_margin="@dimen/edge_medium" />
-
-                <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
-                    android:id="@+id/progressBar"
-                    android:layout_width="@dimen/progress_size"
-                    android:layout_height="@dimen/progress_size"
-                    android:layout_gravity="center"
-                    android:layout_centerInParent="true"
-                    android:background="@color/blue" />
             </FrameLayout>
 
             <EditText

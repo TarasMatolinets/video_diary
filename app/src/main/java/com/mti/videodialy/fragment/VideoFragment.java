@@ -1,5 +1,6 @@
 package com.mti.videodialy.fragment;
 
+import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.gc.materialdesign.views.ButtonFloat;
 import com.mti.videodialy.activity.BaseActivity;
 import com.mti.videodialy.activity.CreateVideoNoteActivity;
@@ -110,6 +113,13 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener 
         if (listVideos.isEmpty()) {
             mIvCameraOff.setVisibility(View.VISIBLE);
             mTvNoRecords.setVisibility(View.VISIBLE);
+
+            YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.ZoomIn);
+            personalAnim.duration(1500);
+
+            personalAnim.playOn(mIvCameraOff);
+            personalAnim.playOn(mTvNoRecords);
+
         } else {
             mIvCameraOff.setVisibility(View.GONE);
             mTvNoRecords.setVisibility(View.GONE);
@@ -154,26 +164,6 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener 
             mButtonFloat.setEnabled(false);
         else
             Crouton.makeText(getActivity(), R.string.fragment_broken_camera_warning, Style.ALERT);
-    }
-
-    final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
-        @Override
-        public void onChanged() {
-            super.onChanged();
-            showEmptyView();
-        }
-    };
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mAdapter.registerAdapterDataObserver(observer);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mAdapter.unregisterAdapterDataObserver(observer);
     }
 
     @Override
@@ -246,6 +236,7 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener 
                 intent.putExtra(KEY_VIDEO_PATH, videoFilePath);
 
                 startActivityForResult(intent, MenuActivity.UPDATE_VIDEO_ADAPTER);
+
 
                 Log.i(VideoDiaryApplication.TAG, "Video has been saved to: " + data.getData());
             } else if (resultCode == getActivity().RESULT_CANCELED) {

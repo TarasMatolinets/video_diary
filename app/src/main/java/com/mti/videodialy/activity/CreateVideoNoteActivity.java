@@ -78,6 +78,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                     Bitmap bMap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
 
                     Bitmap newImage = UserHelper.cropImage(bMap, width, height);
+
                     mIvThumbnail.setImageBitmap(newImage);
                 }
             }
@@ -156,7 +157,6 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
         Bitmap bitmap = ((BitmapDrawable) mIvThumbnail.getDrawable()).getBitmap();
 
-
         File oldFileName = new File(videoFilePath);
         File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + BaseActivity.APPLICATION_DIRECTORY + BaseActivity.VIDEO_DIR + File.separator + VideoFragment.VIDEO_FILE_NAME + VideoFragment.FILE_FORMAT);
 
@@ -169,8 +169,18 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             video.setTitle(mEtTitle.getText().toString());
             video.setDescription(mEtDescription.getText().toString());
 
-            String imageUrl = UserHelper.saveBitmapToSD(bitmap);
-            video.setImageUrl(imageUrl);
+            String tempBitmapPath = UserHelper.saveBitmapToSD(bitmap);
+            //we can use decodeSampledBitmapFromResource when we have stored bitmap in sd otherwise bitmap  will be null
+            Bitmap finalBitmap = UserHelper.decodeSampledBitmapFromResource(tempBitmapPath);
+
+            String finalPathBitmap = UserHelper.saveBitmapToSD(finalBitmap);
+
+            File file = new File(tempBitmapPath);
+
+            if (file.exists())
+                file.delete();
+
+            video.setImageUrl(finalPathBitmap);
 
             DataBaseManager.getInstance().createVideo(video);
 

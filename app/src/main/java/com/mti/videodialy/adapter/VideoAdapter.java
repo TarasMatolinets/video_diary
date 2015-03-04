@@ -20,6 +20,7 @@ import com.mti.videodialy.activity.BaseActivity;
 import com.mti.videodialy.data.DataBaseManager;
 import com.mti.videodialy.data.dao.Video;
 import com.mti.videodialy.fragment.VideoFragment;
+import com.mti.videodialy.utils.UserHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -36,7 +37,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
     private static final String FILE = "file:///";
     private Context mContext;
-    private RecyclerView mRecycleView;
     private List<Video> mListVideos;
     private View view;
 
@@ -55,7 +55,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         Video video = mListVideos.get(position);
 
         holder.delete.setTag(position);
@@ -69,19 +69,18 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         ImageLoader.getInstance().displayImage(FILE + video.getImageUrl(), holder.imIcon, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
-                holder.progress.setVisibility(View.VISIBLE);
+
             }
 
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                holder.progress.setVisibility(View.GONE);
+
             }
 
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                holder.progress.setVisibility(View.GONE);
-
                 holder.imIcon.setImageBitmap(loadedImage);
+
             }
         });
     }
@@ -101,7 +100,11 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
         switch (v.getId()) {
             case R.id.trash:
-                Video video =  mListVideos.get(position);
+                // fix bug https://code.google.com/p/android/issues/detail?id=77846
+                if (mListVideos.size() < position || mListVideos.size() == position)
+                    position = position - 1;
+
+                Video video = mListVideos.get(position);
 
                 File videoFile = new File(video.getVideoName());
                 File fileImage = new File(video.getImageUrl());
@@ -110,8 +113,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
                 deleteFile(fileImage);
                 DataBaseManager.getInstance().deleteVideoById(video.getId());
 
-                mListVideos.remove(position);
-
+                mListVideos.remove(video);
                 notifyItemRemoved(position);
 
                 Intent intent = new Intent(VideoFragment.UPDATE_ADAPTER);
@@ -121,9 +123,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         }
     }
 
-    private void deleteFile(File fileImage) {
-        if (fileImage.exists())
-            fileImage.delete();
+    private void deleteFile(File file) {
+        if (file.exists())
+            file.delete();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -144,7 +146,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
             delete.setOnClickListener(VideoAdapter.this);
 
-            progress = (ProgressBarCircularIndeterminate) itemLayoutView.findViewById(R.id.progressBar);
         }
     }
 }

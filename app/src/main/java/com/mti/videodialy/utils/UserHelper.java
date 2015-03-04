@@ -95,7 +95,7 @@ public class UserHelper {
         n = generator.nextInt(n);
         String fname = "Image-" + n + ".jpg";
 
-        File file = new File(imageDir, fname);
+       final File file = new File(imageDir, fname);
 
         try {
             FileOutputStream out = new FileOutputStream(file);
