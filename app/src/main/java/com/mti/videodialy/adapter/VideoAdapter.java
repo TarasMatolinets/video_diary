@@ -1,26 +1,25 @@
 package com.mti.videodialy.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.mti.videodialy.activity.BaseActivity;
+import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
+import com.mti.videodialy.activity.CreateVideoNoteActivity;
+import com.mti.videodialy.activity.MenuActivity;
 import com.mti.videodialy.data.DataBaseManager;
 import com.mti.videodialy.data.dao.Video;
 import com.mti.videodialy.fragment.VideoFragment;
-import com.mti.videodialy.utils.UserHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -33,9 +32,10 @@ import mti.com.videodiary.R;
 /**
  * Created by Taras Matolinets on 24.02.15.
  */
-public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> implements View.OnClickListener {
+public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> implements View.OnClickListener {
 
     private static final String FILE = "file:///";
+    public static final String KEY_POSITION = "com.mti.position.key";
     private Context mContext;
     private List<Video> mListVideos;
     private View view;
@@ -59,6 +59,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         Video video = mListVideos.get(position);
 
         holder.delete.setTag(position);
+        holder.flMain.setTag(position);
 
         holder.tvDescription.clearFocus();
         holder.tvTitle.clearFocus();
@@ -100,10 +101,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
         switch (v.getId()) {
             case R.id.trash:
-                // fix bug https://code.google.com/p/android/issues/detail?id=77846
-                if (mListVideos.size() < position || mListVideos.size() == position)
-                    position = position - 1;
-
                 Video video = mListVideos.get(position);
 
                 File videoFile = new File(video.getVideoName());
@@ -115,10 +112,16 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
                 mListVideos.remove(video);
                 notifyItemRemoved(position);
+                notifyItemRangeChanged(position, mListVideos.size());
 
                 Intent intent = new Intent(VideoFragment.UPDATE_ADAPTER);
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 
+                break;
+            case R.id.flMain:
+                Intent activityIntent = new Intent(mContext, CreateVideoNoteActivity.class);
+                activityIntent.putExtra(KEY_POSITION, position);
+                ((MenuActivity) mContext).startActivityForResult(activityIntent, MenuActivity.UPDATE_VIDEO_ADAPTER);
                 break;
         }
     }
@@ -128,13 +131,19 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             file.delete();
     }
 
+    @Override
+    public int getSwipeLayoutResourceId(int i) {
+        return 0;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public EditText tvTitle;
         public EditText tvDescription;
         public ImageView imIcon;
         public ImageView delete;
-        public ProgressBarCircularIndeterminate progress;
+        public CardView cardView;
+        public FrameLayout flMain;
 
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
@@ -143,9 +152,11 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             tvTitle = (EditText) itemLayoutView.findViewById(R.id.etTitle);
             imIcon = (ImageView) itemLayoutView.findViewById(R.id.ivVideoThumbnail);
             delete = (ImageView) itemLayoutView.findViewById(R.id.trash);
+            cardView = (CardView) itemLayoutView.findViewById(R.id.cardViewCreateVideo);
+            flMain = (FrameLayout) itemLayoutView.findViewById(R.id.flMain);
 
+            flMain.setOnClickListener(VideoAdapter.this);
             delete.setOnClickListener(VideoAdapter.this);
-
         }
     }
 }

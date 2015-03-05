@@ -1,6 +1,5 @@
 package com.mti.videodialy.fragment;
 
-import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,12 +16,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Display;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,11 +45,14 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import mti.com.videodiary.R;
 
+import static android.view.View.OnClickListener;
+
 /**
  * Created by Taras Matolinets on 23.02.15.
  */
-public class VideoFragment extends BaseFragment implements View.OnClickListener {
+public class VideoFragment extends BaseFragment implements OnClickListener{
     private static final int VIDEO_CAPTURE = 101;
+    public static final String KEY_POSITION = "com.mti.position.key";
     public static final String FILE_FORMAT = ".mp4";
     public static final String UPDATE_ADAPTER = "com.mti.video.daily.update.adapter";
     public static String VIDEO_FILE_NAME = File.separator + "video-daily" + FILE_FORMAT;
@@ -153,6 +153,7 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener 
         mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
 
         mAdapter = new VideoAdapter(getActivity(), listVideos);
+
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -250,7 +251,7 @@ public class VideoFragment extends BaseFragment implements View.OnClickListener 
             List<Video> listVideo = DataBaseManager.getInstance().getAllVideosList();
 
             mAdapter.setListVideos(listVideo);
-            mAdapter.notifyItemInserted(listVideo.size());
+            mAdapter.notifyDataSetChanged();
 
             showEmptyView();
         }

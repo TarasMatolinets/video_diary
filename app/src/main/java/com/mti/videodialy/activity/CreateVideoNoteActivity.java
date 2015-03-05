@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.mti.videodialy.adapter.VideoAdapter;
 import com.mti.videodialy.data.DataBaseManager;
 import com.mti.videodialy.data.dao.Video;
 import com.mti.videodialy.fragment.VideoFragment;
@@ -33,6 +34,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     private EditText mEtDescription;
     private boolean isShowSave;
     private ActionBar mActionBar;
+    private boolean isEditVideoDaily;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,19 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     private void setDataToView() {
-        String videoFilePath = getIntent().getExtras().getString(VideoFragment.KEY_VIDEO_PATH);
+        int position = getIntent().getIntExtra(VideoFragment.KEY_POSITION, -1);
+
+        String videoFilePath;
+
+        if (position != -1) {
+            isEditVideoDaily = true;
+            Video video = DataBaseManager.getInstance().getVideoByPosition(position);
+            videoFilePath = video.getVideoName();
+
+            mEtTitle.setText(video.getTitle());
+            mEtDescription.setText(video.getDescription());
+        } else
+            videoFilePath = getIntent().getStringExtra(VideoFragment.KEY_VIDEO_PATH);
 
         final File file = new File(videoFilePath);
 
@@ -143,14 +157,37 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     private void deleteVideoFile() {
-        String videoFilePath = getIntent().getExtras().getString(VideoFragment.KEY_VIDEO_PATH);
+        String videoFilePath = getIntent().getStringExtra(VideoFragment.KEY_VIDEO_PATH);
 
-        File file = new File(videoFilePath);
-        if (file.exists())
-            file.delete();
+        if (videoFilePath != null) {
+            File file = new File(videoFilePath);
+            if (file.exists())
+                file.delete();
+        }
     }
 
     private void saveVideoNote() {
+        if (!isEditVideoDaily) {
+            createNewVideoDaily();
+        } else
+            updateVideoDaily();
+
+        setResult(RESULT_OK);
+
+        finish();
+    }
+
+    private void updateVideoDaily() {
+        int position = getIntent().getIntExtra(VideoFragment.KEY_POSITION, -1);
+
+        Video video = DataBaseManager.getInstance().getVideoByPosition(position);
+        video.setDescription(mEtDescription.getText().toString());
+        video.setTitle(mEtTitle.getText().toString());
+
+        DataBaseManager.getInstance().updateVideoList(video);
+    }
+
+    private void createNewVideoDaily() {
         String videoFilePath = getIntent().getExtras().getString(VideoFragment.KEY_VIDEO_PATH);
 
         VideoFragment.VIDEO_FILE_NAME = mEtTitle.getText().toString();
@@ -183,10 +220,6 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             video.setImageUrl(finalPathBitmap);
 
             DataBaseManager.getInstance().createVideo(video);
-
-            setResult(RESULT_OK);
-
-            finish();
         }
     }
 

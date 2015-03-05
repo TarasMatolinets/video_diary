@@ -8,7 +8,7 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 
 @DatabaseTable
-public class Video {
+public class Video{
     @DatabaseField(generatedId = true)
     private int id;
     @DatabaseField

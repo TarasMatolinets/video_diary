@@ -1,7 +1,9 @@
 package com.mti.videodialy.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -68,6 +70,15 @@ public class MenuActivity extends MaterialNavigationDrawer {
             closeDrawer();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Fragment fragment = (Fragment) getCurrentSection().getTargetFragment();
+
+        // update current video card data
+        if (fragment instanceof VideoFragment)
+            fragment.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     protected MaterialSection backToSection(MaterialSection currentSection) {

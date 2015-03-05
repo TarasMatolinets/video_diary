@@ -31,10 +31,10 @@ dependencies {
     compile 'com.daimajia.androidanimations:library:1.1.2@aar'
 
     //material design library
-    compile 'jp.wasabeef:recyclerview-animators:1.1.0@aar'
+    
+    compile "com.daimajia.swipelayout:library:1.1.8@aar"
     compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
-    compile 'org.lucasr.twowayview:core:1.0.0-SNAPSHOT@aar'
-    compile 'org.lucasr.twowayview:layouts:1.0.0-SNAPSHOT@aar'
+
     compile('de.keyboardsurfer.android.widget:crouton:1.8.5@aar') {
         // exclusion is not necessary, but generally a good idea.
         exclude group: 'com.google.android', module: 'support-v4'

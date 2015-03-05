@@ -6,6 +6,8 @@ import com.j256.ormlite.dao.Dao;
 import com.mti.videodialy.data.dao.Video;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,6 +40,8 @@ public class DataBaseManager {
         List<Video> videoList = null;
         try {
             videoList = getHelper().getVideoListDao().queryForAll();
+
+            Collections.reverse(videoList);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -49,6 +53,9 @@ public class DataBaseManager {
         try {
             Dao<Video, Integer> daoVideoList = getHelper().getVideoListDao();
             videoList = daoVideoList.queryForAll();
+
+             Collections.reverse(videoList);
+
             daoVideoList.delete(videoList);
 
         } catch (SQLException e) {
@@ -68,6 +75,8 @@ public class DataBaseManager {
         Video video = null;
         try {
             List<Video> videoList = getHelper().getVideoListDao().queryForAll();
+            Collections.reverse(videoList);
+
             video = videoList.get(id);
 
         } catch (SQLException e) {
