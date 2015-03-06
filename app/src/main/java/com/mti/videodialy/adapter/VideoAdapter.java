@@ -1,9 +1,13 @@
 package com.mti.videodialy.adapter;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
+import com.mti.videodialy.activity.BaseActivity;
 import com.mti.videodialy.activity.CreateVideoNoteActivity;
 import com.mti.videodialy.activity.MenuActivity;
 import com.mti.videodialy.data.DataBaseManager;
@@ -119,9 +124,22 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
 
                 break;
             case R.id.flMain:
+                int[] screenLocation = new int[2];
+                v.getLocationOnScreen(screenLocation);
+                int orientation = mContext.getResources().getConfiguration().orientation;
+
                 Intent activityIntent = new Intent(mContext, CreateVideoNoteActivity.class);
-                activityIntent.putExtra(KEY_POSITION, position);
+
+                activityIntent.putExtra(KEY_POSITION, position).
+                        putExtra(BaseActivity.PACKAGE + ".orientation", orientation).
+                        putExtra(BaseActivity.PACKAGE + ".left", screenLocation[0]).
+                        putExtra(BaseActivity.PACKAGE + ".top", screenLocation[1]).
+                        putExtra(BaseActivity.PACKAGE + ".width", v.getWidth()).
+                        putExtra(BaseActivity.PACKAGE + ".height", v.getHeight());
+
                 ((MenuActivity) mContext).startActivityForResult(activityIntent, MenuActivity.UPDATE_VIDEO_ADAPTER);
+
+                ((Activity) mContext).overridePendingTransition(0, 0);
                 break;
         }
     }

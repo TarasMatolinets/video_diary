@@ -29,7 +29,6 @@
             android:id="@+id/cardViewCreateVideo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             card_view:cardBackgroundColor="@color/white"
             card_view:cardCornerRadius="@dimen/edge_normal">
 
@@ -50,6 +49,13 @@
                         android:scaleType="fitXY"
                         android:adjustViewBounds="true"
                         android:layout_margin="@dimen/edge_medium" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_play_arrow_white"
+                        android:id="@+id/ivPlay"
+                        android:layout_gravity="center" />
                 </FrameLayout>
 
                 <EditText

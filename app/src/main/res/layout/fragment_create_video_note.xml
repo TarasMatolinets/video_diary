@@ -2,14 +2,12 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:id="@+id/flMain">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/scrollCard"
-        android:background="@color/white"
         android:fillViewport="true">
 
         <LinearLayout
@@ -33,6 +31,13 @@
                     android:id="@+id/ivVideoThumbnail"
                     android:scaleType="fitXY"
                     android:layout_margin="@dimen/edge_medium" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_play_arrow_white"
+                    android:id="@+id/ivPlay"
+                    android:layout_gravity="center" />
 
             </android.support.v7.widget.CardView>
 

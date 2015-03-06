@@ -35,7 +35,9 @@
         <activity
             android:name="com.mti.videodialy.activity.CreateVideoNoteActivity"
             android:theme="@style/VideoDailyActionBar"
-            android:configChanges="orientation|screenSize"></activity>
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="stateHidden"
+            ></activity>
 
     </application>
 

@@ -17,8 +17,9 @@ public class BaseActivity extends ActionBarActivity {
     public static final String VIDEO_DIR = "/video";
     public static final String NOTE_DIR = "/note";
     public static final String IMAGE_DIR = "/image";
+    public static final String PACKAGE = "com.mti.videodaily";
 
-    public static final double IMAGE_DIVIDER = 3.2;
+    static float sAnimatorScale = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

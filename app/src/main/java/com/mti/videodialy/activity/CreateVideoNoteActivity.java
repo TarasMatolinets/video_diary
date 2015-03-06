@@ -1,8 +1,14 @@
 package com.mti.videodialy.activity;
 
+import android.animation.ObjectAnimator;
+import android.animation.TimeInterpolator;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -11,10 +17,15 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewPropertyAnimator;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.mti.videodialy.adapter.VideoAdapter;
 import com.mti.videodialy.data.DataBaseManager;
 import com.mti.videodialy.data.dao.Video;
 import com.mti.videodialy.fragment.VideoFragment;
@@ -27,7 +38,11 @@ import mti.com.videodiary.R;
 /**
  * Created by Taras Matolinets on 01.03.15.
  */
-public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher {
+public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher, View.OnClickListener {
+
+    private static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
+    private static final TimeInterpolator sAccelerator = new AccelerateInterpolator();
+    private static final int ANIM_DURATION = 500;
 
     private ImageView mIvThumbnail;
     private EditText mEtTitle;
@@ -35,6 +50,14 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     private boolean isShowSave;
     private ActionBar mActionBar;
     private boolean isEditVideoDaily;
+    private ImageView ivPlay;
+    private int mOriginalOrientation;
+    private int mLeftDelta;
+    private int mTopDelta;
+    private float mWidthScale;
+    private float mHeightScale;
+    private ColorDrawable mBackground;
+    private FrameLayout mFlMain;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,7 +70,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         initViews();
         initListeners();
 
-        setDataToView();
+        setDataToView(savedInstanceState);
         initActionBar();
     }
 
@@ -64,8 +87,32 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         mActionBar.show();
     }
 
-    private void setDataToView() {
+    private void initViews() {
+        ivPlay = (ImageView) findViewById(R.id.ivPlay);
+        mEtTitle = (EditText) findViewById(R.id.etTitle);
+        mEtDescription = (EditText) findViewById(R.id.etDescription);
+        mIvThumbnail = (ImageView) findViewById(R.id.ivVideoThumbnail);
+        mFlMain = (FrameLayout) findViewById(R.id.flMain);
+    }
+
+    private void initListeners() {
+        mEtTitle.addTextChangedListener(this);
+        ivPlay.setOnClickListener(this);
+    }
+
+    private void setDataToView(Bundle savedInstanceState) {
+        Bundle bundle = getIntent().getExtras();
         int position = getIntent().getIntExtra(VideoFragment.KEY_POSITION, -1);
+
+        final int thumbnailTop = bundle.getInt(BaseActivity.PACKAGE + ".top");
+        final int thumbnailLeft = bundle.getInt(BaseActivity.PACKAGE + ".left");
+        final int thumbnailWidth = bundle.getInt(BaseActivity.PACKAGE + ".width");
+        final int thumbnailHeight = bundle.getInt(BaseActivity.PACKAGE + ".height");
+        mOriginalOrientation = bundle.getInt(BaseActivity.PACKAGE + ".orientation");
+
+        mBackground = new ColorDrawable(Color.WHITE);
+
+        mFlMain.setBackgroundDrawable(mBackground);
 
         String videoFilePath;
 
@@ -97,17 +144,176 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                 }
             }
         });
+
+        // Only run the animation if we're coming from the parent activity, not if
+        // we're recreated automatically by the window manager (e.g., device rotation)
+        if (savedInstanceState == null) {
+            ViewTreeObserver observer = mIvThumbnail.getViewTreeObserver();
+            observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+                @Override
+                public boolean onPreDraw() {
+                    mIvThumbnail.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                    // Figure out where the thumbnail and full size versions are, relative
+                    // to the screen and each other
+                    int[] screenLocation = new int[2];
+                    mIvThumbnail.getLocationOnScreen(screenLocation);
+                    mLeftDelta = thumbnailLeft - screenLocation[0];
+                    mTopDelta = thumbnailTop - screenLocation[1];
+
+                    // Scale factors to make the large version the same size as the thumbnail
+                    mWidthScale = (float) thumbnailWidth / mIvThumbnail.getWidth();
+                    mHeightScale = (float) thumbnailHeight / mIvThumbnail.getHeight();
+
+                    runEnterAnimation();
+
+                    return true;
+                }
+            });
+        }
     }
 
-    private void initViews() {
-        mEtTitle = (EditText) findViewById(R.id.etTitle);
-        mEtDescription = (EditText) findViewById(R.id.etDescription);
-        mIvThumbnail = (ImageView) findViewById(R.id.ivVideoThumbnail);
+    /**
+     * The enter animation scales the picture in from its previous thumbnail
+     * size/location, colorizing it in parallel. In parallel, the background of the
+     * activity is fading in. When the pictue is in place, the text description
+     * drops down.
+     */
+    public void runEnterAnimation() {
+        final long duration = (long) (ANIM_DURATION * BaseActivity.sAnimatorScale);
+
+        // Set starting values for properties we're going to animate. These
+        // values scale and position the full size version down to the thumbnail
+        // size/location, from which we'll animate it back up
+        mIvThumbnail.setPivotX(0);
+        mIvThumbnail.setPivotY(0);
+        mIvThumbnail.setScaleX(mWidthScale);
+        mIvThumbnail.setScaleY(mHeightScale);
+        mIvThumbnail.setTranslationX(mLeftDelta);
+        mIvThumbnail.setTranslationY(mTopDelta);
+
+        mEtTitle.setAlpha(0);
+        mEtDescription.setAlpha(0);
+
+        // Animate scale and translation to go from thumbnail to full size
+        ViewPropertyAnimator anim = mIvThumbnail.animate();
+        anim.setDuration(duration)
+                .scaleX(1).scaleY(1).
+                translationX(0).translationY(0).
+                setInterpolator(sDecelerator)
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        animateText(duration);
+                    }
+                });
+
+        ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0, 255);
+        bgAnim.setDuration(duration);
+        bgAnim.start();
     }
 
-    private void initListeners() {
-        mEtTitle.addTextChangedListener(this);
+    private void animateText(final long duration) {
+        // Animate the description in after the image animation
+        // is done. Slide and fade the text in from underneath
+        // the picture.
+        mEtTitle.setTranslationY(-mEtTitle.getHeight());
+        mEtTitle.animate().setDuration(duration / 2).
+                translationY(0).alpha(1).
+                setInterpolator(sDecelerator).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                mEtDescription.setVisibility(View.VISIBLE);
+                mEtDescription.setTranslationY(0);
+                mEtDescription.animate().setDuration(duration / 2).
+                        alpha(1).
+                        setInterpolator(sDecelerator);
+            }
+        });
     }
+
+    /**
+     * The exit animation is basically a reverse of the enter animation, except that if
+     * the orientation has changed we simply scale the picture back into the center of
+     * the screen.
+     *
+     * @param endAction This action gets run after the animation completes (this is
+     *                  when we actually switch activities)
+     */
+    public void runExitAnimation(final Runnable endAction) {
+        final long duration = (long) (ANIM_DURATION * BaseActivity.sAnimatorScale);
+
+        // No need to set initial values for the reverse animation; the image is at the
+        // starting size/location that we want to start from. Just animate to the
+        // thumbnail size/location that we retrieved earlier
+
+        // Caveat: configuration change invalidates thumbnail positions; just animate
+        // the scale around the center. Also, fade it out since it won't match up with
+        // whatever's actually in the center
+        final boolean fadeOut;
+        if (getResources().getConfiguration().orientation != mOriginalOrientation) {
+            mIvThumbnail.setPivotX(mIvThumbnail.getWidth() / 2);
+            mIvThumbnail.setPivotY(mIvThumbnail.getHeight() / 2);
+            mLeftDelta = 0;
+            mTopDelta = 0;
+            fadeOut = true;
+        } else {
+            fadeOut = false;
+        }
+
+        mEtDescription.animate().translationY(-mEtDescription.getHeight()).alpha(0).
+                setDuration(duration / 2).setInterpolator(sAccelerator).withEndAction(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        mEtTitle.animate().translationY(-mEtTitle.getHeight()).alpha(0).
+                                setDuration(duration / 2).setInterpolator(sAccelerator).
+                                withEndAction(new Runnable() {
+                                    public void run() {
+                                        // Animate image back to thumbnail size/location
+                                        mIvThumbnail.animate().setDuration(duration).
+                                                scaleX(mWidthScale).scaleY(mHeightScale).
+                                                translationX(mLeftDelta).translationY(mTopDelta).
+                                                withEndAction(endAction);
+                                        if (fadeOut) {
+                                            mIvThumbnail.animate().alpha(0);
+                                        }
+
+                                        // Fade out background
+                                        ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
+                                        bgAnim.setDuration(duration);
+                                        bgAnim.start();
+                                    }
+                                });
+                    }
+                }
+        );
+    }
+
+    private void animateTitleOnExit(final Runnable endAction, final long duration, final boolean fadeOut) {
+        mEtTitle.animate().translationY(-mEtTitle.getHeight()).alpha(0).
+                setDuration(duration / 2).setInterpolator(sAccelerator).
+
+                withEndAction(new Runnable() {
+                    public void run() {
+                        // Animate image back to thumbnail size/location
+                        mIvThumbnail.animate().setDuration(duration).
+                                scaleX(mWidthScale).scaleY(mHeightScale).
+                                translationX(mLeftDelta).translationY(mTopDelta).
+                                withEndAction(endAction);
+                        if (fadeOut) {
+                            mIvThumbnail.animate().alpha(0);
+                        }
+
+                        // Fade out background
+                        ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
+                        bgAnim.setDuration(duration);
+                        bgAnim.start();
+                    }
+                });
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -141,9 +347,15 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                 saveVideoNote();
                 break;
             case android.R.id.home:
-                deleteVideoFile();
+                if (!isEditVideoDaily)
+                    deleteVideoFile();
 
-                finish();
+                runExitAnimation(new Runnable() {
+                    public void run() {
+                        // *Now* go ahead and exit the activity
+                        finish();
+                    }
+                });
                 break;
         }
 
@@ -152,8 +364,23 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        deleteVideoFile();
+        if (!isEditVideoDaily)
+            deleteVideoFile();
+
+        runExitAnimation(new Runnable() {
+            public void run() {
+                // *Now* go ahead and exit the activity
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+
+        // override transitions to skip the standard window animations
+        overridePendingTransition(0, 0);
     }
 
     private void deleteVideoFile() {
@@ -188,7 +415,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     private void createNewVideoDaily() {
-        String videoFilePath = getIntent().getExtras().getString(VideoFragment.KEY_VIDEO_PATH);
+        String videoFilePath = getIntent().getStringExtra(VideoFragment.KEY_VIDEO_PATH);
 
         VideoFragment.VIDEO_FILE_NAME = mEtTitle.getText().toString();
 
@@ -241,5 +468,27 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ivPlay:
+                String videoFilePath;
+                if (!isEditVideoDaily)
+                    videoFilePath = getIntent().getStringExtra(VideoFragment.KEY_VIDEO_PATH);
+                else {
+                    int position = getIntent().getIntExtra(VideoFragment.KEY_POSITION, -1);
+
+                    Video video = DataBaseManager.getInstance().getVideoByPosition(position);
+                    videoFilePath = video.getVideoName();
+                }
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoFilePath));
+                intent.setDataAndType(Uri.parse(videoFilePath), "video/mp4");
+                startActivity(intent);
+
+                break;
+        }
     }
 }
