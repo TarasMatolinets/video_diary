@@ -55,6 +55,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener{
     public static final String KEY_POSITION = "com.mti.position.key";
     public static final String FILE_FORMAT = ".mp4";
     public static final String UPDATE_ADAPTER = "com.mti.video.daily.update.adapter";
+    public static final int DURATION = 1500;
     public static String VIDEO_FILE_NAME = File.separator + "video-daily" + FILE_FORMAT;
     public static final String KEY_VIDEO_PATH = "com.mti.video-daily.key-video-file-path";
 
@@ -115,7 +116,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener{
             mTvNoRecords.setVisibility(View.VISIBLE);
 
             YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.ZoomIn);
-            personalAnim.duration(1500);
+            personalAnim.duration(DURATION);
 
             personalAnim.playOn(mIvCameraOff);
             personalAnim.playOn(mTvNoRecords);

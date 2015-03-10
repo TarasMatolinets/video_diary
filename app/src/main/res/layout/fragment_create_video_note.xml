@@ -29,7 +29,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/ivVideoThumbnail"
-                    android:scaleType="fitXY"
+                    android:scaleType="centerCrop"
                     android:layout_margin="@dimen/edge_medium" />
 
                 <ImageView
@@ -37,6 +37,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/ic_play_arrow_white"
                     android:id="@+id/ivPlay"
+                    android:visibility="gone"
                     android:layout_gravity="center" />
 
             </android.support.v7.widget.CardView>

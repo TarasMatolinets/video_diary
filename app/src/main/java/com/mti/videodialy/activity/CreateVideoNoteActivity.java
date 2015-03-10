@@ -1,5 +1,7 @@
 package com.mti.videodialy.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -43,6 +46,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     private static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
     private static final TimeInterpolator sAccelerator = new AccelerateInterpolator();
     private static final int ANIM_DURATION = 500;
+    public static final int DURATION = 1000;
 
     private ImageView mIvThumbnail;
     private EditText mEtTitle;
@@ -58,6 +62,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     private float mHeightScale;
     private ColorDrawable mBackground;
     private FrameLayout mFlMain;
+    private CardView mCardView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,8 +86,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         mActionBar.setTitle(R.string.create_video_note);
         mActionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
 
-        mActionBar.setDisplayShowHomeEnabled(true);
-        mActionBar.setHomeButtonEnabled(true);
+        mActionBar.setElevation(0f);
 
         mActionBar.show();
     }
@@ -93,11 +97,14 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         mEtDescription = (EditText) findViewById(R.id.etDescription);
         mIvThumbnail = (ImageView) findViewById(R.id.ivVideoThumbnail);
         mFlMain = (FrameLayout) findViewById(R.id.flMain);
+        mCardView = (CardView) findViewById(R.id.cardViewCreateVideo);
     }
 
     private void initListeners() {
         mEtTitle.addTextChangedListener(this);
         ivPlay.setOnClickListener(this);
+
+        mCardView.setBackgroundColor(Color.TRANSPARENT);
     }
 
     private void setDataToView(Bundle savedInstanceState) {
@@ -186,19 +193,15 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         // Set starting values for properties we're going to animate. These
         // values scale and position the full size version down to the thumbnail
         // size/location, from which we'll animate it back up
-        mIvThumbnail.setPivotX(0);
-        mIvThumbnail.setPivotY(0);
         mIvThumbnail.setScaleX(mWidthScale);
         mIvThumbnail.setScaleY(mHeightScale);
-        mIvThumbnail.setTranslationX(mLeftDelta);
-        mIvThumbnail.setTranslationY(mTopDelta);
 
         mEtTitle.setAlpha(0);
         mEtDescription.setAlpha(0);
 
         // Animate scale and translation to go from thumbnail to full size
         ViewPropertyAnimator anim = mIvThumbnail.animate();
-        anim.setDuration(duration)
+        anim.setDuration(1000)
                 .scaleX(1).scaleY(1).
                 translationX(0).translationY(0).
                 setInterpolator(sDecelerator)
@@ -210,7 +213,15 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                 });
 
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0, 255);
-        bgAnim.setDuration(duration);
+        bgAnim.setDuration(1000);
+        bgAnim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mCardView.setBackgroundColor(Color.WHITE);
+                ivPlay.setVisibility(View.VISIBLE);
+            }
+        });
         bgAnim.start();
     }
 
@@ -224,7 +235,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                 setInterpolator(sDecelerator).withEndAction(new Runnable() {
             @Override
             public void run() {
-                mEtDescription.setVisibility(View.VISIBLE);
+
                 mEtDescription.setTranslationY(0);
                 mEtDescription.animate().setDuration(duration / 2).
                         alpha(1).
@@ -251,16 +262,16 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         // Caveat: configuration change invalidates thumbnail positions; just animate
         // the scale around the center. Also, fade it out since it won't match up with
         // whatever's actually in the center
-        final boolean fadeOut;
         if (getResources().getConfiguration().orientation != mOriginalOrientation) {
             mIvThumbnail.setPivotX(mIvThumbnail.getWidth() / 2);
             mIvThumbnail.setPivotY(mIvThumbnail.getHeight() / 2);
             mLeftDelta = 0;
             mTopDelta = 0;
-            fadeOut = true;
-        } else {
-            fadeOut = false;
         }
+
+        //show transparent effect
+        mCardView.setBackgroundColor(Color.TRANSPARENT);
+        ivPlay.setVisibility(View.GONE);
 
         mEtDescription.animate().translationY(-mEtDescription.getHeight()).alpha(0).
                 setDuration(duration / 2).setInterpolator(sAccelerator).withEndAction(
@@ -272,17 +283,13 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                                 withEndAction(new Runnable() {
                                     public void run() {
                                         // Animate image back to thumbnail size/location
-                                        mIvThumbnail.animate().setDuration(duration).
-                                                scaleX(mWidthScale).scaleY(mHeightScale).
-                                                translationX(mLeftDelta).translationY(mTopDelta).
+                                        mIvThumbnail.animate().setDuration(1500).
+                                                scaleX(mWidthScale).scaleY(mHeightScale).alpha(0).
                                                 withEndAction(endAction);
-                                        if (fadeOut) {
-                                            mIvThumbnail.animate().alpha(0);
-                                        }
 
                                         // Fade out background
                                         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
-                                        bgAnim.setDuration(duration);
+                                        bgAnim.setDuration(DURATION);
                                         bgAnim.start();
                                     }
                                 });
@@ -290,30 +297,6 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                 }
         );
     }
-
-    private void animateTitleOnExit(final Runnable endAction, final long duration, final boolean fadeOut) {
-        mEtTitle.animate().translationY(-mEtTitle.getHeight()).alpha(0).
-                setDuration(duration / 2).setInterpolator(sAccelerator).
-
-                withEndAction(new Runnable() {
-                    public void run() {
-                        // Animate image back to thumbnail size/location
-                        mIvThumbnail.animate().setDuration(duration).
-                                scaleX(mWidthScale).scaleY(mHeightScale).
-                                translationX(mLeftDelta).translationY(mTopDelta).
-                                withEndAction(endAction);
-                        if (fadeOut) {
-                            mIvThumbnail.animate().alpha(0);
-                        }
-
-                        // Fade out background
-                        ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
-                        bgAnim.setDuration(duration);
-                        bgAnim.start();
-                    }
-                });
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -349,15 +332,15 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             case android.R.id.home:
                 if (!isEditVideoDaily)
                     deleteVideoFile();
-
-                runExitAnimation(new Runnable() {
-                    public void run() {
-                        // *Now* go ahead and exit the activity
-                        finish();
-                    }
-                });
                 break;
         }
+
+        runExitAnimation(new Runnable() {
+            public void run() {
+                // *Now* go ahead and exit the activity
+                finish();
+            }
+        });
 
         return false;
     }
@@ -400,8 +383,6 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             updateVideoDaily();
 
         setResult(RESULT_OK);
-
-        finish();
     }
 
     private void updateVideoDaily() {

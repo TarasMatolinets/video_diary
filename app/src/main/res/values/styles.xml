@@ -9,9 +9,8 @@
     <style name="MyNavigationDrawerTheme" parent="MaterialNavigationDrawerTheme.Light.DarkActionBar.TranslucentKitKatStatusBar">
         <item name="colorPrimaryDark">@color/darkblue</item>
         <item name="colorPrimary">@color/blue</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/text_medium</item>
         <item name="drawerType">@integer/DRAWERTYPE_CUSTOM</item>
+        <item name="elevation">0dp</item>
         <item name="android:actionBarStyle">@style/VideoDailyActionBarStyle</item>
         <item name="rippleBackport">true</item>
     </style>
@@ -19,11 +18,8 @@
     <style name="VideoDailyActionBar"  parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimaryDark">@color/darkblue</item>
         <item name="colorPrimary">@color/blue</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/text_medium</item>
         <item name="android:actionBarStyle">@style/VideoDailyActionBarStyle</item>
-
-        <item name="android:windowNoTitle">true</item>
+         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
@@ -35,11 +31,14 @@
         <item name="android:textSize">@dimen/text_normal</item>
     </style>
 
-    <style name="VideoDailyActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/text_huge</item>
-
+    <style name="VideoDailyActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="titleTextStyle">@style/VideoDailyActionBarTitle</item>
     </style>
+
+    <style name="VideoDailyActionBarTitle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/text_huge</item>
+    </style>
+
 
 </resources>
