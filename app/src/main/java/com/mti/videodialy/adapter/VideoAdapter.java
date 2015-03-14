@@ -68,7 +68,7 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
         Video video = mListVideos.get(position);
 
         holder.delete.setTag(position);
-        holder.cardView.setTag(position);
+        holder.flMain.setTag(position);
         holder.share.setTag(position);
 
         holder.tvDescription.clearFocus();
@@ -128,7 +128,7 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 
                 break;
-            case R.id.cardViewCreateVideo:
+            case R.id.flMain:
                 int[] screenLocation = new int[2];
                 v.getLocationOnScreen(screenLocation);
                 int orientation = mContext.getResources().getConfiguration().orientation;
@@ -183,7 +183,7 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
             cardView = (CardView) itemLayoutView.findViewById(R.id.cardViewCreateVideo);
             flMain = (FrameLayout) itemLayoutView.findViewById(R.id.flMain);
 
-            cardView.setOnClickListener(VideoAdapter.this);
+            flMain.setOnClickListener(VideoAdapter.this);
             delete.setOnClickListener(VideoAdapter.this);
             share.setOnClickListener(VideoAdapter.this);
         }
