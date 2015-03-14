@@ -16,12 +16,15 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.daimajia.swipe.SimpleSwipeListener;
+import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.mti.videodialy.activity.BaseActivity;
 import com.mti.videodialy.activity.CreateVideoNoteActivity;
@@ -41,7 +44,7 @@ import mti.com.videodiary.R;
 /**
  * Created by Taras Matolinets on 24.02.15.
  */
-public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> implements View.OnClickListener {
+public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> implements View.OnClickListener, SwipeLayout.SwipeListener {
 
     private static final String FILE = "file:///";
     public static final String KEY_POSITION = "com.mti.position.key";
@@ -147,7 +150,7 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
                 ((Activity) mContext).overridePendingTransition(0, 0);
                 break;
             case R.id.ivShare:
-              //TODO:share your video
+                //TODO:share your video
                 break;
         }
     }
@@ -155,6 +158,48 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
     private void deleteFile(File file) {
         if (file.exists())
             file.delete();
+    }
+
+    @Override
+    public void onStartOpen(SwipeLayout swipeLayout) {
+
+    }
+
+    @Override
+    public void onOpen(SwipeLayout swipeLayout) {
+        FrameLayout flMain = (FrameLayout) view.findViewById(R.id.flMain);
+        flMain.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void onStartClose(SwipeLayout swipeLayout) {
+
+    }
+
+    @Override
+    public void onClose(SwipeLayout swipeLayout) {
+        FrameLayout flMain = (FrameLayout) view.findViewById(R.id.flMain);
+        flMain.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public void onUpdate(SwipeLayout swipeLayout, int i, int i2) {
+
+    }
+
+    @Override
+    public void onHandRelease(SwipeLayout swipeLayout, float v, float v2) {
+
     }
 
     @Override
@@ -171,11 +216,13 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
         public ImageView share;
         public CardView cardView;
         public FrameLayout flMain;
+        public SwipeLayout swipe;
 
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
 
             tvDescription = (EditText) itemLayoutView.findViewById(R.id.etDescription);
+            swipe = (SwipeLayout) itemLayoutView.findViewById(R.id.swipe);
             tvTitle = (EditText) itemLayoutView.findViewById(R.id.etTitle);
             imIcon = (ImageView) itemLayoutView.findViewById(R.id.ivVideoThumbnail);
             share = (ImageView) itemLayoutView.findViewById(R.id.ivShare);
@@ -186,6 +233,7 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
             flMain.setOnClickListener(VideoAdapter.this);
             delete.setOnClickListener(VideoAdapter.this);
             share.setOnClickListener(VideoAdapter.this);
+            swipe.addSwipeListener(VideoAdapter.this);
         }
     }
 }
