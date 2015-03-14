@@ -1,5 +1,6 @@
 package com.mti.videodialy.fragment;
 
+import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Display;
@@ -39,10 +41,12 @@ import com.mti.videodialy.data.DataBaseManager;
 import com.mti.videodialy.data.dao.Video;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import jp.wasabeef.recyclerview.animators.adapters.ScaleInAnimationAdapter;
 import mti.com.videodiary.R;
 
 import static android.view.View.OnClickListener;
@@ -50,12 +54,12 @@ import static android.view.View.OnClickListener;
 /**
  * Created by Taras Matolinets on 23.02.15.
  */
-public class VideoFragment extends BaseFragment implements OnClickListener{
+public class VideoFragment extends BaseFragment implements OnClickListener, SearchView.OnQueryTextListener {
     private static final int VIDEO_CAPTURE = 101;
     public static final String KEY_POSITION = "com.mti.position.key";
     public static final String FILE_FORMAT = ".mp4";
     public static final String UPDATE_ADAPTER = "com.mti.video.daily.update.adapter";
-    public static final int DURATION = 1500;
+
     public static String VIDEO_FILE_NAME = File.separator + "video-daily" + FILE_FORMAT;
     public static final String KEY_VIDEO_PATH = "com.mti.video-daily.key-video-file-path";
 
@@ -117,7 +121,6 @@ public class VideoFragment extends BaseFragment implements OnClickListener{
 
             YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.ZoomIn);
             personalAnim.duration(DURATION);
-
             personalAnim.playOn(mIvCameraOff);
             personalAnim.playOn(mTvNoRecords);
 
@@ -155,7 +158,9 @@ public class VideoFragment extends BaseFragment implements OnClickListener{
 
         mAdapter = new VideoAdapter(getActivity(), listVideos);
 
-        mRecyclerView.setAdapter(mAdapter);
+        ScaleInAnimationAdapter alphaAdapter = new ScaleInAnimationAdapter(mAdapter);
+        alphaAdapter.setDuration(1000);
+        mRecyclerView.setAdapter(alphaAdapter);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -184,6 +189,13 @@ public class VideoFragment extends BaseFragment implements OnClickListener{
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.menu_action_bar_video, menu);
+
+        SearchManager manager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+
+        SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        search.setSearchableInfo(manager.getSearchableInfo(getActivity().getComponentName()));
+        search.setOnQueryTextListener(this);
     }
 
     private boolean hasCamera() {
@@ -258,4 +270,26 @@ public class VideoFragment extends BaseFragment implements OnClickListener{
         }
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        List<Video> listVideo = DataBaseManager.getInstance().getAllVideosList();
+
+        ArrayList<Video> searchVideoList = new ArrayList<Video>();
+        for (Video v : listVideo) {
+            if (v.getTitle().contains(s))
+                searchVideoList.add(v);
+        }
+
+        if (!searchVideoList.isEmpty())
+            mAdapter.setListVideos(searchVideoList);
+
+        mAdapter.notifyDataSetChanged();
+
+        return true;
+    }
 }

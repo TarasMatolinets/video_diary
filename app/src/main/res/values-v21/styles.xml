@@ -10,7 +10,7 @@
         <item name="colorPrimaryDark">@color/darkblue</item>
         <item name="colorPrimary">@color/blue</item>
         <item name="colorAccent">#FFFFFF</item>
-        <item name="android:actionBarStyle">@style/VideoDailyActionBarStyle</item>
+        <item name="actionBarStyle">@style/VideoDailyActionBarStyle</item>
         <item name="drawerType">@integer/DRAWERTYPE_CUSTOM</item>
         <item name="android:elevation">0dp</item>
 
@@ -27,8 +27,7 @@
     <style name="VideoDailyActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimaryDark">@color/darkblue</item>
         <item name="colorPrimary">@color/blue</item>
-        <item name="android:actionBarStyle">@style/VideoDailyActionBarStyle</item>
-        <item name="elevation">0dp</item>
+        <item name="actionBarStyle">@style/VideoDailyActionBarStyle</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -41,13 +40,17 @@
     </style>
 
 
-    <style name="VideoDailyActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
-         <item name="titleTextStyle">@style/VideoDailyActionBarTitle</item>
+    <style name="VideoDailyActionBarStyle" parent="Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="titleTextStyle">@style/MyTitleTextStyle</item>
+        <item name="displayOptions">homeAsUp|showTitle</item>
+        <item name="elevation">0dp</item>
     </style>
 
-    <style name="VideoDailyActionBarTitle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+    <style name="MyTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">@dimen/text_huge</item>
+        <item name="android:textSize">@dimen/text_medium</item>
     </style>
+
 
 </resources>

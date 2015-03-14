@@ -35,10 +35,23 @@
         <activity
             android:name="com.mti.videodialy.activity.CreateVideoNoteActivity"
             android:theme="@style/VideoDailyActionBar"
+            android:label="@string/create_video_note"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"
-            ></activity>
+            android:windowSoftInputMode="stateHidden"></activity>
+
+        <intent-filter>
+            <action android:name="android.intent.action.SEARCH" />
+        </intent-filter>
+
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value="com.mti.videodialy.activity.MenuActivity" />
+
+        <meta-data
+            android:name="android.app.searchable"
+            android:resource="@xml/searchable" />
 
     </application>
+
 
 </manifest>

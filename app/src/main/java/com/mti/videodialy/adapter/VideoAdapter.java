@@ -2,11 +2,15 @@ package com.mti.videodialy.adapter;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
@@ -64,7 +68,8 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
         Video video = mListVideos.get(position);
 
         holder.delete.setTag(position);
-        holder.flMain.setTag(position);
+        holder.cardView.setTag(position);
+        holder.share.setTag(position);
 
         holder.tvDescription.clearFocus();
         holder.tvTitle.clearFocus();
@@ -123,7 +128,7 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 
                 break;
-            case R.id.flMain:
+            case R.id.cardViewCreateVideo:
                 int[] screenLocation = new int[2];
                 v.getLocationOnScreen(screenLocation);
                 int orientation = mContext.getResources().getConfiguration().orientation;
@@ -140,6 +145,9 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
                 ((MenuActivity) mContext).startActivityForResult(activityIntent, MenuActivity.UPDATE_VIDEO_ADAPTER);
 
                 ((Activity) mContext).overridePendingTransition(0, 0);
+                break;
+            case R.id.ivShare:
+              //TODO:share your video
                 break;
         }
     }
@@ -160,6 +168,7 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
         public EditText tvDescription;
         public ImageView imIcon;
         public ImageView delete;
+        public ImageView share;
         public CardView cardView;
         public FrameLayout flMain;
 
@@ -169,12 +178,14 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
             tvDescription = (EditText) itemLayoutView.findViewById(R.id.etDescription);
             tvTitle = (EditText) itemLayoutView.findViewById(R.id.etTitle);
             imIcon = (ImageView) itemLayoutView.findViewById(R.id.ivVideoThumbnail);
+            share = (ImageView) itemLayoutView.findViewById(R.id.ivShare);
             delete = (ImageView) itemLayoutView.findViewById(R.id.trash);
             cardView = (CardView) itemLayoutView.findViewById(R.id.cardViewCreateVideo);
             flMain = (FrameLayout) itemLayoutView.findViewById(R.id.flMain);
 
-            flMain.setOnClickListener(VideoAdapter.this);
+            cardView.setOnClickListener(VideoAdapter.this);
             delete.setOnClickListener(VideoAdapter.this);
+            share.setOnClickListener(VideoAdapter.this);
         }
     }
 }

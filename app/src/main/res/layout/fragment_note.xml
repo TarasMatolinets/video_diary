@@ -27,7 +27,7 @@
         android:textColor="@color/white"
         android:textStyle="normal"
         android:textSize="@dimen/text_huge"
-        android:id="@+id/tvCreateView"
+        android:id="@+id/tvNoNotes"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/ivNote" />
 

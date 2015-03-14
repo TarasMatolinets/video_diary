@@ -47,6 +47,8 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     private static final TimeInterpolator sAccelerator = new AccelerateInterpolator();
     private static final int ANIM_DURATION = 500;
     public static final int DURATION = 1000;
+    public static final int DEFAULT_ITEM_POSITION = -1;
+    public static final int DURATION_FADE_IN = 600;
 
     private ImageView mIvThumbnail;
     private EditText mEtTitle;
@@ -83,10 +85,12 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     private void initActionBar() {
         mActionBar = getSupportActionBar();
 
-        mActionBar.setTitle(R.string.create_video_note);
-        mActionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
+        int position = getIntent().getIntExtra(VideoFragment.KEY_POSITION, -1);
 
-        mActionBar.setElevation(0f);
+        if (position == DEFAULT_ITEM_POSITION)
+            mActionBar.setTitle(R.string.create_video_note);
+        else
+            mActionBar.setTitle(R.string.edit_video_note);
 
         mActionBar.show();
     }
@@ -201,7 +205,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
         // Animate scale and translation to go from thumbnail to full size
         ViewPropertyAnimator anim = mIvThumbnail.animate();
-        anim.setDuration(1000)
+        anim.setDuration(DURATION)
                 .scaleX(1).scaleY(1).
                 translationX(0).translationY(0).
                 setInterpolator(sDecelerator)
@@ -213,7 +217,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                 });
 
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0, 255);
-        bgAnim.setDuration(1000);
+        bgAnim.setDuration(DURATION_FADE_IN);
         bgAnim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -283,7 +287,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                                 withEndAction(new Runnable() {
                                     public void run() {
                                         // Animate image back to thumbnail size/location
-                                        mIvThumbnail.animate().setDuration(1500).
+                                        mIvThumbnail.animate().setDuration(DURATION).
                                                 scaleX(mWidthScale).scaleY(mHeightScale).alpha(0).
                                                 withEndAction(endAction);
 

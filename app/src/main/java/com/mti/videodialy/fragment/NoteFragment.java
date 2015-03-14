@@ -6,6 +6,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 
 import mti.com.videodiary.R;
 
@@ -13,6 +18,8 @@ import mti.com.videodiary.R;
  * Created by taras on 23.02.15.
  */
 public class NoteFragment extends BaseFragment {
+
+    private View mView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -22,9 +29,22 @@ public class NoteFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_note, container, false);
+        mView = inflater.inflate(R.layout.fragment_note, container, false);
 
-        return view;
+        initViews();
+
+        return mView;
+    }
+
+    private void initViews() {
+
+        ImageView note = (ImageView) mView.findViewById(R.id.ivNote);
+        TextView noteTitle = (TextView) mView.findViewById(R.id.tvNoNotes);
+
+        YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.ZoomIn);
+        personalAnim.duration(DURATION);
+        personalAnim.playOn(note);
+        personalAnim.playOn(noteTitle);
     }
 
     @Override

@@ -17,6 +17,7 @@
     <string name="menu_act_no_notes">No notes</string>
     <string name="menu_act_choice_image">Tap to choice picture</string>
     <string name="create_video_note">Create video note</string>
+    <string name="edit_video_note">Edit video note</string>
 
     <string name="menu_search">Search</string>
     <string name="menu_record">Record</string>
