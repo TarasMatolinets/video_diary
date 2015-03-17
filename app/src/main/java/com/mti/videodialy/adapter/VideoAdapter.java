@@ -44,7 +44,7 @@ import mti.com.videodiary.R;
 /**
  * Created by Taras Matolinets on 24.02.15.
  */
-public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> implements View.OnClickListener, SwipeLayout.SwipeListener {
+public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> implements View.OnClickListener {
 
     private static final String FILE = "file:///";
     public static final String KEY_POSITION = "com.mti.position.key";
@@ -71,7 +71,7 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
         Video video = mListVideos.get(position);
 
         holder.delete.setTag(position);
-        holder.flMain.setTag(position);
+        holder.cardView.setTag(position);
         holder.share.setTag(position);
 
         holder.tvDescription.clearFocus();
@@ -131,7 +131,7 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 
                 break;
-            case R.id.flMain:
+            case R.id.cardViewCreateVideo:
                 int[] screenLocation = new int[2];
                 v.getLocationOnScreen(screenLocation);
                 int orientation = mContext.getResources().getConfiguration().orientation;
@@ -150,7 +150,23 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
                 ((Activity) mContext).overridePendingTransition(0, 0);
                 break;
             case R.id.ivShare:
-                //TODO:share your video
+                Video videoForShare = mListVideos.get(position);
+
+                ContentValues content = new ContentValues(4);
+                content.put(MediaStore.Video.VideoColumns.TITLE, videoForShare.getTitle());
+                content.put(MediaStore.Video.VideoColumns.DATE_ADDED,
+                        System.currentTimeMillis() / 1000);
+                content.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+                content.put(MediaStore.Video.Media.DATA, videoForShare.getVideoName());
+                ContentResolver resolver = mContext.getContentResolver();
+                Uri uri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, content);
+
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("video/*");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, videoForShare.getTitle());
+                sharingIntent.putExtra(android.content.Intent.EXTRA_STREAM, uri);
+                mContext.startActivity(Intent.createChooser(sharingIntent, "share:"));
+
                 break;
         }
     }
@@ -160,47 +176,6 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
             file.delete();
     }
 
-    @Override
-    public void onStartOpen(SwipeLayout swipeLayout) {
-
-    }
-
-    @Override
-    public void onOpen(SwipeLayout swipeLayout) {
-        FrameLayout flMain = (FrameLayout) view.findViewById(R.id.flMain);
-        flMain.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
-    }
-
-    @Override
-    public void onStartClose(SwipeLayout swipeLayout) {
-
-    }
-
-    @Override
-    public void onClose(SwipeLayout swipeLayout) {
-        FrameLayout flMain = (FrameLayout) view.findViewById(R.id.flMain);
-        flMain.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
-    }
-
-    @Override
-    public void onUpdate(SwipeLayout swipeLayout, int i, int i2) {
-
-    }
-
-    @Override
-    public void onHandRelease(SwipeLayout swipeLayout, float v, float v2) {
-
-    }
 
     @Override
     public int getSwipeLayoutResourceId(int i) {
@@ -230,10 +205,9 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
             cardView = (CardView) itemLayoutView.findViewById(R.id.cardViewCreateVideo);
             flMain = (FrameLayout) itemLayoutView.findViewById(R.id.flMain);
 
-            flMain.setOnClickListener(VideoAdapter.this);
+            cardView.setOnClickListener(VideoAdapter.this);
             delete.setOnClickListener(VideoAdapter.this);
             share.setOnClickListener(VideoAdapter.this);
-            swipe.addSwipeListener(VideoAdapter.this);
         }
     }
 }

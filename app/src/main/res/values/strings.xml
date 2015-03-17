@@ -40,4 +40,7 @@
 
     <!--warnings-->
     <string name="fragment_broken_camera_warning">Something going wrong with your camera</string>
+
+    <string name="error">error message</string>
+    <string name="error_format">error format</string>
 </resources>
