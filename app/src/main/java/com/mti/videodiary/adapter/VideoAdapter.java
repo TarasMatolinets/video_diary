@@ -122,7 +122,7 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, mListVideos.size());
 
-                SwipeLayout swipeLayout = (SwipeLayout)view.findViewById(R.id.swipe);
+                SwipeLayout swipeLayout = (SwipeLayout) view.findViewById(R.id.swipe);
                 swipeLayout.close();
                 Intent intent = new Intent(VideoFragment.UPDATE_ADAPTER_INTENT);
                 intent.putExtra(Constants.UPDATE_ADAPTER, true);
@@ -158,7 +158,7 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
                 ContentResolver resolver = mContext.getContentResolver();
                 Uri uri = resolver.insert(MediaStore.Video.Media.INTERNAL_CONTENT_URI, content);
 
-                if(uri == null)
+                if (uri == null)
                     uri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, content);
 
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
