@@ -39,7 +39,6 @@ import com.mti.videodiary.adapter.VideoAdapter;
 import com.mti.videodiary.application.VideoDiaryApplication;
 import com.mti.videodiary.data.DataBaseManager;
 import com.mti.videodiary.data.dao.Video;
-import com.mti.videodiary.utils.Constants;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,7 +46,6 @@ import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import jp.wasabeef.recyclerview.animators.adapters.ScaleInAnimationAdapter;
 import mti.com.videodiary.R;
 
 import static android.view.View.OnClickListener;
