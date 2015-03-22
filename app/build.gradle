@@ -15,15 +15,15 @@ android {
         versionCode 1
         versionName "1.0"
     }
-    signingConfigs{
-                releaseConfig
-                        {
-                            storeFile file("video_dairy_keystore.jks");
-                            storePassword("4759112aA");
-                            keyAlias "videodailyalias";
-                            keyPassword "videodaily321aA";
-                        }
-            }
+    signingConfigs {
+        releaseConfig
+                {
+                    storeFile file("video_dairy_release.jks");
+                    storePassword("4759112aA");
+                    keyAlias "videodailyalias";
+                    keyPassword "videodaily321aA";
+                }
+    }
 
 
     buildTypes {
@@ -46,8 +46,6 @@ dependencies {
     compile 'com.daimajia.androidanimations:library:1.1.2@aar'
     compile 'jp.wasabeef:recyclerview-animators:1.1.0@aar'
 
-    //material design library
-
     compile "com.daimajia.swipelayout:library:1.1.8@aar"
     compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
 
@@ -60,10 +58,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'com.android.support:support-v4:21.0.3'
 
-//cache images
+   //cache images
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
 
-    compile 'com.google.android.gms:play-services:6.5.87'
     compile project(':MaterialNavigationDrawerModule')
-
 }

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/exploded-aar/com.daimajia.easing/library/1.0.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="e88a9ed27f98f8c0701d03d5553ce6111ca34a5b">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/classes-70c6fbd867b1246c02608e439a7a304d4d000569.jar" />
+    </item>
+    <item
+        jar="/home/taras/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/library-2.4.0-40654a9897919f90bb69458a5a17728fd5c3fe37.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/exploded-aar/com.daimajia.androidanimations/library/1.1.2/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="85ccb558dc8258ecf4f0a19e97a3114ec2c64cb4">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/classes-03ac24890144c45950a78eb7d51d63c33060091a.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/classes-466be83be310d83a328f3f2c8383def34a626e62.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b8945fc23a7461c6fdde15753456d64b0a9358b">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/classes-1d79f8b609be0bb6e2feb5b9ac21ae591ec470a0.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/exploded-aar/de.keyboardsurfer.android.widget/crouton/1.8.5/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b81c788c5f175f94ddaac2f65e5d1726371e0963">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/classes-aa32a461995dc42e3deab607a371001f3b5a8b05.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/exploded-aar/video_diary__new/MaterialNavigationDrawerModule/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3a52fc33e5a7799c56d3977dda10be670e1ca1a2">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/classes-16e00115fb2918c6ed0443d842d51dea656ccb05.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/exploded-aar/com.daimajia.swipelayout/library/1.1.8/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="71078cb0460b50cead8a2fc9f5529673aee0bbce">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/classes-61d6dfcafebff2fa1ff6355a905ab6d97b6eaed2.jar" />
+    </item>
+    <item
+        jar="/home/taras/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/library-2.4.0-40654a9897919f90bb69458a5a17728fd5c3fe37.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="00b0b7233e1ec64acebfac40d4983d32d4712426">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/classes-b48d30b2318f2c917ccffafd168720ca15f52205.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/programs/installed/android/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-8307edfc5ae88e41206cb79586c2afff1e7c5791.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/libs/ormlite-android-4.49-SNAPSHOT.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ecfae85e17f2472852fa8298952f9d52f6a6bfa4">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/ormlite-android-4.49-SNAPSHOT-aa4cc978a53ae1e1ac879641fc1d99be51754c21.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-9898aeb8264ea9c60d38ccca6aa062e01dfecc2c.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/exploded-aar/com.daimajia.androidanimations/library/1.1.2/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="85ccb558dc8258ecf4f0a19e97a3114ec2c64cb4">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/classes-03ac24890144c45950a78eb7d51d63c33060091a.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/exploded-aar/com.balysv/material-ripple/1.0.1/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="aba9317bc403d69d8a571c0a72acfe95698a5db0">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/classes-b80bb389df9b4f0784d8f037dd13a28c8bbc663e.jar" />
+    </item>
+    <item
+        jar="/home/taras/.gradle/caches/modules-2/files-2.1/com.nostra13.universalimageloader/universal-image-loader/1.9.3/a85588bec3e2c4584d593d3f15df1677321bca72/universal-image-loader-1.9.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a85588bec3e2c4584d593d3f15df1677321bca72">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/universal-image-loader-1.9.3-5ded47ec938aaaa4cfcbdc3da9dc7157682265bc.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/exploded-aar/com.daimajia.easing/library/1.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e88a9ed27f98f8c0701d03d5553ce6111ca34a5b">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/classes-70c6fbd867b1246c02608e439a7a304d4d000569.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/exploded-aar/jp.wasabeef/recyclerview-animators/1.1.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1ee2417303712f2959fc9d726c67881daaf3c054">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/classes-dfcc500e9463b3634985345a109d51e58ded2be6.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/classes-b481fba6145aa38e1173ce0ad8f32c306583a3b0.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/exploded-aar/com.github.navasmdc/MaterialDesign/1.4/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="87405405e403de68f4057757b8a2e8de02bd65d0">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/classes-a1e4feac7155f64c878019b0a1a15391020d2203.jar" />
+    </item>
+    <item
+        jar="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/libs/ormlite-core-4.49-SNAPSHOT.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9a8b276da6dada8141f614d3feba25a0e8589db7">
+        <dex dex="/home/taras/my-computer/work/projects/my-projects/video_diary__new/app/build/intermediates/pre-dexed/debug/ormlite-core-4.49-SNAPSHOT-377d76ecaf61b180c4c48a74411921bac9ba9817.jar" />
+    </item>
+
+</items>

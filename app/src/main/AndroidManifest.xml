@@ -5,6 +5,10 @@
     <!--user permission-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -12,11 +16,11 @@
 
     <application
         android:allowBackup="true"
-        android:name="com.mti.videodialy.application.VideoDiaryApplication"
+        android:name="com.mti.videodiary.application.VideoDiaryApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name">
         <activity
-            android:name="com.mti.videodialy.activity.SplashActivity"
+            android:name="com.mti.videodiary.activity.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:noHistory="true"
@@ -28,12 +32,12 @@
         </activity>
 
         <activity
-            android:name="com.mti.videodialy.activity.MenuActivity"
+            android:name="com.mti.videodiary.activity.MenuActivity"
             android:theme="@style/MyNavigationDrawerTheme"
             android:configChanges="orientation|screenSize"></activity>
 
         <activity
-            android:name="com.mti.videodialy.activity.CreateVideoNoteActivity"
+            android:name="com.mti.videodiary.activity.CreateVideoNoteActivity"
             android:theme="@style/VideoDailyActionBar"
             android:label="@string/create_video_note"
             android:configChanges="orientation|screenSize"
@@ -51,10 +55,7 @@
             android:name="android.app.searchable"
             android:resource="@xml/searchable" />
 
-        <meta-data android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
-    </application>
+   </application>
 
 
 </manifest>

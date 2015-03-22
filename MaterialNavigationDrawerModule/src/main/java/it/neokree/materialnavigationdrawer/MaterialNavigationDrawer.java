@@ -39,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
@@ -1414,15 +1415,20 @@ public abstract class MaterialNavigationDrawer<Fragment> extends ActionBarActivi
                 usercover.setImageBitmap(background);
                 break;
             case DRAWERHEADER_IMAGE:
-                ImageView image = new ImageView(this);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                image.setScaleType(ImageView.ScaleType.FIT_XY);
-                image.setImageBitmap(background);
+                try {
+                    ImageView image = new ImageView(this);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    image.setScaleType(ImageView.ScaleType.FIT_XY);
+                    image.setImageBitmap(background);
 
-                customDrawerHeader.addView(image,params);
+                    customDrawerHeader.addView(image, params);
+                }
+                catch (RuntimeException e)
+                {
+                    Toast.makeText(this,"Please take different picture",Toast.LENGTH_SHORT).show();
+                }
                 break;
-            default:
-                throw new RuntimeException("Your drawer configuration don't support a background image, check in your styles.xml");
+
         }
 
     }
@@ -1447,6 +1453,10 @@ public abstract class MaterialNavigationDrawer<Fragment> extends ActionBarActivi
             default:
                 throw new RuntimeException("Your drawer configuration don't support a background image, check in your styles.xml");
         }
+    }
+    public LinearLayout getHeaderView()
+    {
+        return customDrawerHeader;
     }
 
     // Method used for customize layout
