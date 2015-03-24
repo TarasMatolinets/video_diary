@@ -73,7 +73,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:ellipsize="end"
-                    android:hint="@string/fragment_create_title" />
+                    android:hint="@string/create_title" />
 
                 <EditText
                     android:id="@+id/etDescription"

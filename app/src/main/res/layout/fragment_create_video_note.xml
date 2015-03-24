@@ -54,7 +54,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:ellipsize="end"
-                android:hint="@string/fragment_create_title"
+                android:hint="@string/create_title"
                 android:layout_weight="0.1" />
 
 
@@ -68,7 +68,7 @@
                 android:textSize="@dimen/text_mini_normal"
                 android:textStyle="normal"
                 android:textColor="@color/black"
-                android:hint="@string/fragment_description"
+                android:hint="@string/description"
                 android:layout_weight="0.2"
                 android:gravity="top" />
 

@@ -3,9 +3,9 @@ package com.mti.videodiary.activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,11 +16,14 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.gc.materialdesign.widgets.Dialog;
+import com.gc.materialdesign.widgets.SnackBar;
+import com.mti.videodiary.dialog.TakePictureDialog;
 import com.mti.videodiary.fragment.AboutMeFragment;
 import com.mti.videodiary.fragment.NoteFragment;
 import com.mti.videodiary.fragment.VideoFragment;
+import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.UserHelper;
+import com.mti.videodiary.utils.VideoDairySharePreferences;
 
 import java.io.File;
 
@@ -32,7 +35,7 @@ import mti.com.videodiary.R;
 public class MenuActivity extends MaterialNavigationDrawer implements View.OnClickListener {
 
     public static final int UPDATE_VIDEO_ADAPTER = 22;
-    private static final int RESULT_LOAD_IMAGE = 133;
+    public static final int RESULT_LOAD_IMAGE = 133;
     private FrameLayout mFrameLayoutMain;
     private TextView mChoiceImage;
 
@@ -60,6 +63,11 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
         createFolder(videoFolder);
         createFolder(noteFolder);
         createFolder(imageDir);
+
+        String picturePath = VideoDairySharePreferences.getSharedPreferences().getString(Constants.IMAGE_HEADER, null);
+
+        if (picturePath != null)
+            setImageInBackground(picturePath);
 
         setBackPattern(MaterialNavigationDrawer.BACKPATTERN_CUSTOM);
 
@@ -100,15 +108,26 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
-            setImageInBackground(picturePath);
-
-        } else {
+            if (picturePath != null) {
+                setImageInBackground(picturePath);
+                VideoDairySharePreferences.setDataToSharePreferences(Constants.IMAGE_HEADER, picturePath, VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING);
+            } else {
+                showSnackView();
+            }
+        } else if (requestCode == MenuActivity.UPDATE_VIDEO_ADAPTER ) {
             Fragment fragment = (Fragment) getCurrentSection().getTargetFragment();
 
             // update current video card data
             if (fragment instanceof VideoFragment)
                 fragment.onActivityResult(requestCode, resultCode, data);
+        } else {
+            showSnackView();
         }
+    }
+
+    private void showSnackView() {
+        SnackBar snackbar = new SnackBar(this, getResources().getString(R.string.error_picture), null, null);
+        snackbar.show();
     }
 
     private void setImageInBackground(final String picturePath) {
@@ -125,7 +144,7 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
                     Bitmap bitmap = UserHelper.decodeSampledBitmapFromResource(picturePath);
 
                     Bitmap newImage = UserHelper.cropImage(bitmap, width, height);
-                    Drawable drawable = new BitmapDrawable(getResources(),newImage);
+                    Drawable drawable = new BitmapDrawable(getResources(), newImage);
 
                     mFrameLayoutMain.setBackground(drawable);
                 }
@@ -163,22 +182,8 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
 
         final CharSequence[] choice = {"Choose from Gallery", "Capture a photo"};
 
-        final Dialog dialog = new Dialog(this, getString(R.string.select_image_gallery), getString(R.string.select_image_gallery_description));
+        TakePictureDialog dialog = new TakePictureDialog();
+        dialog.show(getSupportFragmentManager(), null);
 
-        dialog.setOnAcceptButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                startActivityForResult(i, RESULT_LOAD_IMAGE);
-            }
-        });
-        dialog.setOnCancelButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
     }
 }

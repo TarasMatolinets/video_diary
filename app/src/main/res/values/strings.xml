@@ -32,15 +32,18 @@
     <string name="menu_about_me">About me</string>
 
     <!--fragment video -->
-    <string name="fragment_create_title">Sign your video</string>
-    <string name="fragment_description">Tell more about this video</string>
+    <string name="create_title">Sign your video</string>
+    <string name="description">Tell more about this video</string>
+
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
 
     <string name="menu_no_record">No Video Records</string>
     <string name="menu_no_notes">No Notes</string>
 
     <!--warnings-->
     <string name="fragment_broken_camera_warning">Something going wrong with your camera</string>
-
+    <string name="error_picture">Please choice another picture </string>
     <string name="error">error message</string>
     <string name="error_format">error format</string>
 </resources>

@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import com.mti.videodiary.data.DataBaseManager;
 import com.mti.videodiary.data.dao.Video;
 import com.mti.videodiary.fragment.VideoFragment;
+import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.UserHelper;
 
 import java.io.File;
@@ -386,7 +387,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         } else
             updateVideoDaily();
 
-        setResult(RESULT_OK);
+        setResult(MenuActivity.UPDATE_VIDEO_ADAPTER,null);
     }
 
     private void updateVideoDaily() {

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,7 +32,9 @@ import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.gc.materialdesign.views.ButtonFlat;
 import com.gc.materialdesign.views.ButtonFloat;
+import com.gc.materialdesign.widgets.SnackBar;
 import com.mti.videodiary.activity.BaseActivity;
 import com.mti.videodiary.activity.CreateVideoNoteActivity;
 import com.mti.videodiary.activity.MenuActivity;
