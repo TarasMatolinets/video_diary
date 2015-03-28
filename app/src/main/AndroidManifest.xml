@@ -55,7 +55,7 @@
             android:name="android.app.searchable"
             android:resource="@xml/searchable" />
 
-   </application>
+    </application>
 
 
 </manifest>
