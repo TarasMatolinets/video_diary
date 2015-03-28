@@ -166,10 +166,12 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
     }
 
     private void checkCamera() {
-        if (!hasCamera())
+        if (!hasCamera()) {
+            SnackBar snackbar = new SnackBar(getActivity(), getResources().getString(R.string.fragment_broken_camera_warning), null, null);
+            snackbar.setBackgroundSnackBar(getResources().getColor(R.color.blue));
+            snackbar.show();
             mButtonFloat.setEnabled(false);
-        else
-            Crouton.makeText(getActivity(), R.string.fragment_broken_camera_warning, Style.ALERT);
+        }
     }
 
     @Override

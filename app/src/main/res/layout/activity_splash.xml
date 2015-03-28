@@ -39,38 +39,31 @@
             android:textSize="@dimen/extra_huge"
             android:visibility="invisible"
             android:textStyle="bold" />
-
         <EditText
             android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:layout_margin="@dimen/edge_above"
             android:id="@+id/etTitle"
             android:hint="@string/splash_personal_name"
             android:textColor="@color/gray"
             android:textColorHint="@color/gray"
             android:background="@color/white"
-            android:layout_centerHorizontal="true"
             android:textSize="@dimen/text_medium"
             android:visibility="gone"
-            android:layout_below="@+id/tvTitle"
-            android:focusable="true" />
+            android:focusable="true"
+            android:gravity="center"
+            android:layout_centerInParent="true" />
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/splash_next"
             android:id="@+id/splashBtClickNext"
-            android:layout_centerHorizontal="true"
             android:visibility="gone"
             android:gravity="center"
-            android:background="@drawable/next"
-            android:textSize="@dimen/text_mini_normal"
-            android:textColor="@color/white"
+            android:background="@drawable/ic_keyboard_arrow_right_white"
+            tools:ignore="ContentDescription"
             android:layout_toRightOf="@+id/etTitle"
-            android:layout_alignBottom="@+id/etTitle"
-            android:layout_alignTop="@+id/etTitle"
-            tools:ignore="ContentDescription" />
+            android:layout_centerVertical="true" />
 
     </RelativeLayout>
 

@@ -44,7 +44,7 @@ import java.util.List;
  * {@link android.widget.ListView#setOnScrollListener(android.widget.AbsListView.OnScrollListener)}, passing
  * in the scroll listener returned by {@link #makeScrollListener()}. If a scroll listener is
  * already assigned, the caller should still pass scroll changes through to this listener. This will
- * ensure that this {@link SwipeDismissRecyclerViewTouchListener} is paused during list view
+ * ensure that this {@link SwipeDismissRecyclerViewTouchListener} is paused during list viewDivider
  * scrolling.</p>
  *
  * <p>Example usage:</p>
@@ -68,7 +68,7 @@ import java.util.List;
  * <p>This class Requires API level 12 or later due to use of {@link
  * android.view.ViewPropertyAnimator}.</p>
  *
- * <p>For a generalized {@link android.view.View.OnTouchListener} that makes any view dismissable,
+ * <p>For a generalized {@link android.view.View.OnTouchListener} that makes any viewDivider dismissable,
  * see {@link SwipeDismissTouchListener}.</p>
  *
  * @see SwipeDismissTouchListener
@@ -119,9 +119,9 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
     }
 
     /**
-     * Constructs a new swipe-to-dismiss touch listener for the given list view.
+     * Constructs a new swipe-to-dismiss touch listener for the given list viewDivider.
      *
-     * @param recyclerView  The list view whose items should be dismissable.
+     * @param recyclerView  The list viewDivider whose items should be dismissable.
      * @param callbacks The callback to trigger when the user has indicated that she would like to
      *                  dismiss one or more list items.
      */
@@ -150,7 +150,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
      * android.widget.ListView} using {@link android.widget.ListView#setOnScrollListener(android.widget.AbsListView.OnScrollListener)}.
      * If a scroll listener is already assigned, the caller should still pass scroll changes through
      * to this listener. This will ensure that this {@link SwipeDismissRecyclerViewTouchListener} is
-     * paused during list view scrolling.</p>
+     * paused during list viewDivider scrolling.</p>
      *
      * @see SwipeDismissRecyclerViewTouchListener
      */
@@ -181,7 +181,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
 
                 // TODO: ensure this is a finger, and set a flag
 
-                // Find the child view that was touched (perform a hit test)
+                // Find the child viewDivider that was touched (perform a hit test)
                 Rect rect = new Rect();
                 int childCount = mRecyclerView.getChildCount();
                 int[] listViewCoords = new int[2];
@@ -371,7 +371,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
 
                     ViewGroup.LayoutParams lp;
                     for (PendingDismissData pendingDismiss : mPendingDismisses) {
-                        // Reset view presentation
+                        // Reset viewDivider presentation
                         pendingDismiss.view.setAlpha(1f);
                         pendingDismiss.view.setTranslationX(0);
                         lp = pendingDismiss.view.getLayoutParams();

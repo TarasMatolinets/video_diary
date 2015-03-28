@@ -3,7 +3,6 @@ package com.mti.videodiary.activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -11,9 +10,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gc.materialdesign.widgets.SnackBar;
@@ -25,6 +26,8 @@ import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.UserHelper;
 import com.mti.videodiary.utils.VideoDairySharePreferences;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 
 import it.neokree.materialnavigationdrawer.MaterialNavigationDrawer;
@@ -32,20 +35,23 @@ import it.neokree.materialnavigationdrawer.elements.MaterialSection;
 import mti.com.videodiary.R;
 
 
-public class MenuActivity extends MaterialNavigationDrawer implements View.OnClickListener {
+public class MenuActivity extends MaterialNavigationDrawer implements View.OnClickListener, DrawerLayout.DrawerListener {
 
     public static final int UPDATE_VIDEO_ADAPTER = 22;
     public static final int RESULT_LOAD_IMAGE = 133;
     private FrameLayout mFrameLayoutMain;
     private TextView mChoiceImage;
+    private boolean isImageAlreadySet;
 
     @Override
     public void init(Bundle bundle) {
 
         // create and set the header
         View view = LayoutInflater.from(this).inflate(R.layout.custom_drawer_header, null);
-        mFrameLayoutMain = (FrameLayout) view.findViewById(R.id.flMain);
         mChoiceImage = (TextView) view.findViewById(R.id.tvChoiceImage);
+        mFrameLayoutMain = (FrameLayout) view.findViewById(R.id.flMain);
+
+        setDrawerListener(this);
         setDrawerHeaderCustom(view);
 
         int selectedColor = getResources().getColor(R.color.blue);
@@ -64,14 +70,17 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
         createFolder(noteFolder);
         createFolder(imageDir);
 
-        String picturePath = VideoDairySharePreferences.getSharedPreferences().getString(Constants.IMAGE_HEADER, null);
-
-        if (picturePath != null)
-            setImageInBackground(picturePath);
 
         setBackPattern(MaterialNavigationDrawer.BACKPATTERN_CUSTOM);
 
+
         getHeaderView().setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     /**
@@ -99,34 +108,40 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case RESULT_LOAD_IMAGE:
+                    Uri selectedImage = data.getData();
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                    Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                    cursor.moveToFirst();
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    String picturePath = cursor.getString(columnIndex);
+                    cursor.close();
 
-            if (picturePath != null) {
-                setImageInBackground(picturePath);
-                VideoDairySharePreferences.setDataToSharePreferences(Constants.IMAGE_HEADER, picturePath, VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING);
-            } else {
-                showSnackView();
+                    if (picturePath != null) {
+                        setImageInBackground(picturePath);
+                        VideoDairySharePreferences.setDataToSharePreferences(Constants.IMAGE_HEADER, picturePath, VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING);
+                    } else {
+                        showSnackView();
+                    }
+                    break;
+                case MenuActivity.UPDATE_VIDEO_ADAPTER:
+                    Fragment fragment = (Fragment) getCurrentSection().getTargetFragment();
+
+                    // update current video card data
+                    if (fragment instanceof VideoFragment)
+                        fragment.onActivityResult(requestCode, resultCode, data);
+                    else
+                        showSnackView();
+                    break;
             }
-        } else if (requestCode == MenuActivity.UPDATE_VIDEO_ADAPTER ) {
-            Fragment fragment = (Fragment) getCurrentSection().getTargetFragment();
-
-            // update current video card data
-            if (fragment instanceof VideoFragment)
-                fragment.onActivityResult(requestCode, resultCode, data);
-        } else {
-            showSnackView();
         }
     }
 
     private void showSnackView() {
         SnackBar snackbar = new SnackBar(this, getResources().getString(R.string.error_picture), null, null);
+        snackbar.setBackgroundSnackBar(getResources().getColor(R.color.blue));
         snackbar.show();
     }
 
@@ -136,8 +151,10 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
         mFrameLayoutMain.post(new Runnable() {
             @Override
             public void run() {
-                int width = mFrameLayoutMain.getWidth();
-                int height = mFrameLayoutMain.getHeight();
+                isImageAlreadySet = true;
+
+                int width = mFrameLayoutMain.getMeasuredWidth();
+                int height = mFrameLayoutMain.getMeasuredHeight();
 
                 if (width > 0 && height > 0) {
 
@@ -179,11 +196,29 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
 
     @Override
     public void onClick(View v) {
-
-        final CharSequence[] choice = {"Choose from Gallery", "Capture a photo"};
-
         TakePictureDialog dialog = new TakePictureDialog();
         dialog.show(getSupportFragmentManager(), null);
+    }
 
+    @Override
+    public void onDrawerSlide(View drawerView, float slideOffset) {
+    }
+
+    @Override
+    public void onDrawerOpened(View drawerView) {
+    }
+
+    @Override
+    public void onDrawerClosed(View drawerView) {
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
+        //bug image height == 0. That's why we set image when drawerOpen
+        if (!isImageAlreadySet) {
+            String picturePath = VideoDairySharePreferences.getSharedPreferences().getString(Constants.IMAGE_HEADER, null);
+            if (picturePath != null)
+                setImageInBackground(picturePath);
+        }
     }
 }

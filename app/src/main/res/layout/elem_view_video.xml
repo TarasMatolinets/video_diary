@@ -24,8 +24,7 @@
         </LinearLayout>
 
 
-        <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/cardViewCreateVideo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,39 +57,45 @@
                         android:layout_gravity="center" />
                 </FrameLayout>
 
-                <EditText
+                <TextView
                     android:id="@+id/etTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/flVideoCreate"
-                    android:focusableInTouchMode="false"
                     android:layout_margin="@dimen/edge_medium"
-                    android:maxLines="3"
-                    android:focusable="false"
-                    android:textCursorDrawable="@drawable/keyboard_cursor_color"
-                    android:inputType="text"
+                    android:maxLines="1"
                     android:textSize="@dimen/text_medium"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:ellipsize="end"
-                    android:hint="@string/create_title" />
+                    android:hint="@string/create_title"
+                    android:singleLine="true" />
 
-                <EditText
+                <include
+                    layout="@layout/view_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignBottom="@+id/etTitle" />
+
+                <TextView
                     android:id="@+id/etDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/etTitle"
-                    android:focusableInTouchMode="false"
                     android:layout_margin="@dimen/edge_medium"
-                    android:focusable="false"
-                    android:inputType="text"
-                    android:maxLines="3"
+                    android:maxLines="1"
                     android:ellipsize="end"
-                    android:textCursorDrawable="@drawable/keyboard_cursor_color"
                     android:textSize="@dimen/text_mini_normal"
                     android:textStyle="normal"
                     android:gravity="top"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:singleLine="true" />
+
+                <include
+                    layout="@layout/view_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignBottom="@+id/etDescription" />
 
                 <ImageView
                     android:layout_width="wrap_content"

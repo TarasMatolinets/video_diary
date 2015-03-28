@@ -11,12 +11,13 @@ import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
@@ -72,7 +73,14 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
         holder.tvDescription.clearFocus();
         holder.tvTitle.clearFocus();
 
-        holder.tvDescription.setText(video.getDescription());
+        if (!TextUtils.isEmpty(video.getDescription())) {
+            holder.tvDescription.setText(video.getDescription());
+            holder.tvDescription.setVisibility(View.VISIBLE);
+            holder.viewDivider.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvDescription.setVisibility(View.GONE);
+            holder.viewDivider.setVisibility(View.VISIBLE);
+        }
         holder.tvTitle.setText(video.getTitle());
 
         ImageLoader.getInstance().displayImage(FILE + video.getImageUrl(), holder.imIcon, new SimpleImageLoadingListener() {
@@ -185,26 +193,28 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public EditText tvTitle;
-        public EditText tvDescription;
+        public TextView tvTitle;
+        public TextView tvDescription;
         public ImageView imIcon;
         public ImageView delete;
         public ImageView share;
         public CardView cardView;
         public FrameLayout flMain;
         public SwipeLayout swipe;
+        public View viewDivider;
 
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
 
-            tvDescription = (EditText) itemLayoutView.findViewById(R.id.etDescription);
+            tvDescription = (TextView) itemLayoutView.findViewById(R.id.etDescription);
             swipe = (SwipeLayout) itemLayoutView.findViewById(R.id.swipe);
-            tvTitle = (EditText) itemLayoutView.findViewById(R.id.etTitle);
+            tvTitle = (TextView) itemLayoutView.findViewById(R.id.etTitle);
             imIcon = (ImageView) itemLayoutView.findViewById(R.id.ivVideoThumbnail);
             share = (ImageView) itemLayoutView.findViewById(R.id.ivShare);
             delete = (ImageView) itemLayoutView.findViewById(R.id.trash);
             cardView = (CardView) itemLayoutView.findViewById(R.id.cardViewCreateVideo);
             flMain = (FrameLayout) itemLayoutView.findViewById(R.id.flMain);
+            viewDivider = (View) itemLayoutView.findViewById(R.id.viewDivider);
 
             flMain.setOnClickListener(VideoAdapter.this);
             delete.setOnClickListener(VideoAdapter.this);

@@ -150,7 +150,7 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
         currentMover.setInterpolator(sLinearInterpolator);
         currentMover.setDuration(MEDIUM_DURATION);
 
-        // set next view visible, translate off to right, skew,
+        // set next viewDivider visible, translate off to right, skew,
         // slide on in parallel, overshoot/wobble, unskew
         nextView.setVisibility(View.VISIBLE);
         nextView.setSkewX(-.5f);

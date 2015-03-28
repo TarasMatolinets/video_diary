@@ -41,6 +41,9 @@
     <string name="menu_no_record">No Video Records</string>
     <string name="menu_no_notes">No Notes</string>
 
+    <string name="select_image_gallery">Select picture from gallery</string>
+    <string name="select_image_gallery_description">Select picture for make your menu more beautiful</string>
+
     <!--warnings-->
     <string name="fragment_broken_camera_warning">Something going wrong with your camera</string>
     <string name="error_picture">Please choice another picture </string>

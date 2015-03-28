@@ -27,7 +27,7 @@ import android.view.ViewGroup;
 
 /**
  * A {@link android.view.View.OnTouchListener} that makes any {@link android.view.View} dismissable when the
- * user swipes (drags her finger) horizontally across the view.
+ * user swipes (drags her finger) horizontally across the viewDivider.
  *
  * <p><em>For {@link android.widget.ListView} list items that don't manage their own touch events
  * (i.e. you're using
@@ -38,12 +38,12 @@ import android.view.ViewGroup;
  * <p>Example usage:</p>
  *
  * <pre>
- * view.setOnTouchListener(new SwipeDismissTouchListener(
- *         view,
+ * viewDivider.setOnTouchListener(new SwipeDismissTouchListener(
+ *         viewDivider,
  *         null, // Optional token/cookie object
  *         new SwipeDismissTouchListener.OnDismissCallback() {
- *             public void onDismiss(View view, Object token) {
- *                 parent.removeView(view);
+ *             public void onDismiss(View viewDivider, Object token) {
+ *                 parent.removeView(viewDivider);
  *             }
  *         }));
  * </pre>
@@ -76,16 +76,16 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
 
     /**
      * The callback interface used by {@link SwipeDismissTouchListener} to inform its client
-     * about a successful dismissal of the view for which it was created.
+     * about a successful dismissal of the viewDivider for which it was created.
      */
     public interface DismissCallbacks {
         /**
-         * Called to determine whether the view can be dismissed.
+         * Called to determine whether the viewDivider can be dismissed.
          */
         boolean canDismiss(Object token);
 
         /**
-         * Called when the user has indicated they she would like to dismiss the view.
+         * Called when the user has indicated they she would like to dismiss the viewDivider.
          *
          * @param view  The originating {@link android.view.View} to be dismissed.
          * @param token The optional token passed to this object's constructor.
@@ -94,12 +94,12 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
     }
 
     /**
-     * Constructs a new swipe-to-dismiss touch listener for the given view.
+     * Constructs a new swipe-to-dismiss touch listener for the given viewDivider.
      *
-     * @param view     The view to make dismissable.
+     * @param view     The viewDivider to make dismissable.
      * @param token    An optional token/cookie object to be passed through to the callback.
      * @param callbacks The callback to trigger when the user has indicated that she would like to
-     *                 dismiss this view.
+     *                 dismiss this viewDivider.
      */
     public SwipeDismissTouchListener(View view, Object token, DismissCallbacks callbacks) {
         ViewConfiguration vc = ViewConfiguration.get(view.getContext());
@@ -115,7 +115,7 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        // offset because the view is translated during swipe
+        // offset because the viewDivider is translated during swipe
         motionEvent.offsetLocation(mTranslationX, 0);
 
         if (mViewWidth < 2) {
@@ -242,7 +242,7 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
     }
 
     private void performDismiss() {
-        // Animate the dismissed view to zero-height and then fire the dismiss callback.
+        // Animate the dismissed viewDivider to zero-height and then fire the dismiss callback.
         // This triggers layout on each animation frame; in the future we may want to do something
         // smarter and more performant.
 
@@ -255,7 +255,7 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
             @Override
             public void onAnimationEnd(Animator animation) {
                 mCallbacks.onDismiss(mView, mToken);
-                // Reset view presentation
+                // Reset viewDivider presentation
                 mView.setAlpha(1f);
                 mView.setTranslationX(0);
                 lp.height = originalHeight;

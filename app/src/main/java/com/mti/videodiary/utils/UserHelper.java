@@ -28,12 +28,12 @@ import java.util.Random;
 public class UserHelper {
 
     /**
-     * hide keyboard under view
+     * hide keyboard under viewDivider
      */
     public static void hideKeyboard(Activity activity, View view) {
         InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        // check if no view has focus:
+        // check if no viewDivider has focus:
         view = activity.getCurrentFocus();
         if (view != null) {
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
