@@ -24,8 +24,9 @@ import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.mti.videodiary.activity.BaseActivity;
 import com.mti.videodiary.activity.CreateVideoNoteActivity;
 import com.mti.videodiary.activity.MenuActivity;
-import com.mti.videodiary.data.DataBaseManager;
+import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.dao.Video;
+import com.mti.videodiary.data.manager.VideoDataManager;
 import com.mti.videodiary.fragment.VideoFragment;
 import com.mti.videodiary.utils.Constants;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -124,7 +125,8 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
 
                 deleteFile(videoFile);
                 deleteFile(fileImage);
-                DataBaseManager.getInstance().deleteVideoById(video.getId());
+                VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
+                videoDataManager.deleteVideoById(video.getId());
 
                 mListVideos.remove(video);
                 notifyItemRemoved(position);
@@ -132,8 +134,8 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
 
                 SwipeLayout swipeLayout = (SwipeLayout) view.findViewById(R.id.swipe);
                 swipeLayout.close();
-                Intent intent = new Intent(VideoFragment.UPDATE_ADAPTER_INTENT);
-                intent.putExtra(Constants.UPDATE_ADAPTER, true);
+
+                Intent intent = new Intent(Constants.UPDATE_ADAPTER_INTENT);
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 
                 break;

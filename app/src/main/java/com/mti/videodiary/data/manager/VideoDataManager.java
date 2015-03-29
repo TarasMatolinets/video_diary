@@ -1,4 +1,4 @@
-package com.mti.videodiary.data;
+package com.mti.videodiary.data.manager;
 
 import android.content.Context;
 
@@ -10,35 +10,19 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by Taras Matolinets on 27.02.15.
+ * Created by Taras Matolinets on 29.03.15.
  */
-public class DataBaseManager {
+public class VideoDataManager extends DataBaseManager{
+    private Context mContext;
 
-    static private DataBaseManager instance;
-    private DataBaseHelper mHelper;
-
-    public DataBaseManager(Context ctx) {
-        mHelper = new DataBaseHelper(ctx);
-    }
-
-    static public void init(Context ctx) {
-        if (null == instance) {
-            instance = new DataBaseManager(ctx);
-        }
-    }
-
-    static public DataBaseManager getInstance() {
-        return instance;
-    }
-
-    private DataBaseHelper getHelper() {
-        return mHelper;
+    public VideoDataManager(Context ctx) {
+        mContext = ctx;
     }
 
     public List<Video> getAllVideosList() {
         List<Video> videoList = null;
         try {
-            videoList = getHelper().getVideoListDao().queryForAll();
+            videoList = mHelper.getVideoListDao().queryForAll();
 
             Collections.reverse(videoList);
         } catch (SQLException e) {
@@ -50,10 +34,10 @@ public class DataBaseManager {
     public void deleteVideosList() {
         List<Video> videoList;
         try {
-            Dao<Video, Integer> daoVideoList = getHelper().getVideoListDao();
+            Dao<Video, Integer> daoVideoList = mHelper.getVideoListDao();
             videoList = daoVideoList.queryForAll();
 
-             Collections.reverse(videoList);
+            Collections.reverse(videoList);
 
             daoVideoList.delete(videoList);
 
@@ -64,7 +48,7 @@ public class DataBaseManager {
 
     public void deleteVideoById(int id) {
         try {
-            getHelper().getVideoListDao().deleteById(id);
+            mHelper.getVideoListDao().deleteById(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -73,7 +57,7 @@ public class DataBaseManager {
     public Video getVideoByPosition(int id) {
         Video video = null;
         try {
-            List<Video> videoList = getHelper().getVideoListDao().queryForAll();
+            List<Video> videoList = mHelper.getVideoListDao().queryForAll();
             Collections.reverse(videoList);
 
             video = videoList.get(id);
@@ -87,7 +71,7 @@ public class DataBaseManager {
 
     public void createVideo(Video video) {
         try {
-            getHelper().getVideoListDao().create(video);
+            mHelper.getVideoListDao().create(video);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -95,11 +79,9 @@ public class DataBaseManager {
 
     public void updateVideoList(Video video) {
         try {
-            getHelper().getVideoListDao().update(video);
+            mHelper.getVideoListDao().update(video);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
-
 }

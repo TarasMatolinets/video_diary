@@ -29,10 +29,10 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.mti.videodiary.data.DataBaseManager;
+import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.dao.Video;
+import com.mti.videodiary.data.manager.VideoDataManager;
 import com.mti.videodiary.fragment.VideoFragment;
-import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.UserHelper;
 
 import java.io.File;
@@ -70,10 +70,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        DataBaseManager.init(this);
-
-        setContentView(R.layout.fragment_create_video_note);
+        setContentView(R.layout.activity_create_video_note);
 
         initViews();
         initListeners();
@@ -130,7 +127,9 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
         if (position != -1) {
             isEditVideoDaily = true;
-            Video video = DataBaseManager.getInstance().getVideoByPosition(position);
+            VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
+            Video video = videoDataManager.getVideoByPosition(position);
+
             videoFilePath = video.getVideoName();
 
             mEtTitle.setText(video.getTitle());
@@ -387,17 +386,18 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         } else
             updateVideoDaily();
 
-        setResult(MenuActivity.UPDATE_VIDEO_ADAPTER,null);
+        setResult(RESULT_OK, null);
     }
 
     private void updateVideoDaily() {
         int position = getIntent().getIntExtra(VideoFragment.KEY_POSITION, -1);
+        VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
 
-        Video video = DataBaseManager.getInstance().getVideoByPosition(position);
+        Video video = videoDataManager.getVideoByPosition(position);
         video.setDescription(mEtDescription.getText().toString());
         video.setTitle(mEtTitle.getText().toString());
 
-        DataBaseManager.getInstance().updateVideoList(video);
+        videoDataManager.updateVideoList(video);
     }
 
     private void createNewVideoDaily() {
@@ -431,8 +431,8 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                 file.delete();
 
             video.setImageUrl(finalPathBitmap);
-
-            DataBaseManager.getInstance().createVideo(video);
+            VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
+            videoDataManager.createVideo(video);
         }
     }
 
@@ -465,8 +465,8 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                     videoFilePath = getIntent().getStringExtra(VideoFragment.KEY_VIDEO_PATH);
                 else {
                     int position = getIntent().getIntExtra(VideoFragment.KEY_POSITION, -1);
-
-                    Video video = DataBaseManager.getInstance().getVideoByPosition(position);
+                    VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
+                    Video video = videoDataManager.getVideoByPosition(position);
                     videoFilePath = video.getVideoName();
                 }
 

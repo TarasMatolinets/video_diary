@@ -19,6 +19,9 @@
     <string name="create_video_note">Create video note</string>
     <string name="edit_video_note">Edit video note</string>
 
+    <string name="create_note">Create note</string>
+    <string name="edit_note">Edit note</string>
+
     <string name="menu_search">Search</string>
     <string name="menu_record">Record</string>
     <string name="menu_cancel">Cancel</string>

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,7 +31,6 @@ import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.gc.materialdesign.views.ButtonFlat;
 import com.gc.materialdesign.views.ButtonFloat;
 import com.gc.materialdesign.widgets.SnackBar;
 import com.mti.videodiary.activity.BaseActivity;
@@ -40,15 +38,15 @@ import com.mti.videodiary.activity.CreateVideoNoteActivity;
 import com.mti.videodiary.activity.MenuActivity;
 import com.mti.videodiary.adapter.VideoAdapter;
 import com.mti.videodiary.application.VideoDiaryApplication;
-import com.mti.videodiary.data.DataBaseManager;
+import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.dao.Video;
+import com.mti.videodiary.data.manager.VideoDataManager;
+import com.mti.videodiary.utils.Constants;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 import mti.com.videodiary.R;
 
 import static android.view.View.OnClickListener;
@@ -61,7 +59,6 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
 
     public static final String KEY_POSITION = "com.mti.position.key";
     public static final String FILE_FORMAT = ".mp4";
-    public static final String UPDATE_ADAPTER_INTENT = "com.mti.video.dairy.update.adapter";
     public static String VIDEO_FILE_NAME = File.separator + "video-dairy" + FILE_FORMAT;
     public static final String KEY_VIDEO_PATH = "com.mti.video-dairy.key-video-file-path";
 
@@ -76,13 +73,10 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        DataBaseManager.init(getActivity());
-
         setHasOptionsMenu(true);
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver,
-                new IntentFilter(UPDATE_ADAPTER_INTENT));
+                new IntentFilter(Constants.UPDATE_ADAPTER_INTENT));
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -115,7 +109,10 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
     }
 
     private void showEmptyView() {
-        final List<Video> listVideos = DataBaseManager.getInstance().getAllVideosList();
+
+        VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
+
+        final List<Video> listVideos = videoDataManager.getAllVideosList();
 
         if (listVideos.isEmpty()) {
             mIvCameraOff.setVisibility(View.VISIBLE);
@@ -145,7 +142,9 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
     }
 
     private void setupRecycleView() {
-        final List<Video> listVideos = DataBaseManager.getInstance().getAllVideosList();
+        VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
+
+        final List<Video> listVideos = videoDataManager.getAllVideosList();
 
         mRecyclerView.setHasFixedSize(true);
 
@@ -252,9 +251,11 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
                 break;
 
             case MenuActivity.UPDATE_VIDEO_ADAPTER:
-                List<Video> listVideo = DataBaseManager.getInstance().getAllVideosList();
+                VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
 
-                mAdapter.setListVideos(listVideo);
+                final List<Video> listVideos = videoDataManager.getAllVideosList();
+
+                mAdapter.setListVideos(listVideos);
                 mAdapter.notifyDataSetChanged();
 
                 showEmptyView();
@@ -281,10 +282,12 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
 
     @Override
     public boolean onQueryTextChange(String s) {
-        List<Video> listVideo = DataBaseManager.getInstance().getAllVideosList();
+        VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
+
+        final List<Video> listVideos = videoDataManager.getAllVideosList();
 
         ArrayList<Video> searchVideoList = new ArrayList<Video>();
-        for (Video v : listVideo) {
+        for (Video v : listVideos) {
             if (v.getTitle().contains(s))
                 searchVideoList.add(v);
         }

@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient_dark_blue"
+        android:background="@drawable/gradient_menu"
         android:id="@+id/flSplash"
         android:clipChildren="false"
         tools:ignore="UselessParent">
