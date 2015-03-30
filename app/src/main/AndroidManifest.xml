@@ -46,7 +46,7 @@
 
         <activity
             android:name="com.mti.videodiary.activity.CreateNoteActivity"
-            android:theme="@style/VideoDailyActionBar"
+            android:theme="@style/NoteDailyActionBar"
             android:label="@string/create_note"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateHidden"></activity>

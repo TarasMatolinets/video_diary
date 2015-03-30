@@ -1,6 +1,8 @@
 package com.mti.videodiary.activity;
 
+import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
@@ -10,13 +12,13 @@ import android.view.MenuItem;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.mti.videodiary.data.dao.Note;
 import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.manager.NoteDataManager;
-import com.mti.videodiary.fragment.VideoFragment;
-
-import java.io.File;
+import com.mti.videodiary.fragment.BaseFragment;
+import com.mti.videodiary.utils.Constants;
 
 import mti.com.videodiary.R;
 
@@ -24,12 +26,7 @@ import mti.com.videodiary.R;
  * Created by Taras Matolinets on 29.03.15.
  */
 public class CreateNoteActivity extends BaseActivity implements TextWatcher {
-    private static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
-    private static final TimeInterpolator sAccelerator = new AccelerateInterpolator();
-    private static final int ANIM_DURATION = 500;
-    public static final int DURATION = 1000;
-    public static final int DEFAULT_ITEM_POSITION = -1;
-    public static final int DURATION_FADE_IN = 600;
+    private static final int DEFAULT_ITEM_POSITION = -1;
 
     private EditText mEtTitle;
     private EditText mEtDescription;
@@ -46,13 +43,29 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher {
         initViews();
         initListeners();
         initActionBar();
+        fillData();
+    }
+
+    private void fillData() {
+        int position = getIntent().getIntExtra(Constants.KEY_POSITION, -1);
+
+        if (position != DEFAULT_ITEM_POSITION) {
+            isEditNote = true;
+
+            NoteDataManager noteDataManager = (NoteDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.NOTE_MANAGER);
+
+            Note note = noteDataManager.getNoteByPosition(position);
+
+            mEtDescription.setText(note.getDescription());
+            mEtTitle.setText(note.getTitle());
+        }
     }
 
 
     private void initActionBar() {
         mActionBar = getSupportActionBar();
 
-        int position = getIntent().getIntExtra(VideoFragment.KEY_POSITION, -1);
+        int position = getIntent().getIntExtra(Constants.KEY_POSITION, -1);
 
         if (position == DEFAULT_ITEM_POSITION)
             mActionBar.setTitle(R.string.create_note);
@@ -69,11 +82,12 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher {
 
     private void initListeners() {
         mEtTitle.addTextChangedListener(this);
+        mEtDescription.addTextChangedListener(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_create_video_note, menu);
+        getMenuInflater().inflate(R.menu.menu_create_note, menu);
 
         MenuItem item = menu.getItem(0);
         item.setVisible(false);
@@ -100,51 +114,25 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher {
 
         switch (id) {
             case R.id.action_save:
-                saveVideoNote();
-                break;
-            case android.R.id.home:
-                if (!isEditNote)
-                    deleteVideoFile();
+                saveNote();
                 break;
         }
+        onBackPressed();
+
         return false;
     }
 
-    @Override
-    public void onBackPressed() {
-            deleteVideoFile();
-                finish();
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-
-        // override transitions to skip the standard window animations
-        overridePendingTransition(0, 0);
-    }
-
-    private void deleteVideoFile() {
-        String videoFilePath = getIntent().getStringExtra(VideoFragment.KEY_VIDEO_PATH);
-
-        if (videoFilePath != null) {
-            File file = new File(videoFilePath);
-            if (file.exists())
-                file.delete();
-        }
-    }
-
-    private void saveVideoNote() {
+    private void saveNote() {
         if (!isEditNote) {
             createNewNoteDaily();
         } else
             updateNoteDaily();
 
-        setResult(MenuActivity.UPDATE_VIDEO_ADAPTER, null);
+        setResult(RESULT_OK, null);
     }
 
     private void updateNoteDaily() {
-        int position = getIntent().getIntExtra(VideoFragment.KEY_POSITION, -1);
+        int position = getIntent().getIntExtra(Constants.KEY_POSITION, -1);
         NoteDataManager noteDataManager = (NoteDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.NOTE_MANAGER);
 
         Note video = noteDataManager.getNoteByPosition(position);
@@ -155,23 +143,25 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher {
     }
 
     private void createNewNoteDaily() {
-            Note video = new Note();
+        Note video = new Note();
 
-            video.setTitle(mEtTitle.getText().toString());
-            video.setDescription(mEtDescription.getText().toString());
+        video.setTitle(mEtTitle.getText().toString());
+        video.setDescription(mEtDescription.getText().toString());
 
-            NoteDataManager noteDataManager = (NoteDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.NOTE_MANAGER);
-            noteDataManager.createNote(video);
+        NoteDataManager noteDataManager = (NoteDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.NOTE_MANAGER);
+        noteDataManager.createNote(video);
     }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (mEtTitle.getText().length() > 0)
+        boolean isTitleFill = mEtTitle.getText().length() > 0;
+        boolean isDescriptionFill = mEtDescription.getText().length() > 0;
+
+        if (isTitleFill && isDescriptionFill)
             isShowSave = true;
         else
             isShowSave = false;
@@ -181,6 +171,5 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-
     }
 }

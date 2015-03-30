@@ -57,11 +57,6 @@ import static android.view.View.OnClickListener;
 public class VideoFragment extends BaseFragment implements OnClickListener, SearchView.OnQueryTextListener {
     private static final int REQUEST_VIDEO_CAPTURE = 101;
 
-    public static final String KEY_POSITION = "com.mti.position.key";
-    public static final String FILE_FORMAT = ".mp4";
-    public static String VIDEO_FILE_NAME = File.separator + "video-dairy" + FILE_FORMAT;
-    public static final String KEY_VIDEO_PATH = "com.mti.video-dairy.key-video-file-path";
-
     private View mView;
     private RecyclerView mRecyclerView;
     private VideoAdapter mAdapter;
@@ -222,7 +217,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonFloat:
-                final File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + VIDEO_FILE_NAME);
+                final File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + Constants.VIDEO_FILE_NAME);
 
                 Uri fileUri = Uri.fromFile(mediaFile);
 
@@ -250,7 +245,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
                 }
                 break;
 
-            case MenuActivity.UPDATE_VIDEO_ADAPTER:
+            case Constants.UPDATE_VIDEO_ADAPTER:
                 VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
 
                 final List<Video> listVideos = videoDataManager.getAllVideosList();
@@ -268,9 +263,9 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
         String videoFilePath = videoUri.getPath();
 
         Intent intent = new Intent(getActivity(), CreateVideoNoteActivity.class);
-        intent.putExtra(KEY_VIDEO_PATH, videoFilePath);
+        intent.putExtra(Constants.KEY_VIDEO_PATH, videoFilePath);
 
-        startActivityForResult(intent, MenuActivity.UPDATE_VIDEO_ADAPTER);
+        startActivityForResult(intent, Constants.UPDATE_VIDEO_ADAPTER);
 
         Log.i(VideoDiaryApplication.TAG, "Video has been saved to: " + data.getData());
     }

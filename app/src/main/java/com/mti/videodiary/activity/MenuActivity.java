@@ -14,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gc.materialdesign.widgets.SnackBar;
@@ -22,11 +21,10 @@ import com.mti.videodiary.dialog.TakePictureDialog;
 import com.mti.videodiary.fragment.AboutMeFragment;
 import com.mti.videodiary.fragment.NoteFragment;
 import com.mti.videodiary.fragment.VideoFragment;
+import com.mti.videodiary.interfaces.OnDialogClickListener;
 import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.UserHelper;
 import com.mti.videodiary.utils.VideoDairySharePreferences;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 
@@ -35,10 +33,7 @@ import it.neokree.materialnavigationdrawer.elements.MaterialSection;
 import mti.com.videodiary.R;
 
 
-public class MenuActivity extends MaterialNavigationDrawer implements View.OnClickListener, DrawerLayout.DrawerListener {
-
-    public static final int UPDATE_VIDEO_ADAPTER = 22;
-    public static final int RESULT_LOAD_IMAGE = 133;
+public class MenuActivity extends MaterialNavigationDrawer implements View.OnClickListener, DrawerLayout.DrawerListener, OnDialogClickListener {
     private FrameLayout mFrameLayoutMain;
     private TextView mChoiceImage;
     private boolean isImageAlreadySet;
@@ -77,12 +72,6 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
         getHeaderView().setOnClickListener(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
     /**
      * create folders for feature files
      *
@@ -110,7 +99,7 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case RESULT_LOAD_IMAGE:
+                case Constants.RESULT_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
                     String[] filePathColumn = {MediaStore.Images.Media.DATA};
                     Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
@@ -126,14 +115,21 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
                         showSnackView();
                     }
                     break;
-                case MenuActivity.UPDATE_VIDEO_ADAPTER:
+                case Constants.UPDATE_VIDEO_ADAPTER:
                     Fragment fragment = (Fragment) getCurrentSection().getTargetFragment();
 
-                    // update current video card data
+                    // update current note card data
                     if (fragment instanceof VideoFragment)
                         fragment.onActivityResult(requestCode, resultCode, data);
-                    else
-                        showSnackView();
+                    break;
+
+
+                case Constants.UPDATE_NOTE_ADAPTER:
+                    Fragment noteFragment = (Fragment) getCurrentSection().getTargetFragment();
+
+                    // update current note card data
+                    if (noteFragment instanceof NoteFragment)
+                        noteFragment.onActivityResult(requestCode, resultCode, data);
                     break;
             }
         }
@@ -197,6 +193,7 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
     @Override
     public void onClick(View v) {
         TakePictureDialog dialog = new TakePictureDialog();
+        dialog.setDialogClickListener(this);
         dialog.show(getSupportFragmentManager(), null);
     }
 
@@ -220,5 +217,15 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
             if (picturePath != null)
                 setImageInBackground(picturePath);
         }
+    }
+
+    @Override
+    public void dialogWithDataClick(Object object) {
+    }
+
+    @Override
+    public void dialogClick() {
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, Constants.RESULT_LOAD_IMAGE);
     }
 }

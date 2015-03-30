@@ -36,7 +36,7 @@
                 android:textColor="@color/black"
                 android:gravity="top"
                 android:ellipsize="end"
-                android:hint="@string/create_title" />
+                android:hint="@string/create_title_note" />
         </android.support.v7.widget.CardView>
 
         <include
@@ -45,7 +45,7 @@
             android:layout_height="1dp" />
 
         <android.support.v7.widget.CardView
-            android:id="@+id/cardViewCreateVideo"
+            android:id="@+id/cardViewCreateNote"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="@dimen/edge_medium"
@@ -64,7 +64,7 @@
                 android:textSize="@dimen/text_mini_normal"
                 android:textStyle="normal"
                 android:textColor="@color/black"
-                android:hint="@string/description"
+                android:hint="@string/description_note"
                 android:gravity="top" />
         </android.support.v7.widget.CardView>
     </LinearLayout>

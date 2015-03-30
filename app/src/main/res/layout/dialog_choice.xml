@@ -14,7 +14,7 @@
         android:layout_marginTop="@dimen/edge_big"
         android:textSize="@dimen/text_mini_normal"
         android:textStyle="normal"
-        android:textColor="@color/black" />
+        android:textColor="@color/gray" />
 
     <LinearLayout
         android:orientation="horizontal"

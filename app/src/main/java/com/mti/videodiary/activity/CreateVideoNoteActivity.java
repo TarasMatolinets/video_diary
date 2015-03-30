@@ -33,6 +33,7 @@ import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.dao.Video;
 import com.mti.videodiary.data.manager.VideoDataManager;
 import com.mti.videodiary.fragment.VideoFragment;
+import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.UserHelper;
 
 import java.io.File;
@@ -47,9 +48,9 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     private static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
     private static final TimeInterpolator sAccelerator = new AccelerateInterpolator();
     private static final int ANIM_DURATION = 500;
-    public static final int DURATION = 1000;
-    public static final int DEFAULT_ITEM_POSITION = -1;
-    public static final int DURATION_FADE_IN = 600;
+    private static final int DURATION = 1000;
+    private static final int DEFAULT_ITEM_POSITION = -1;
+    private static final int DURATION_FADE_IN = 600;
 
     private ImageView mIvThumbnail;
     private EditText mEtTitle;
@@ -83,7 +84,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     private void initActionBar() {
         mActionBar = getSupportActionBar();
 
-        int position = getIntent().getIntExtra(VideoFragment.KEY_POSITION, -1);
+        int position = getIntent().getIntExtra(Constants.KEY_POSITION, -1);
 
         if (position == DEFAULT_ITEM_POSITION)
             mActionBar.setTitle(R.string.create_video_note);
@@ -111,7 +112,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
     private void setDataToView(Bundle savedInstanceState) {
         Bundle bundle = getIntent().getExtras();
-        int position = getIntent().getIntExtra(VideoFragment.KEY_POSITION, -1);
+        int position = getIntent().getIntExtra(Constants.KEY_POSITION, -1);
 
         final int thumbnailTop = bundle.getInt(BaseActivity.PACKAGE + ".top");
         final int thumbnailLeft = bundle.getInt(BaseActivity.PACKAGE + ".left");
@@ -135,7 +136,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             mEtTitle.setText(video.getTitle());
             mEtDescription.setText(video.getDescription());
         } else
-            videoFilePath = getIntent().getStringExtra(VideoFragment.KEY_VIDEO_PATH);
+            videoFilePath = getIntent().getStringExtra(Constants.KEY_VIDEO_PATH);
 
         final File file = new File(videoFilePath);
 
@@ -371,7 +372,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     private void deleteVideoFile() {
-        String videoFilePath = getIntent().getStringExtra(VideoFragment.KEY_VIDEO_PATH);
+        String videoFilePath = getIntent().getStringExtra(Constants.KEY_VIDEO_PATH);
 
         if (videoFilePath != null) {
             File file = new File(videoFilePath);
@@ -390,7 +391,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     private void updateVideoDaily() {
-        int position = getIntent().getIntExtra(VideoFragment.KEY_POSITION, -1);
+        int position = getIntent().getIntExtra(Constants.KEY_POSITION, -1);
         VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
 
         Video video = videoDataManager.getVideoByPosition(position);
@@ -401,14 +402,14 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     private void createNewVideoDaily() {
-        String videoFilePath = getIntent().getStringExtra(VideoFragment.KEY_VIDEO_PATH);
+        String videoFilePath = getIntent().getStringExtra(Constants.KEY_VIDEO_PATH);
 
-        VideoFragment.VIDEO_FILE_NAME = mEtTitle.getText().toString();
+        Constants.VIDEO_FILE_NAME = mEtTitle.getText().toString();
 
         Bitmap bitmap = ((BitmapDrawable) mIvThumbnail.getDrawable()).getBitmap();
 
         File oldFileName = new File(videoFilePath);
-        File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + BaseActivity.APPLICATION_DIRECTORY + BaseActivity.VIDEO_DIR + File.separator + VideoFragment.VIDEO_FILE_NAME + VideoFragment.FILE_FORMAT);
+        File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + BaseActivity.APPLICATION_DIRECTORY + BaseActivity.VIDEO_DIR + File.separator + Constants.VIDEO_FILE_NAME + Constants.FILE_FORMAT);
 
         boolean success = oldFileName.renameTo(newFileName);
 
@@ -462,9 +463,9 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             case R.id.ivPlay:
                 String videoFilePath;
                 if (!isEditVideoDaily)
-                    videoFilePath = getIntent().getStringExtra(VideoFragment.KEY_VIDEO_PATH);
+                    videoFilePath = getIntent().getStringExtra(Constants.KEY_VIDEO_PATH);
                 else {
-                    int position = getIntent().getIntExtra(VideoFragment.KEY_POSITION, -1);
+                    int position = getIntent().getIntExtra(Constants.KEY_POSITION, -1);
                     VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
                     Video video = videoDataManager.getVideoByPosition(position);
                     videoFilePath = video.getVideoName();

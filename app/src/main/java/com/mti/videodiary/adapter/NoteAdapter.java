@@ -3,6 +3,7 @@ package com.mti.videodiary.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -14,11 +15,13 @@ import android.widget.TextView;
 
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.mti.videodiary.activity.BaseActivity;
-import com.mti.videodiary.activity.CreateVideoNoteActivity;
+import com.mti.videodiary.activity.CreateNoteActivity;
 import com.mti.videodiary.activity.MenuActivity;
 import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.dao.Note;
 import com.mti.videodiary.data.manager.NoteDataManager;
+import com.mti.videodiary.dialog.DeleteItemDialogFragment;
+import com.mti.videodiary.interfaces.OnDialogClickListener;
 import com.mti.videodiary.utils.Constants;
 
 import java.util.List;
@@ -28,10 +31,7 @@ import mti.com.videodiary.R;
 /**
  * Created by Taras Matolinets on 29.03.15.
  */
-public class NoteAdapter extends RecyclerSwipeAdapter<NoteAdapter.ViewHolder> implements View.OnClickListener {
-
-    public static final String KEY_POSITION_NOTE = "com.mti.position.key.note";
-
+public class NoteAdapter extends RecyclerSwipeAdapter<NoteAdapter.ViewHolder> implements View.OnClickListener, OnDialogClickListener {
     private Context mContext;
     private List<Note> mListNotes;
     private View view;
@@ -52,12 +52,14 @@ public class NoteAdapter extends RecyclerSwipeAdapter<NoteAdapter.ViewHolder> im
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        Note video = mListNotes.get(position);
+        Note note = mListNotes.get(position);
 
         holder.delete.setTag(position);
         holder.share.setTag(position);
+        holder.cardView.setTag(position);
 
-        holder.tvTitle.setText(video.getTitle());
+        holder.tvTitle.setText(note.getTitle());
+        holder.tvDescription.setText(note.getDescription());
     }
 
     @Override
@@ -75,41 +77,31 @@ public class NoteAdapter extends RecyclerSwipeAdapter<NoteAdapter.ViewHolder> im
 
         switch (v.getId()) {
             case R.id.ivDelete:
-                Note note = mListNotes.get(position);
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constants.KEY_POSITION_NOTE_ADAPTER, position);
 
-                NoteDataManager noteManager = (NoteDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.NOTE_MANAGER);
-                noteManager.deleteNoteById(note.getId());
-
-                mListNotes.remove(note);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, mListNotes.size());
-
-                Intent intent = new Intent(Constants.UPDATE_ADAPTER_INTENT);
-                intent.putExtra(Constants.UPDATE_ADAPTER_NOTE, true);
-                LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+                DeleteItemDialogFragment fragment = new DeleteItemDialogFragment();
+                fragment.setDialogClickListener(this);
+                fragment.setArguments(bundle);
+                fragment.show(((MenuActivity) mContext).getSupportFragmentManager(), null);
 
                 break;
-            case R.id.flMain:
-                int[] screenLocation = new int[2];
-                v.getLocationOnScreen(screenLocation);
-                int orientation = mContext.getResources().getConfiguration().orientation;
+            case R.id.cardViewCreateNote:
+                Intent activityIntent = new Intent(mContext, CreateNoteActivity.class);
+                activityIntent.putExtra(Constants.KEY_POSITION, position);
 
-                Intent activityIntent = new Intent(mContext, CreateVideoNoteActivity.class);
+                ((MenuActivity) mContext).startActivityForResult(activityIntent, Constants.UPDATE_NOTE_ADAPTER);
+                ((Activity) mContext).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-                activityIntent.putExtra(KEY_POSITION_NOTE, position).
-                        putExtra(BaseActivity.PACKAGE + ".orientation", orientation).
-                        putExtra(BaseActivity.PACKAGE + ".left", screenLocation[0]).
-                        putExtra(BaseActivity.PACKAGE + ".top", screenLocation[1]).
-                        putExtra(BaseActivity.PACKAGE + ".width", v.getWidth()).
-                        putExtra(BaseActivity.PACKAGE + ".height", v.getHeight());
-
-                ((MenuActivity) mContext).startActivityForResult(activityIntent, MenuActivity.UPDATE_VIDEO_ADAPTER);
-
-                ((Activity) mContext).overridePendingTransition(0, 0);
                 break;
             case R.id.ivShare:
-                Note videoForShare = mListNotes.get(position);
+                Note noteForShare = mListNotes.get(position);
 
+                Intent intent2 = new Intent();
+                intent2.setAction(Intent.ACTION_SEND);
+                intent2.setType("text/plain");
+                intent2.putExtra(Intent.EXTRA_TEXT, noteForShare.getDescription());
+                mContext.startActivity(Intent.createChooser(intent2, "Share your thoughts via:"));
                 break;
         }
     }
@@ -117,6 +109,28 @@ public class NoteAdapter extends RecyclerSwipeAdapter<NoteAdapter.ViewHolder> im
     @Override
     public int getSwipeLayoutResourceId(int i) {
         return 0;
+    }
+
+    @Override
+    public void dialogWithDataClick(Object object) {
+        int position = (Integer) object;
+
+        Note note = mListNotes.get(position);
+
+        NoteDataManager noteManager = (NoteDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.NOTE_MANAGER);
+        noteManager.deleteNoteById(note.getId());
+
+        mListNotes.remove(note);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, mListNotes.size());
+
+        Intent intent = new Intent(Constants.UPDATE_ADAPTER_INTENT);
+        intent.putExtra(Constants.UPDATE_ADAPTER_NOTE, true);
+        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+    }
+
+    @Override
+    public void dialogClick() {
     }
 
 
@@ -135,8 +149,9 @@ public class NoteAdapter extends RecyclerSwipeAdapter<NoteAdapter.ViewHolder> im
             tvTitle = (TextView) itemLayoutView.findViewById(R.id.etTitle);
             delete = (ImageView) itemLayoutView.findViewById(R.id.ivDelete);
             share = (ImageView) itemLayoutView.findViewById(R.id.ivShare);
-            cardView = (CardView) itemLayoutView.findViewById(R.id.cardViewCreateVideo);
+            cardView = (CardView) itemLayoutView.findViewById(R.id.cardViewCreateNote);
 
+            cardView.setOnClickListener(NoteAdapter.this);
             delete.setOnClickListener(NoteAdapter.this);
             share.setOnClickListener(NoteAdapter.this);
         }

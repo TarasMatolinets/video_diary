@@ -30,7 +30,7 @@
 
     <string name="menu_notes">Notes</string>
     <string name="menu_share">Share</string>
-    <string name="menu_records">Records</string>
+    <string name="menu_records">Video Notes</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_about_me">About me</string>
 
@@ -38,11 +38,17 @@
     <string name="create_title">Sign your video</string>
     <string name="description">Tell more about this video</string>
 
+
+    <string name="create_title_note">Sign your note</string>
+    <string name="description_note">Tell more about this note</string>
+
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
 
     <string name="menu_no_record">No Video Records</string>
     <string name="menu_no_notes">No Notes</string>
+
+    <string name="delete_item">Delete current note</string>
 
     <string name="select_image_gallery">Select picture from gallery</string>
     <string name="select_image_gallery_description">Select picture for make your menu more beautiful</string>

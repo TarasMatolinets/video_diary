@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/cardViewCreateVideo"
+    android:id="@+id/cardViewCreateNote"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/edge_medium"
@@ -39,8 +39,7 @@
             android:ellipsize="end"
             android:textSize="@dimen/text_mini_normal"
             android:textStyle="normal"
-            android:textColor="@color/black"
-            android:singleLine="true"
+            android:textColor="@color/gray"
             android:maxLines="8" />
 
         <include
@@ -65,7 +64,8 @@
             android:id="@+id/ivShare"
             android:layout_margin="@dimen/edge_medium"
             android:background="@drawable/ic_share_grey"
-            android:layout_toLeftOf="@+id/ivDelete"
+            android:layout_alignParentLeft="true"
+
             android:layout_below="@+id/etDescription" />
 
     </RelativeLayout>

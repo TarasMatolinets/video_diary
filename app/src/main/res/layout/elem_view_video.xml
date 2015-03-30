@@ -1,112 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/edge_medium"
+    android:id="@+id/cardViewCreateVideo"
     android:layout_width="match_parent"
-    android:id="@+id/flMain"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    card_view:cardBackgroundColor="@color/white"
+    card_view:cardCornerRadius="@dimen/edge_normal">
 
-    <com.daimajia.swipe.SwipeLayout
-        android:id="@+id/swipe"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_margin="@dimen/edge_medium"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:id="@+id/rlVideoCreate">
 
-        <LinearLayout
-            android:background="@null"
-            android:layout_width="match_parent"
-            android:gravity="center"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/trash"
-                android:src="@drawable/ic_delete_white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-
-        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/cardViewCreateVideo"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            card_view:cardBackgroundColor="@color/white"
-            card_view:cardCornerRadius="@dimen/edge_normal">
+            android:id="@+id/flVideoCreate">
 
-            <RelativeLayout
+            <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/rlVideoCreate">
+                android:id="@+id/ivVideoThumbnail"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                android:layout_margin="@dimen/edge_medium" />
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/flVideoCreate">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_play_arrow_white"
+                android:id="@+id/ivPlay"
+                android:layout_gravity="center" />
+        </FrameLayout>
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/ivVideoThumbnail"
-                        android:scaleType="fitXY"
-                        android:adjustViewBounds="true"
-                        android:layout_margin="@dimen/edge_medium" />
+        <TextView
+            android:id="@+id/etTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/flVideoCreate"
+            android:layout_margin="@dimen/edge_medium"
+            android:maxLines="2"
+            android:textSize="@dimen/text_medium"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:ellipsize="end"
+            android:hint="@string/create_title"
+            android:singleLine="true" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/ic_play_arrow_white"
-                        android:id="@+id/ivPlay"
-                        android:layout_gravity="center" />
-                </FrameLayout>
+        <include
+            layout="@layout/view_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignBottom="@+id/etTitle" />
 
-                <TextView
-                    android:id="@+id/etTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/flVideoCreate"
-                    android:layout_margin="@dimen/edge_medium"
-                    android:maxLines="1"
-                    android:textSize="@dimen/text_medium"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:ellipsize="end"
-                    android:hint="@string/create_title"
-                    android:singleLine="true" />
+        <TextView
+            android:id="@+id/etDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etTitle"
+            android:layout_margin="@dimen/edge_medium"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:textSize="@dimen/text_mini_normal"
+            android:textStyle="normal"
+            android:gravity="top"
+            android:textColor="@color/black"
+             />
 
-                <include
-                    layout="@layout/view_divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_alignBottom="@+id/etTitle" />
+        <include
+            layout="@layout/view_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignBottom="@+id/etDescription" />
 
-                <TextView
-                    android:id="@+id/etDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/etTitle"
-                    android:layout_margin="@dimen/edge_medium"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:textSize="@dimen/text_mini_normal"
-                    android:textStyle="normal"
-                    android:gravity="top"
-                    android:textColor="@color/black"
-                    android:singleLine="true" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/trash"
+            android:layout_margin="@dimen/edge_medium"
+            android:background="@drawable/ic_delete_grey"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="false"
+            android:layout_below="@+id/etDescription" />
 
-                <include
-                    layout="@layout/view_divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_alignBottom="@+id/etDescription" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/ivShare"
-                    android:background="@drawable/ic_share_white"
-                    android:layout_margin="@dimen/edge_medium"
-                    android:layout_alignParentRight="true" />
-
-            </RelativeLayout>
-
-        </android.support.v7.widget.CardView>
-    </com.daimajia.swipe.SwipeLayout>
-</FrameLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivShare"
+            android:layout_marginRight="@dimen/edge_big"
+            android:layout_marginBottom="@dimen/edge_medium"
+            android:layout_marginTop="@dimen/edge_medium"
+            android:background="@drawable/ic_share_grey"
+            android:layout_toLeftOf="@+id/trash"
+            android:layout_below="@+id/etDescription" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

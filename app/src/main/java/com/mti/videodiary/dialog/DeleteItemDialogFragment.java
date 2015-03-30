@@ -12,13 +12,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.mti.videodiary.interfaces.OnDialogClickListener;
+import com.mti.videodiary.utils.Constants;
 
 import mti.com.videodiary.R;
 
 /**
- * Created by Taras Matolinets on 24.03.15.
+ * Created by taras on 30.03.15.
  */
-public class TakePictureDialog extends DialogFragment implements View.OnClickListener {
+public class DeleteItemDialogFragment extends DialogFragment implements View.OnClickListener {
     public OnDialogClickListener mDialogClick;
 
     @NonNull
@@ -27,7 +28,10 @@ public class TakePictureDialog extends DialogFragment implements View.OnClickLis
         final Dialog dialog = new Dialog(getActivity());
 
         dialog.setContentView(R.layout.dialog_choice);
-        dialog.setTitle(R.string.select_image_gallery);
+        dialog.setTitle(R.string.delete_item);
+
+        TextView titleDesc = (TextView) dialog.findViewById(R.id.tvDesc);
+        titleDesc.setVisibility(View.GONE);
 
         TextView title = (TextView) dialog.findViewById(android.R.id.title);
         title.setTextColor(getActivity().getResources().getColor(R.color.black));
@@ -65,12 +69,17 @@ public class TakePictureDialog extends DialogFragment implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btOkay:
+                int position = getArguments().getInt(Constants.KEY_POSITION_NOTE_ADAPTER);
+
                 if (mDialogClick != null)
-                    mDialogClick.dialogClick();
+                    mDialogClick.dialogWithDataClick(position);
+                dismiss();
                 break;
             case R.id.btCancel:
                 dismiss();
                 break;
         }
     }
+
+
 }
