@@ -38,6 +38,8 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
         setContentView(R.layout.activity_create_note);
 
         initViews();

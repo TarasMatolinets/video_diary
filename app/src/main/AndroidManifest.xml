@@ -34,14 +34,15 @@
         <activity
             android:name="com.mti.videodiary.activity.MenuActivity"
             android:theme="@style/MyNavigationDrawerTheme"
-            android:configChanges="orientation|screenSize"></activity>
+            android:configChanges="orientation|screenSize|keyboardHidden" />
 
         <activity
             android:name="com.mti.videodiary.activity.CreateVideoNoteActivity"
             android:theme="@style/VideoDailyActionBar"
             android:label="@string/create_video_note"
-            android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|"
+            android:windowSoftInputMode="stateHidden" />
 
 
         <activity
@@ -49,7 +50,7 @@
             android:theme="@style/NoteDailyActionBar"
             android:label="@string/create_note"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
 
         <intent-filter>
             <action android:name="android.intent.action.SEARCH" />

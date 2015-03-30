@@ -36,6 +36,7 @@
     <style name="NoteDailyActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimaryDark">@color/darkblue</item>
         <item name="colorPrimary">@color/blue</item>
+        <item name="elevation">0dp</item>
         <item name="actionBarStyle">@style/VideoDailyActionBarStyle</item>
     </style>
 

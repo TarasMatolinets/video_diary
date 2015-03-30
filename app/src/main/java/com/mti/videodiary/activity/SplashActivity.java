@@ -177,7 +177,7 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
                 String name = VideoDairySharePreferences.getSharedPreferences().getString(KEY_NAME, null);
 
                 if (name == null)
-                    moveViewToScreenCenter(nextView, -nextView.getHeight() * 4, 0, true);
+                    moveViewToScreenCenter(nextView, -nextView.getHeight() *4, 0, true);
                 else {
                     YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.FadeOut);
                     personalAnim.duration(700);

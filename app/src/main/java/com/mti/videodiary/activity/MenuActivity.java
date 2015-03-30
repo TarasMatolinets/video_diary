@@ -67,8 +67,6 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
 
 
         setBackPattern(MaterialNavigationDrawer.BACKPATTERN_CUSTOM);
-
-
         getHeaderView().setOnClickListener(this);
     }
 

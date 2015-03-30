@@ -24,6 +24,13 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="NoteDailyActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimaryDark">@color/darkblue</item>
+        <item name="colorPrimary">@color/blue</item>
+        <item name="elevation">0dp</item>
+        <item name="actionBarStyle">@style/VideoDailyActionBarStyle</item>
+    </style>
+
     <style name="VideoDailyTextStyle">
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/white</item>

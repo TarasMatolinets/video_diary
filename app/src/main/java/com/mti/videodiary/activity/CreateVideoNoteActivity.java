@@ -5,10 +5,13 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +21,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +41,7 @@ import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.UserHelper;
 
 import java.io.File;
+import java.io.IOException;
 
 import mti.com.videodiary.R;
 
@@ -107,7 +112,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         mEtTitle.addTextChangedListener(this);
         ivPlay.setOnClickListener(this);
 
-        mCardView.setBackgroundColor(Color.TRANSPARENT);
+        mCardView.setCardBackgroundColor(Color.TRANSPARENT);
     }
 
     private void setDataToView(Bundle savedInstanceState) {
@@ -149,6 +154,9 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                 if (width > 0 && height > 0) {
 
                     Bitmap bMap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
+
+                  //  bMap = fixOrientation(bMap);
+                    // bMap = getRotatedBitmap(file.getAbsolutePath(), bMap);
 
                     Bitmap newImage = UserHelper.cropImage(bMap, width, height);
 
@@ -223,7 +231,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                mCardView.setBackgroundColor(Color.WHITE);
+                mCardView.setCardBackgroundColor(Color.WHITE);
                 ivPlay.setVisibility(View.VISIBLE);
             }
         });
@@ -275,7 +283,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         }
 
         //show transparent effect
-        mCardView.setBackgroundColor(Color.TRANSPARENT);
+        mCardView.setCardBackgroundColor(Color.TRANSPARENT);
         ivPlay.setVisibility(View.GONE);
 
         mEtDescription.animate().translationY(-mEtDescription.getHeight()).alpha(0).
@@ -301,6 +309,20 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                     }
                 }
         );
+    }
+
+    public Bitmap fixOrientation(Bitmap image) {
+        int position = getIntent().getIntExtra(Constants.KEY_POSITION, DEFAULT_ITEM_POSITION);
+
+        if (image.getWidth() > image.getHeight()) {
+            return getBitmap(image,-90);
+        } else return image;
+    }
+
+    private Bitmap getBitmap(Bitmap image,int angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return image = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
     }
 
     @Override
@@ -391,7 +413,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     private void updateVideoDaily() {
-        int position = getIntent().getIntExtra(Constants.KEY_POSITION, -1);
+        int position = getIntent().getIntExtra(Constants.KEY_POSITION, DEFAULT_ITEM_POSITION);
         VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
 
         Video video = videoDataManager.getVideoByPosition(position);
@@ -402,39 +424,53 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     private void createNewVideoDaily() {
-        String videoFilePath = getIntent().getStringExtra(Constants.KEY_VIDEO_PATH);
+        final String videoFilePath = getIntent().getStringExtra(Constants.KEY_VIDEO_PATH);
 
         Constants.VIDEO_FILE_NAME = mEtTitle.getText().toString();
 
-        Bitmap bitmap = ((BitmapDrawable) mIvThumbnail.getDrawable()).getBitmap();
+        mIvThumbnail.post(new Runnable() {
+            @Override
+            public void run() {
+                int width = mIvThumbnail.getWidth();
+                int height = mIvThumbnail.getHeight();
 
-        File oldFileName = new File(videoFilePath);
-        File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + BaseActivity.APPLICATION_DIRECTORY + BaseActivity.VIDEO_DIR + File.separator + Constants.VIDEO_FILE_NAME + Constants.FILE_FORMAT);
+                if (width > 0 && height > 0) {
 
-        boolean success = oldFileName.renameTo(newFileName);
+                    Bitmap bitmap = ((BitmapDrawable) mIvThumbnail.getDrawable()).getBitmap();
 
-        if (success) {
-            Video video = new Video();
+                    Bitmap newImage = UserHelper.cropImage(bitmap, width, height);
 
-            video.setVideoUrl(newFileName.getAbsolutePath());
-            video.setTitle(mEtTitle.getText().toString());
-            video.setDescription(mEtDescription.getText().toString());
+                    File oldFileName = new File(videoFilePath);
+                    File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + BaseActivity.APPLICATION_DIRECTORY + BaseActivity.VIDEO_DIR + File.separator + Constants.VIDEO_FILE_NAME + Constants.FILE_FORMAT);
 
-            String tempBitmapPath = UserHelper.saveBitmapToSD(bitmap);
-            //we can use decodeSampledBitmapFromResource when we have stored bitmap in sd otherwise bitmap  will be null
-            Bitmap finalBitmap = UserHelper.decodeSampledBitmapFromResource(tempBitmapPath);
+                    boolean success = oldFileName.renameTo(newFileName);
 
-            String finalPathBitmap = UserHelper.saveBitmapToSD(finalBitmap);
+                    if (success) {
+                        Video video = new Video();
 
-            File file = new File(tempBitmapPath);
+                        video.setVideoUrl(newFileName.getAbsolutePath());
+                        video.setTitle(mEtTitle.getText().toString());
+                        video.setDescription(mEtDescription.getText().toString());
 
-            if (file.exists())
-                file.delete();
+                        String tempBitmapPath = UserHelper.saveBitmapToSD(newImage);
+                        //we can use decodeSampledBitmapFromResource when we have stored bitmap in sd otherwise bitmap  will be null
+                        Bitmap finalBitmap = UserHelper.decodeSampledBitmapFromResource(tempBitmapPath);
 
-            video.setImageUrl(finalPathBitmap);
-            VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
-            videoDataManager.createVideo(video);
-        }
+                        String finalPathBitmap = UserHelper.saveBitmapToSD(finalBitmap);
+
+                        File file = new File(tempBitmapPath);
+
+                        if (file.exists())
+                            file.delete();
+
+                        video.setImageUrl(finalPathBitmap);
+                        VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
+                        videoDataManager.createVideo(video);
+                    }
+                }
+            }
+        });
+
     }
 
     @Override
@@ -465,7 +501,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                 if (!isEditVideoDaily)
                     videoFilePath = getIntent().getStringExtra(Constants.KEY_VIDEO_PATH);
                 else {
-                    int position = getIntent().getIntExtra(Constants.KEY_POSITION, -1);
+                    int position = getIntent().getIntExtra(Constants.KEY_POSITION, DEFAULT_ITEM_POSITION);
                     VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
                     Video video = videoDataManager.getVideoByPosition(position);
                     videoFilePath = video.getVideoName();

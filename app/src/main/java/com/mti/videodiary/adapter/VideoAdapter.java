@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +22,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.daimajia.swipe.SwipeLayout;
-import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.mti.videodiary.activity.BaseActivity;
 import com.mti.videodiary.activity.CreateVideoNoteActivity;
 import com.mti.videodiary.activity.MenuActivity;
@@ -44,7 +44,7 @@ import mti.com.videodiary.R;
 /**
  * Created by Taras Matolinets on 24.02.15.
  */
-public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> implements View.OnClickListener,OnDialogClickListener {
+public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> implements View.OnClickListener,OnDialogClickListener {
 
     private static final String FILE = "file:///";
     public static final String KEY_POSITION = "com.mti.position.key";
@@ -172,15 +172,10 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
         }
     }
 
+
     private void deleteFile(File file) {
         if (file.exists())
             file.delete();
-    }
-
-
-    @Override
-    public int getSwipeLayoutResourceId(int i) {
-        return 0;
     }
 
     @Override
@@ -207,8 +202,7 @@ public class VideoAdapter extends RecyclerSwipeAdapter<VideoAdapter.ViewHolder> 
 
     @Override
     public void dialogClick() {
-
-    }
+ }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {

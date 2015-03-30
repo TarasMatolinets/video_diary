@@ -46,7 +46,6 @@ dependencies {
     compile 'com.daimajia.androidanimations:library:1.1.2@aar'
     compile 'jp.wasabeef:recyclerview-animators:1.1.0@aar'
 
-    compile "com.daimajia.swipelayout:library:1.1.8@aar"
     compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
 
     compile('de.keyboardsurfer.android.widget:crouton:1.8.5@aar') {

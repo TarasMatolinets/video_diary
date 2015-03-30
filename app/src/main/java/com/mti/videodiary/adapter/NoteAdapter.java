@@ -1,6 +1,5 @@
 package com.mti.videodiary.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,12 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
-import com.mti.videodiary.activity.BaseActivity;
 import com.mti.videodiary.activity.CreateNoteActivity;
 import com.mti.videodiary.activity.MenuActivity;
-import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.dao.Note;
+import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.manager.NoteDataManager;
 import com.mti.videodiary.dialog.DeleteItemDialogFragment;
 import com.mti.videodiary.interfaces.OnDialogClickListener;
@@ -31,7 +28,7 @@ import mti.com.videodiary.R;
 /**
  * Created by Taras Matolinets on 29.03.15.
  */
-public class NoteAdapter extends RecyclerSwipeAdapter<NoteAdapter.ViewHolder> implements View.OnClickListener, OnDialogClickListener {
+public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> implements View.OnClickListener, OnDialogClickListener {
     private Context mContext;
     private List<Note> mListNotes;
     private View view;
@@ -91,8 +88,6 @@ public class NoteAdapter extends RecyclerSwipeAdapter<NoteAdapter.ViewHolder> im
                 activityIntent.putExtra(Constants.KEY_POSITION, position);
 
                 ((MenuActivity) mContext).startActivityForResult(activityIntent, Constants.UPDATE_NOTE_ADAPTER);
-                ((Activity) mContext).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
                 break;
             case R.id.ivShare:
                 Note noteForShare = mListNotes.get(position);
@@ -104,11 +99,6 @@ public class NoteAdapter extends RecyclerSwipeAdapter<NoteAdapter.ViewHolder> im
                 mContext.startActivity(Intent.createChooser(intent2, "Share your thoughts via:"));
                 break;
         }
-    }
-
-    @Override
-    public int getSwipeLayoutResourceId(int i) {
-        return 0;
     }
 
     @Override
