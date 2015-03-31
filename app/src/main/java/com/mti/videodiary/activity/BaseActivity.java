@@ -10,11 +10,11 @@ import android.view.View;
  */
 public class BaseActivity extends ActionBarActivity {
 
-    public static final String APPLICATION_DIRECTORY = "/videoDaily";
-    public static final String VIDEO_DIR = "/video";
+    public static final String APPLICATION_DIRECTORY = "videoDairy";
+    public static final String VIDEO_DIR = "video";
     public static final String NOTE_DIR = "/note";
-    public static final String IMAGE_DIR = "/image";
-    public static final String PACKAGE = "com.mti.videodaily";
+    public static final String IMAGE_DIR = "image";
+    public static final String PACKAGE = "com.mti.videodairy";
 
     static float sAnimatorScale = 1;
 

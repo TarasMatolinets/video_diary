@@ -85,7 +85,7 @@ public class UserHelper {
     public static String saveBitmapToSD(Bitmap finalBitmap) {
         String root = Environment.getExternalStorageDirectory().toString();
 
-        File imageDir = new File(root + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.IMAGE_DIR);
+        File imageDir = new File(root + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.IMAGE_DIR);
 
         if (!imageDir.exists())
             imageDir.mkdirs();

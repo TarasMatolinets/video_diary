@@ -20,6 +20,7 @@ import com.gc.materialdesign.widgets.SnackBar;
 import com.mti.videodiary.dialog.TakePictureDialog;
 import com.mti.videodiary.fragment.AboutMeFragment;
 import com.mti.videodiary.fragment.NoteFragment;
+import com.mti.videodiary.fragment.SettingFragment;
 import com.mti.videodiary.fragment.VideoFragment;
 import com.mti.videodiary.interfaces.OnDialogClickListener;
 import com.mti.videodiary.utils.Constants;
@@ -57,9 +58,9 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
 
         addBottomSection(newSection(getString(R.string.menu_settings), R.drawable.ic_settings_black, new SettingFragment()).setSectionColor(selectedColor));
 
-        String videoFolder = BaseActivity.APPLICATION_DIRECTORY + BaseActivity.VIDEO_DIR;
-        String noteFolder = BaseActivity.APPLICATION_DIRECTORY + BaseActivity.NOTE_DIR;
-        String imageDir = BaseActivity.APPLICATION_DIRECTORY + BaseActivity.IMAGE_DIR;
+        String videoFolder = File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR;
+        String noteFolder = File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.NOTE_DIR;
+        String imageDir = File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.IMAGE_DIR;
 
         createFolder(videoFolder);
         createFolder(noteFolder);

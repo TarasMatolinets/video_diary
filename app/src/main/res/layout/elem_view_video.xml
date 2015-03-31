@@ -94,5 +94,16 @@
             android:background="@drawable/ic_share_grey"
             android:layout_toLeftOf="@+id/trash"
             android:layout_below="@+id/etDescription" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivEdit"
+            android:layout_marginRight="@dimen/edge_big"
+            android:layout_marginBottom="@dimen/edge_medium"
+            android:layout_marginTop="@dimen/edge_medium"
+            android:background="@drawable/ic_edit_grey"
+            android:layout_toLeftOf="@+id/ivShare"
+            android:layout_below="@+id/etDescription" />
     </RelativeLayout>
 </android.support.v7.widget.CardView>

@@ -38,6 +38,7 @@
     <string name="create_title">Sign your video</string>
     <string name="description">Tell more about this video</string>
 
+    <string name="tap_to_add_video_note">Tap to add video note</string>
 
     <string name="create_title_note">Sign your note</string>
     <string name="description_note">Tell more about this note</string>

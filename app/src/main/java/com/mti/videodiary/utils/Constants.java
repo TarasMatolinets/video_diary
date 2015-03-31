@@ -18,6 +18,9 @@ public class Constants {
     public static final String FILE_FORMAT = ".mp4";
     public static String VIDEO_FILE_NAME = File.separator + "video-dairy" + FILE_FORMAT;
     public static final String KEY_VIDEO_PATH = "com.mti.video-dairy.key-video-file-path";
+    public static final String ORIENTATION = "com.mti.video-dairy.orientation";
+
+/*video adapter*/
 
 
     /*note fragment*/

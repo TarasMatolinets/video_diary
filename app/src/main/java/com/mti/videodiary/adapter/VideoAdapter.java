@@ -44,10 +44,10 @@ import mti.com.videodiary.R;
 /**
  * Created by Taras Matolinets on 24.02.15.
  */
-public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> implements View.OnClickListener,OnDialogClickListener {
+public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> implements View.OnClickListener, OnDialogClickListener {
 
     private static final String FILE = "file:///";
-    public static final String KEY_POSITION = "com.mti.position.key";
+
     private Context mContext;
     private List<Video> mListVideos;
     private View view;
@@ -71,8 +71,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         Video video = mListVideos.get(position);
 
         holder.delete.setTag(position);
-        holder.cardView.setTag(position);
+        holder.edit.setTag(position);
         holder.share.setTag(position);
+        holder.play.setTag(position);
 
         holder.tvDescription.clearFocus();
         holder.tvTitle.clearFocus();
@@ -128,17 +129,27 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
                 fragment.setDialogClickListener(this);
                 fragment.setArguments(bundle);
                 fragment.show(((MenuActivity) mContext).getSupportFragmentManager(), null);
+                break;
+
+            case R.id.ivPlay:
+                VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
+                Video video = videoDataManager.getVideoByPosition(position);
+                String videoFilePath = video.getVideoName();
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoFilePath));
+                intent.setDataAndType(Uri.parse(videoFilePath), "video/mp4");
+                mContext.startActivity(intent);
 
                 break;
-            case R.id.cardViewCreateVideo:
+            case R.id.ivEdit:
                 int[] screenLocation = new int[2];
                 v.getLocationOnScreen(screenLocation);
                 int orientation = mContext.getResources().getConfiguration().orientation;
 
                 Intent activityIntent = new Intent(mContext, CreateVideoNoteActivity.class);
 
-                activityIntent.putExtra(KEY_POSITION, position).
-                        putExtra(BaseActivity.PACKAGE + ".orientation", orientation).
+                activityIntent.putExtra(Constants.KEY_POSITION, position).
+                        putExtra(BaseActivity.PACKAGE + Constants.ORIENTATION, orientation).
                         putExtra(BaseActivity.PACKAGE + ".left", screenLocation[0]).
                         putExtra(BaseActivity.PACKAGE + ".top", screenLocation[1]).
                         putExtra(BaseActivity.PACKAGE + ".width", v.getWidth()).
@@ -180,7 +191,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
     @Override
     public void dialogWithDataClick(Object object) {
-        int position = (Integer)object;
+        int position = (Integer) object;
 
         Video video = mListVideos.get(position);
 
@@ -202,7 +213,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
     @Override
     public void dialogClick() {
- }
+    }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -211,7 +222,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         public TextView tvDescription;
         public ImageView imIcon;
         public ImageView delete;
+        public ImageView play;
         public ImageView share;
+        public ImageView edit;
         public CardView cardView;
         public FrameLayout flMain;
 
@@ -225,11 +238,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             imIcon = (ImageView) itemLayoutView.findViewById(R.id.ivVideoThumbnail);
             share = (ImageView) itemLayoutView.findViewById(R.id.ivShare);
             delete = (ImageView) itemLayoutView.findViewById(R.id.trash);
+            play = (ImageView) itemLayoutView.findViewById(R.id.ivPlay);
+            edit = (ImageView) itemLayoutView.findViewById(R.id.ivEdit);
             cardView = (CardView) itemLayoutView.findViewById(R.id.cardViewCreateVideo);
             flMain = (FrameLayout) itemLayoutView.findViewById(R.id.flMain);
             viewDivider = (View) itemLayoutView.findViewById(R.id.viewDivider);
 
-            cardView.setOnClickListener(VideoAdapter.this);
+            play.setOnClickListener(VideoAdapter.this);
+            edit.setOnClickListener(VideoAdapter.this);
             delete.setOnClickListener(VideoAdapter.this);
             share.setOnClickListener(VideoAdapter.this);
         }
