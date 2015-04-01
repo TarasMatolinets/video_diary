@@ -18,7 +18,7 @@ import mti.com.videodiary.R;
 /**
  * Created by Taras Matolinets on 24.03.15.
  */
-public class TakePictureDialog extends DialogFragment implements View.OnClickListener {
+public class DialogTakePictureFragment extends DialogFragment implements View.OnClickListener {
     public OnDialogClickListener mDialogClick;
 
     @NonNull
@@ -26,7 +26,7 @@ public class TakePictureDialog extends DialogFragment implements View.OnClickLis
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Dialog dialog = new Dialog(getActivity());
 
-        dialog.setContentView(R.layout.dialog_choice);
+        dialog.setContentView(R.layout.dialog_choice_menu);
         dialog.setTitle(R.string.select_image_gallery);
 
         TextView title = (TextView) dialog.findViewById(android.R.id.title);

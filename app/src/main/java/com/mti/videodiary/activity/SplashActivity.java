@@ -7,7 +7,6 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.TimeInterpolator;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -29,7 +28,7 @@ import android.widget.RelativeLayout;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.mti.videodiary.animation.SkewableTextView;
-import com.mti.videodiary.utils.SharedPreferenceWrapper;
+import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.UserHelper;
 import com.mti.videodiary.utils.VideoDairySharePreferences;
 
@@ -42,7 +41,7 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
 
     public static final long MEDIUM_DURATION = 1000;
     private static final long SMALL_DURATION = 500;
-    private static final String KEY_NAME = "com.video.daily.personal.name";
+
 
     private static final AccelerateInterpolator sAccelerator = new AccelerateInterpolator();
     private static final LinearInterpolator sLinearInterpolator = new LinearInterpolator();
@@ -90,10 +89,11 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
         animationProperty.scaleX(1).scaleY(1);
         animationProperty.setInterpolator(new OvershootInterpolator());
 
-        String name = VideoDairySharePreferences.getSharedPreferences().getString(KEY_NAME, null);
+        //check if exist personal name
+//        String name = VideoDairySharePreferences.getSharedPreferences().getString(Constants.KEY_PERSON_NAME, null);
 
-        if (name != null)
-            mName.setText(name);
+//        if (name != null)
+//            mName.setText(name);
 
         YoYo.with(Techniques.ZoomIn).playOn(mWelcome);
         animateView();
@@ -174,17 +174,22 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
             public void onAnimationEnd(Animator animation) {
                 UserHelper.sleep(1000);
 
-                String name = VideoDairySharePreferences.getSharedPreferences().getString(KEY_NAME, null);
-
-                if (name == null)
-                    moveViewToScreenCenter(nextView, -nextView.getHeight() *4, 0, true);
-                else {
-                    YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.FadeOut);
-                    personalAnim.duration(700);
-                    personalAnim.withListener(mPersonalNameAnimation);
-                    personalAnim.playOn(mName);
-                }
-
+                //this commented code enable function add personal name and. Notice you also have to uncomment
+                // add setting function for in drawer and comment code for switch Splash activity to MenuActivity witch is below.
+//                String name = VideoDairySharePreferences.getSharedPreferences().getString(Constants.KEY_PERSON_NAME, null);
+//
+//                if (name == null)
+//                    moveViewToScreenCenter(nextView, -nextView.getHeight() * 4, 0, true);
+//                else {
+//                    YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.FadeOut);
+//                    personalAnim.duration(700);
+//                    personalAnim.withListener(mPersonalNameAnimation);
+//                    personalAnim.playOn(mName);
+//                }
+//
+                Intent intent = new Intent(SplashActivity.this, MenuActivity.class);
+                //  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
         fullSet.start();
@@ -252,10 +257,10 @@ public class SplashActivity extends BaseActivity implements ViewTreeObserver.OnP
         switch (v.getId()) {
             case R.id.splashBtClickNext:
 
-                String name = VideoDairySharePreferences.getSharedPreferences().getString(KEY_NAME, null);
+                String name = VideoDairySharePreferences.getSharedPreferences().getString(Constants.KEY_PERSON_NAME, null);
 
                 if (name == null) {
-                    VideoDairySharePreferences.setDataToSharePreferences(KEY_NAME, mPersonalName.getText().toString(), VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING);
+                    VideoDairySharePreferences.setDataToSharePreferences(Constants.KEY_PERSON_NAME, mPersonalName.getText().toString(), VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING);
                 }
 
                 splashClickNext();

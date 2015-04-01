@@ -62,7 +62,7 @@ public class NoteFragment extends BaseFragment implements View.OnClickListener, 
         setHasOptionsMenu(true);
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver,
-                new IntentFilter(Constants.UPDATE_ADAPTER_NOTE));
+                new IntentFilter(Constants.UPDATE_ADAPTER_INTENT));
     }
 
     @Override

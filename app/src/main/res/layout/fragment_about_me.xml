@@ -1,5 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_menu">
 
-</FrameLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/support_project"
+        android:id="@+id/tvSupportProject"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_normal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/edge_large" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/tvFirstCard"
+        android:layout_below="@+id/tvSupportProject"
+        android:text="@string/first_number_card"
+        android:textStyle="normal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_mini_normal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/edge_above" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/second_number_card"
+        android:id="@+id/tvSecondCard"
+        android:textStyle="normal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_mini_normal"
+        android:layout_below="@+id/tvFirstCard"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/edge_above" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/tvContactMe"
+        android:text="@string/contact_me"
+        android:textSize="@dimen/text_normal"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_below="@+id/tvSecondCard"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/edge_large" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvEmail"
+        android:textSize="@dimen/text_mini_normal"
+        android:textColor="@color/white"
+        android:layout_alignParentLeft="true"
+        android:textStyle="bold"
+        android:autoLink="email"
+        android:layout_marginLeft="@dimen/edge_medium"
+        android:layout_below="@+id/tvContactMe"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/edge_medium" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_mini_normal"
+        android:id="@+id/tvLinkenIn"
+        android:autoLink="web"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/white"
+        android:textStyle="normal"
+        android:layout_below="@+id/tvEmail"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/edge_medium"
+        android:layout_marginTop="@dimen/edge_above" />
+
+
+</RelativeLayout>

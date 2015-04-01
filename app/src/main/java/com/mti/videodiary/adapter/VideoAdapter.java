@@ -178,7 +178,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Title");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_STREAM, uri);
 
-                mContext.startActivity(Intent.createChooser(sharingIntent, "Upload video via: "));
+                mContext.startActivity(Intent.createChooser(sharingIntent, mContext.getResources().getString(R.string.share_text_video)));
                 break;
         }
     }

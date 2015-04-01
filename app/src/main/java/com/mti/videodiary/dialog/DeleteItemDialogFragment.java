@@ -27,7 +27,7 @@ public class DeleteItemDialogFragment extends DialogFragment implements View.OnC
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Dialog dialog = new Dialog(getActivity());
 
-        dialog.setContentView(R.layout.dialog_choice);
+        dialog.setContentView(R.layout.dialog_choice_menu);
         dialog.setTitle(R.string.delete_item);
 
         TextView titleDesc = (TextView) dialog.findViewById(R.id.tvDesc);

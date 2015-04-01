@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Video Dairy</string>
+    <string name="action_settings">Настройки</string>
+    <string name="contact_me" >Свяжитесь со мной:</string>
+    <string name="create_note">Создать заметку</string>
+    <string name="create_title" >Название видео записи</string>
+    <string name="create_title_note" >Описание заметки</string>
+    <string name="create_video_note" >Создавайте видео запись</string>
+    <string name="delete_item" >Удалить заметку</string>
+    <string name="description" >Расскажите больше об этом видео</string>
+    <string name="description_note">Расскажите подробнее о этой заметке</string>
+    <string name="dialog_cancel" >Отменить</string>
+    <string name="edit_note">Изменить заметку</string>
+    <string name="edit_video_note" >Редактирование видео заметку</string>
+    <string name="error_picture" >Пожалуйста, выберите другоє изображение</string>
+    <string name="fragment_broken_camera_warning">Что-то не так с вашей камеры</string>
+    <string name="menu_about_me" >Поддержка</string>
+    <string name="menu_act_choice_image" >Выбрать изображение</string>
+    <string name="menu_act_no_notes" >Нет заметок</string>
+
+    <string name="share_text_video">Поделись своим записю  с помощью:</string>
+    <string name="share_text_note">Поделись свиомы мыслями с помощью:</string>
+
+    <string name="menu_act_no_videos">Нет видео записи</string>
+    <string name="menu_cancel" >Отменить</string>
+    <string name="menu_no_notes">Нет заметок</string>
+    <string name="menu_no_record">Нет видео записей</string>
+    <string name="menu_notes" >Заметки</string>
+    <string name="menu_record">Запись</string>
+    <string name="menu_records">Видео заметки</string>
+    <string name="menu_save">Сохранить</string>
+    <string name="menu_search">Поиск</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="menu_share">Поделиться</string>
+    <string name="select_image_gallery">Выберите изображение</string>
+    <string name="select_image_gallery_description">Выберите изображение для чтоби сделать Ваше меню более красивым</string>
+    <string name="splash_app_name">ВИДЕО-ДНЕВНИК</string>
+    <string name="splash_welcome">ДОБРО ПОЖАЛОВАТЬ!</string>
+    <string name="support_project">Поддержка проекта:</string>
+    <string name="tap_to_add_video_note">Нажмите, чтобы добавить видео запись</string>
+</resources>

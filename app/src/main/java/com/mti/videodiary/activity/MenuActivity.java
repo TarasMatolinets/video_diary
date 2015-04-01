@@ -17,7 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.gc.materialdesign.widgets.SnackBar;
-import com.mti.videodiary.dialog.TakePictureDialog;
+import com.mti.videodiary.dialog.DialogTakePictureFragment;
 import com.mti.videodiary.fragment.AboutMeFragment;
 import com.mti.videodiary.fragment.NoteFragment;
 import com.mti.videodiary.fragment.SettingFragment;
@@ -56,7 +56,8 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
         addSection(newSection(getString(R.string.menu_notes), R.drawable.ic_note_add_black, new NoteFragment()).setSectionColor(selectedColor));
         addSection(newSection(getString(R.string.menu_about_me), R.drawable.ic_person_black, new AboutMeFragment()).setSectionColor(selectedColor));
 
-        addBottomSection(newSection(getString(R.string.menu_settings), R.drawable.ic_settings_black, new SettingFragment()).setSectionColor(selectedColor));
+        //show settings where you can change personal name
+     //   addBottomSection(newSection(getString(R.string.menu_settings), R.drawable.ic_settings_black, new SettingFragment()).setSectionColor(selectedColor));
 
         String videoFolder = File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR;
         String noteFolder = File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.NOTE_DIR;
@@ -109,7 +110,7 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
 
                     if (picturePath != null) {
                         setImageInBackground(picturePath);
-                        VideoDairySharePreferences.setDataToSharePreferences(Constants.IMAGE_HEADER, picturePath, VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING);
+                        VideoDairySharePreferences.setDataToSharePreferences(Constants.IMAGE_HEADER_MENU, picturePath, VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING);
                     } else {
                         showSnackView();
                     }
@@ -191,7 +192,7 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        TakePictureDialog dialog = new TakePictureDialog();
+        DialogTakePictureFragment dialog = new DialogTakePictureFragment();
         dialog.setDialogClickListener(this);
         dialog.show(getSupportFragmentManager(), null);
     }
@@ -212,7 +213,7 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
     public void onDrawerStateChanged(int newState) {
         //bug image height == 0. That's why we set image when drawerOpen
         if (!isImageAlreadySet) {
-            String picturePath = VideoDairySharePreferences.getSharedPreferences().getString(Constants.IMAGE_HEADER, null);
+            String picturePath = VideoDairySharePreferences.getSharedPreferences().getString(Constants.IMAGE_HEADER_MENU, null);
             if (picturePath != null)
                 setImageInBackground(picturePath);
         }

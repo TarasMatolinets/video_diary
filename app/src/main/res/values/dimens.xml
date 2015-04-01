@@ -43,4 +43,7 @@
 
     <dimen name="view_height_adapter">100dp</dimen>
 
+    <dimen name="corner_radius">1000dp</dimen>
+
+
 </resources>

@@ -100,7 +100,6 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
         showEmptyView();
 
         checkCamera();
-
         return mView;
     }
 

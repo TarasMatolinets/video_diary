@@ -81,7 +81,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
                 fragment.setDialogClickListener(this);
                 fragment.setArguments(bundle);
                 fragment.show(((MenuActivity) mContext).getSupportFragmentManager(), null);
-
                 break;
             case R.id.cardViewCreateNote:
                 Intent activityIntent = new Intent(mContext, CreateNoteActivity.class);
@@ -96,7 +95,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
                 intent2.setAction(Intent.ACTION_SEND);
                 intent2.setType("text/plain");
                 intent2.putExtra(Intent.EXTRA_TEXT, noteForShare.getDescription());
-                mContext.startActivity(Intent.createChooser(intent2, "Share your thoughts via:"));
+                mContext.startActivity(Intent.createChooser(intent2, mContext.getResources().getString(R.string.share_text_note)));
                 break;
         }
     }
@@ -111,11 +110,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         noteManager.deleteNoteById(note.getId());
 
         mListNotes.remove(note);
+
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, mListNotes.size());
 
         Intent intent = new Intent(Constants.UPDATE_ADAPTER_INTENT);
-        intent.putExtra(Constants.UPDATE_ADAPTER_NOTE, true);
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
     }
 

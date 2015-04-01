@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Video Dairy</string>
+    <string name="action_settings">Налаштування</string>
+    <string name="contact_me">Зв\'язатись зі мною:</string>
+    <string name="create_note">Cтворити замітку</string>
+    <string name="create_title">Назва відео запису</string>
+    <string name="create_title_note">Опис замітки</string>
+    <string name="create_video_note">Створити відео запис</string>
+    <string name="delete_item">Видалити запис</string>
+    <string name="description">Розкажіть більше про цей відео-запис</string>
+    <string name="description_note">Розкажіть більше про цю замітку</string>
+    <string name="dialog_cancel">Скасувати</string>
+    <string name="edit_note">Змінити замітку</string>
+    <string name="edit_video_note">Редагувати відео-замітку</string>
+    <string name="error_picture">Будь-ласка виберіть другу картинку</string>
+    <string name="fragment_broken_camera_warning">Щось не так із вашою камерою</string>
+    <string name="menu_about_me">Підтримка</string>
+    <string name="menu_act_choice_image">Виберіть картинку</string>
+    <string name="menu_act_no_notes">Нема заміток</string>
+    <string name="menu_act_no_videos">Нема відео запису</string>
+    <string name="menu_cancel">Скасувати</string>
+    <string name="menu_no_notes">Нема заміток</string>
+    <string name="menu_no_record">Нема відео записів</string>
+    <string name="menu_notes">Замітки</string>
+    <string name="menu_record">Запис</string>
+    <string name="menu_records">Відео Замітки</string>
+    <string name="menu_save">Зберегти</string>
+    <string name="menu_search">Пошук</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="menu_share">Поділитися</string>
+    <string name="select_image_gallery">Виберіть зображення</string>
+    <string name="select_image_gallery_description">Виберіть зображення для чтоби зробити Ваше меню красивішим</string>
+    <string name="splash_name"></string>
+    <string name="splash_app_name">ВІДЕО-ЩОДЕННИК</string>
+    <string name="splash_welcome">ЛАСКАВО ПРОСИМО!</string>
+    <string name="support_project">Підтримка проекту:</string>
+    <string name="tap_to_add_video_note">Натисніть щоб добавити відео запис</string>
+
+    <string name="share_text_video">Поділись своім відео за допомогою:</string>
+    <string name="share_text_note">Поділись свіоми думками за допомогою:</string>
+
+
+</resources>

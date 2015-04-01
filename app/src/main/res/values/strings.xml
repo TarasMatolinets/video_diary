@@ -15,7 +15,7 @@
     <!--menu activity-->
     <string name="menu_act_no_videos">No video records</string>
     <string name="menu_act_no_notes">No notes</string>
-    <string name="menu_act_choice_image">Tap to choice picture</string>
+    <string name="menu_act_choice_image">Tap to choose picture</string>
     <string name="create_video_note">Create video note</string>
     <string name="edit_video_note">Edit video note</string>
 
@@ -27,12 +27,11 @@
     <string name="menu_cancel">Cancel</string>
     <string name="menu_save">Save</string>
 
-
     <string name="menu_notes">Notes</string>
     <string name="menu_share">Share</string>
     <string name="menu_records">Video Notes</string>
     <string name="menu_settings">Settings</string>
-    <string name="menu_about_me">About me</string>
+    <string name="menu_about_me">Support</string>
 
     <!--fragment video -->
     <string name="create_title">Sign your video</string>
@@ -43,7 +42,7 @@
     <string name="create_title_note">Sign your note</string>
     <string name="description_note">Tell more about this note</string>
 
-    <string name="dialog_ok">OK</string>
+    <string name="dialog_ok" translatable="false">OK</string>
     <string name="dialog_cancel">Cancel</string>
 
     <string name="menu_no_record">No Video Records</string>
@@ -54,9 +53,30 @@
     <string name="select_image_gallery">Select picture from gallery</string>
     <string name="select_image_gallery_description">Select picture for make your menu more beautiful</string>
 
+    <!--setting fragment-->
+    <string name="frag_setting_title" translatable="false">Setting</string>
+
+    <string name="share_text_video">"Share your video via:</string>
+    <string name="share_text_note">"Share your thoughts via:</string>
+
+    <string name="frag_avatar" translatable="false">Take picture from</string>
+    <string name="frag_avatar_gallery" translatable="false">Gallery</string>
+    <string name="frag_avatar_camera" translatable="false">Camera</string>
+
+    <string name="support_project">Support project:</string>
+
+    <string name="contact_me">Contact me:</string>
+    <string name="contact_me_email" translatable="false">Email: </string>
+    <string name="contact_me_linken_in" translatable="false">LinkenIn: </string>
+    <string name="email" translatable="false">ernest.hyst@gmail.com</string>
+    <string name="linken_in" translatable="false">https://www.linkedin.com/in/tarasmatolinets</string>
+
+    <string name="first_number_card" translatable="false"><b>EuroBank: </b>5167 3200 1402 7726</string>
+    <string name="second_number_card" translatable="false"><b>Private Bank: </b>5168 7572 6860 7100</string>
+
     <!--warnings-->
     <string name="fragment_broken_camera_warning">Something going wrong with your camera</string>
-    <string name="error_picture">Please choice another picture </string>
-    <string name="error">error message</string>
-    <string name="error_format">error format</string>
+    <string name="error_picture">Please choose another picture</string>
+    <string name="error" translatable="false">error message</string>
+    <string name="error_format" translatable="false">error format</string>
 </resources>

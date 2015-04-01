@@ -6,8 +6,11 @@ import java.io.File;
  * Created by Taras Matolinets on 21.03.15.
  */
 public class Constants {
+    /*splash activity*/
+    public static final String KEY_PERSON_NAME = "com.video.daily.personal.name";
+
     /*menu activity*/
-    public static final String IMAGE_HEADER = "com.video.dairy.image.header";
+    public static final String IMAGE_HEADER_MENU = "com.video.dairy.image.header";
     public static final int UPDATE_VIDEO_ADAPTER = 22;
     public static final int UPDATE_NOTE_ADAPTER = 33;
     public static final int RESULT_LOAD_IMAGE = 133;
@@ -29,4 +32,7 @@ public class Constants {
 
     /*note adapter*/
     public static final String KEY_POSITION_NOTE_ADAPTER = "com.mti.position.position.note.adapter";
+
+    /*image avatar*/
+    public static final String IMAGE_AVATAR = "com.mti.image.avatar";
 }

@@ -1,5 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_menu">
 
-</FrameLayout>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/etPersonalName"
+        android:layout_marginTop="@dimen/edge_medium"
+        android:hint="@string/splash_name"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_large"
+        android:layout_below="@+id/ivAvatar"
+        android:layout_centerHorizontal="true" />
+
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:layout_height="@dimen/view_height_adapter"
+        android:layout_width="@dimen/view_height_adapter"
+        android:id="@+id/ivAvatar"
+        android:scaleType="fitCenter"
+        android:background="@drawable/ic_person_white"
+        android:layout_marginTop="@dimen/edge_medium"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        app:riv_corner_radius="@dimen/corner_radius"
+        app:riv_border_width="@dimen/edge_tiny"
+        app:riv_border_color="@color/white"
+        app:riv_mutate_background="true"
+        app:riv_tile_mode="repeat"
+        app:riv_oval="true" />
+
+
+</RelativeLayout>

@@ -18,7 +18,7 @@ import java.sql.SQLException;
  * Created by Taras Matolinets on 26.02.15.
  */
 public class DataBaseHelper extends OrmLiteSqliteOpenHelper {
-    private static final String DB_NAME = "video_daily_db";
+    private static final String DB_NAME = "video_dairy_db";
     private static final int DB_VERSION = 1;
 
     private Context mContext;
@@ -50,6 +50,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper {
 
             TableUtils.dropTable(connectionSource, Video.class, true);
             TableUtils.dropTable(connectionSource, Note.class, true);
+
             onCreate(sqLiteDatabase, connectionSource);
 
         } catch (SQLException e) {
