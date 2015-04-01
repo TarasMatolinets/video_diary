@@ -18,9 +18,8 @@ import android.widget.TextView;
 
 import com.gc.materialdesign.widgets.SnackBar;
 import com.mti.videodiary.dialog.DialogTakePictureFragment;
-import com.mti.videodiary.fragment.AboutMeFragment;
+import com.mti.videodiary.fragment.SupportFragment;
 import com.mti.videodiary.fragment.NoteFragment;
-import com.mti.videodiary.fragment.SettingFragment;
 import com.mti.videodiary.fragment.VideoFragment;
 import com.mti.videodiary.interfaces.OnDialogClickListener;
 import com.mti.videodiary.utils.Constants;
@@ -54,7 +53,7 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
 
         addSection(newSection(getString(R.string.menu_records), R.drawable.ic_videocam_black, new VideoFragment()).setSectionColor(selectedColor));
         addSection(newSection(getString(R.string.menu_notes), R.drawable.ic_note_add_black, new NoteFragment()).setSectionColor(selectedColor));
-        addSection(newSection(getString(R.string.menu_about_me), R.drawable.ic_person_black, new AboutMeFragment()).setSectionColor(selectedColor));
+        addSection(newSection(getString(R.string.menu_about_me), R.drawable.ic_person_black, new SupportFragment()).setSectionColor(selectedColor));
 
         //show settings where you can change personal name
      //   addBottomSection(newSection(getString(R.string.menu_settings), R.drawable.ic_settings_black, new SettingFragment()).setSectionColor(selectedColor));

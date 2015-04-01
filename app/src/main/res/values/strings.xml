@@ -79,4 +79,6 @@
     <string name="error_picture">Please choose another picture</string>
     <string name="error" translatable="false">error message</string>
     <string name="error_format" translatable="false">error format</string>
+
+    <string name="banner_ad_unit_id">ca-app-pub-6807003067438136/7737012204</string>
 </resources>

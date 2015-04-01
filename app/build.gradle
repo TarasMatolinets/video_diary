@@ -48,6 +48,8 @@ dependencies {
     compile 'jp.wasabeef:recyclerview-animators:1.1.0@aar'
     compile 'com.makeramen:roundedimageview:2.0.1'
 
+    compile 'com.google.android.gms:play-services:7.0.0'
+
     compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
 
     compile('de.keyboardsurfer.android.widget:crouton:1.8.5@aar') {

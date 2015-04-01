@@ -2,12 +2,14 @@ package com.mti.videodiary.fragment;
 
 import android.os.Bundle;
 import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import mti.com.videodiary.R;
 
@@ -15,11 +17,15 @@ import mti.com.videodiary.R;
  * Created by Taras Matolinets on 24.02.15.
  */
 
-public class AboutMeFragment extends BaseFragment {
+public class SupportFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_about_me, container, false);
+        View view = inflater.inflate(R.layout.fragment_support, container, false);
+
+        AdView mAdView = (AdView) view.findViewById(R.id.adViewSupport);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         TextView tvEmail = (TextView) view.findViewById(R.id.tvEmail);
         TextView tvLinkenIn = (TextView) view.findViewById(R.id.tvLinkenIn);

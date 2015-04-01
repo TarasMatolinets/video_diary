@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:id="@+id/flMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -24,6 +25,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adViewNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id"/>
 
         <com.gc.materialdesign.views.ButtonFloat
             android:id="@+id/buttonFloat"

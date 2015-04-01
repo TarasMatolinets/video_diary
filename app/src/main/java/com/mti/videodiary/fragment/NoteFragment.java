@@ -27,6 +27,8 @@ import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.gc.materialdesign.views.ButtonFloat;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.mti.videodiary.activity.CreateNoteActivity;
 import com.mti.videodiary.activity.MenuActivity;
 import com.mti.videodiary.adapter.NoteAdapter;
@@ -68,6 +70,10 @@ public class NoteFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_note, container, false);
+
+        AdView mAdView = (AdView) mView.findViewById(R.id.adViewNote);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         initViews();
         setupRecycleView();
