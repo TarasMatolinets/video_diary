@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.crashlytics.android.Crashlytics;
 import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.utils.VideoDairySharePreferences;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -11,6 +12,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
+import io.fabric.sdk.android.Fabric;
 import mti.com.videodiary.R;
 
 /**
@@ -25,7 +27,7 @@ public class VideoDiaryApplication extends Application {
         super.onCreate();
 
         DataBaseManager.init(this);
-
+        Fabric.with(this, new Crashlytics());
         initImageLoader(getApplicationContext());
         VideoDairySharePreferences.setContext(getApplicationContext());
     }

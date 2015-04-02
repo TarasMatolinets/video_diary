@@ -74,6 +74,10 @@
             android:name="android.app.searchable"
             android:resource="@xml/searchable" />
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="632c52e11fc663d638a8c6cb4d1ddad2038e26f4" />
+
     </application>
 
 
