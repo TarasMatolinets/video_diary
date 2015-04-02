@@ -7,7 +7,7 @@
 
     <!--splash-screen-->
     <string name="splash_welcome">WELCOME!</string>
-    <string name="splash_app_name">VIDEO DIARY</string>
+    <string name="splash_app_name">TO VIDEO DIARY</string>
     <string name="splash_name">Sign your name</string>
     <string name="splash_personal_name">Your Personal Name</string>
     <string name="splash_next">Next</string>
