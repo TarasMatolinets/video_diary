@@ -333,7 +333,6 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                 }
             });
         }
-
     }
 
     private void animateTextView(long duration, final Runnable endAction) {
