@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -26,7 +27,6 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -217,13 +217,23 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         anim.setDuration(DURATION)
                 .scaleX(1).scaleY(1).
                 translationX(0).translationY(0).
-                setInterpolator(sDecelerator)
-                .withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        animateText(duration);
-                    }
-                });
+                setInterpolator(sDecelerator);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            anim.setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    animateText(duration);
+                }
+            });
+        } else {
+            anim.withEndAction(new Runnable() {
+                @Override
+                public void run() {
+                    animateText(duration);
+                }
+            });
+        }
 
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0, 255);
         bgAnim.setDuration(DURATION_FADE_IN);
@@ -244,18 +254,32 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         // is done. Slide and fade the text in from underneath
         // the picture.
         mEtTitle.setTranslationY(-mEtTitle.getHeight());
-        mEtTitle.animate().setDuration(duration / 2).
+        ViewPropertyAnimator anim = mEtTitle.animate();
+        anim.setDuration(duration / 2).
                 translationY(0).alpha(1).
-                setInterpolator(sDecelerator).withEndAction(new Runnable() {
-            @Override
-            public void run() {
+                setInterpolator(sDecelerator);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            anim.setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    animateDescription(duration);
+                }
+            });
+        } else {
+            anim.withEndAction(new Runnable() {
+                @Override
+                public void run() {
+                    animateDescription(duration);
+                }
+            });
+        }
+    }
 
-                mEtDescription.setTranslationY(0);
-                mEtDescription.animate().setDuration(duration / 2).
-                        alpha(1).
-                        setInterpolator(sDecelerator);
-            }
-        });
+    private void animateDescription(long duration) {
+        mEtDescription.setTranslationY(0);
+        mEtDescription.animate().setDuration(duration / 2).
+                alpha(1).
+                setInterpolator(sDecelerator);
     }
 
     /**
@@ -289,29 +313,70 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         mIvCancel.setVisibility(View.GONE);
         mTvAddVideoNote.setVisibility(View.GONE);
 
-        mEtDescription.animate().translationY(-mEtDescription.getHeight()).alpha(0).
-                setDuration(duration / 2).setInterpolator(sAccelerator).withEndAction(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        mEtTitle.animate().translationY(-mEtTitle.getHeight()).alpha(0).
-                                setDuration(duration / 2).setInterpolator(sAccelerator).
-                                withEndAction(new Runnable() {
-                                    public void run() {
-                                        // Animate image back to thumbnail size/location
-                                        mIvThumbnail.animate().setDuration(DURATION).
-                                                scaleX(mWidthScale).scaleY(mHeightScale).alpha(0).
-                                                withEndAction(endAction);
+        ViewPropertyAnimator anim = mEtDescription.animate();
 
-                                        // Fade out background
-                                        ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
-                                        bgAnim.setDuration(DURATION);
-                                        bgAnim.start();
-                                    }
-                                });
-                    }
+                anim.translationY(-mEtDescription.getHeight()).alpha(0).
+                setDuration(duration / 2).setInterpolator(sAccelerator);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            anim.setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    animateTextView(duration, endAction);
                 }
-        );
+            });
+        } else {
+            anim.withEndAction(new Runnable() {
+                @Override
+                public void run() {
+                    animateTextView(duration, endAction);
+                }
+            });
+        }
+
+    }
+
+    private void animateTextView(long duration, final Runnable endAction) {
+       ViewPropertyAnimator anim = mEtTitle.animate();
+
+        anim.translationY(-mEtTitle.getHeight()).alpha(0).
+                setDuration(duration / 2).setInterpolator(sAccelerator);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            anim.setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    animateThumbnail(endAction);
+                }
+            });
+        } else {
+            anim.withEndAction(new Runnable() {
+                @Override
+                public void run() {
+                    animateThumbnail(endAction);
+                }
+            });
+        }
+    }
+
+    private void animateThumbnail(final Runnable endAction) {
+      ViewPropertyAnimator anim =mIvThumbnail.animate();
+        anim.setDuration(DURATION).
+                scaleX(mWidthScale).scaleY(mHeightScale).alpha(0);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            anim.setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    animateThumbnail(endAction);
+                }
+            });
+        } else {
+            anim.withEndAction(endAction);
+        }
+
+        // Fade out background
+        ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
+        bgAnim.setDuration(DURATION);
+        bgAnim.start();
     }
 
     @Override

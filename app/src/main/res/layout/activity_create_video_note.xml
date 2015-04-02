@@ -74,9 +74,10 @@
             android:layout_margin="@dimen/edge_medium"
             android:maxLines="3"
             android:textCursorDrawable="@drawable/keyboard_cursor_color"
-            android:inputType="text"
+            android:inputType="text|textMultiLine"
             android:textSize="@dimen/text_medium"
             android:textStyle="bold"
+
             android:textColor="@color/black"
             android:ellipsize="end"
             android:hint="@string/create_title"
@@ -88,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="@dimen/edge_medium"
-            android:inputType="text"
+            android:inputType="text|textMultiLine"
             android:textCursorDrawable="@drawable/keyboard_cursor_color"
             android:textSize="@dimen/text_mini_normal"
             android:textStyle="normal"
@@ -96,7 +97,6 @@
             android:hint="@string/description"
             android:layout_weight="0.2"
             android:gravity="top" />
-
 
     </LinearLayout>
 </ScrollView>
