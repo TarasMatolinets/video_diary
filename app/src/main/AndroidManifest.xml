@@ -4,26 +4,34 @@
     package="mti.com.videodiary">
 
     <!--user permission-->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--
 
-    <compatible-screens>
-        <screen android:screenSize="large" android:screenDensity="ldpi" />
-        <screen android:screenSize="large" android:screenDensity="mdpi" />
-        <screen android:screenSize="large" android:screenDensity="hdpi" />
+        <compatible-screens>
+            &lt;!&ndash;<screen android:screenSize="large" android:screenDensity="mdpi" />&ndash;&gt;
+            <screen android:screenSize="large" android:screenDensity="hdpi" />
+            <screen android:screenSize="large" android:screenDensity="xhdpi" />
 
-        <screen android:screenSize="normal" android:screenDensity="ldpi" />
-        <screen android:screenSize="normal" android:screenDensity="mdpi" />
-        <screen android:screenSize="normal" android:screenDensity="hdpi" />
-        <screen android:screenSize="normal" android:screenDensity="xhdpi" />
-    </compatible-screens>
+            <screen android:screenSize="xlarge" android:screenDensity="mdpi" />
+            <screen android:screenSize="xlarge" android:screenDensity="hdpi" />
+            <screen android:screenSize="xlarge" android:screenDensity="xhdpi" />
 
+    </compatible-screens>-->
+
+
+    <supports-screens
+        android:smallScreens="false"
+        android:normalScreens="false"
+        android:largeScreens="true"
+        android:xlargeScreens="false"
+        android:anyDensity="true" />
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -66,7 +74,8 @@
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateHidden" />
 
-        <activity android:name="com.google.android.gms.ads.AdActivity"
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
 
@@ -74,7 +83,8 @@
             <action android:name="android.intent.action.SEARCH" />
         </intent-filter>
 
-        <meta-data android:name="com.google.android.gms.version"
+        <meta-data
+            android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <meta-data
