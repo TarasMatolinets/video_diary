@@ -105,7 +105,6 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
         initListeners();
         showEmptyView();
 
-        checkCamera();
         return mView;
     }
 
@@ -165,15 +164,6 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    private void checkCamera() {
-        if (!hasCamera()) {
-            SnackBar snackbar = new SnackBar(getActivity(), getResources().getString(R.string.fragment_broken_camera_warning), null, null);
-            snackbar.setBackgroundSnackBar(getResources().getColor(R.color.blue));
-            snackbar.show();
-            mButtonFloat.setEnabled(false);
-        }
-    }
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -201,7 +191,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
 
     private boolean hasCamera() {
         if (getActivity().getPackageManager().hasSystemFeature(
-                PackageManager.FEATURE_CAMERA_ANY)) {
+                PackageManager.FEATURE_CAMERA)) {
             return true;
         } else {
             return false;
@@ -223,18 +213,34 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonFloat:
-                final File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + Constants.VIDEO_FILE_NAME);
+                if (hasCamera()) {
+                    Uri fileUri = Uri.fromFile(saveFileInStorage());
 
-                Uri fileUri = Uri.fromFile(mediaFile);
+                    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
-                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                   // intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
 
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-
-                startActivityForResult(intent, REQUEST_VIDEO_CAPTURE);
+                    startActivityForResult(intent, REQUEST_VIDEO_CAPTURE);
+                } else {
+                    SnackBar snackbar = new SnackBar(getActivity(), getResources().getString(R.string.fragment_broken_camera_warning), null, null);
+                    snackbar.setBackgroundSnackBar(getResources().getColor(R.color.blue));
+                    snackbar.show();
+                }
                 break;
         }
+    }
+
+    private File saveFileInStorage() {
+        String state = Environment.getExternalStorageState();
+        File mediaFile = null;
+
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + Constants.VIDEO_FILE_NAME);
+        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+          return  mediaFile = new File(getActivity().getFilesDir() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + Constants.VIDEO_FILE_NAME);
+        }
+        return null;
     }
 
     @Override

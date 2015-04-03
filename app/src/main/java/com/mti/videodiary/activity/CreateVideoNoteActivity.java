@@ -19,6 +19,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.mti.videodiary.application.VideoDiaryApplication;
 import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.dao.Video;
 import com.mti.videodiary.data.manager.VideoDataManager;
@@ -38,6 +40,7 @@ import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.UserHelper;
 
 import java.io.File;
+import java.io.IOException;
 
 import mti.com.videodiary.R;
 
@@ -158,6 +161,21 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                 if (width > 0 && height > 0) {
 
                     Bitmap bMap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
+                    //this code for devices which file path not save at video dairy folder
+                    if (bMap == null) {
+                        File newFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + File.separator + Constants.VIDEO_FILE_NAME + Constants.FILE_FORMAT);
+
+                        try {
+                            UserHelper.copyFileUsingFileStreams(file, newFile);
+                            bMap = ThumbnailUtils.createVideoThumbnail(newFile.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
+
+                            if(file.exists())
+                                file.delete();
+                       } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                     Bitmap newImage = UserHelper.cropImage(bMap, width, height);
 
                     mIvThumbnail.setImageBitmap(newImage);
@@ -315,7 +333,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
         ViewPropertyAnimator anim = mEtDescription.animate();
 
-                anim.translationY(-mEtDescription.getHeight()).alpha(0).
+        anim.translationY(-mEtDescription.getHeight()).alpha(0).
                 setDuration(duration / 2).setInterpolator(sAccelerator);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
@@ -336,7 +354,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     private void animateTextView(long duration, final Runnable endAction) {
-       ViewPropertyAnimator anim = mEtTitle.animate();
+        ViewPropertyAnimator anim = mEtTitle.animate();
 
         anim.translationY(-mEtTitle.getHeight()).alpha(0).
                 setDuration(duration / 2).setInterpolator(sAccelerator);
@@ -358,7 +376,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     private void animateThumbnail(final Runnable endAction) {
-      ViewPropertyAnimator anim =mIvThumbnail.animate();
+        ViewPropertyAnimator anim = mIvThumbnail.animate();
         anim.setDuration(DURATION).
                 scaleX(mWidthScale).scaleY(mHeightScale).alpha(0);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {

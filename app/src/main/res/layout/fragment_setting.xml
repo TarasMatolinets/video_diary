@@ -11,7 +11,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/etPersonalName"
         android:layout_marginTop="@dimen/edge_medium"
-        android:hint="@string/splash_name"
+
         android:textColor="@color/white"
         android:textSize="@dimen/text_large"
         android:layout_below="@+id/ivAvatar"

@@ -158,7 +158,7 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
                     Bitmap newImage = UserHelper.cropImage(bitmap, width, height);
                     Drawable drawable = new BitmapDrawable(getResources(), newImage);
 
-                    mFrameLayoutMain.setBackground(drawable);
+                        mFrameLayoutMain.setBackgroundDrawable(drawable);
                 }
             }
         });

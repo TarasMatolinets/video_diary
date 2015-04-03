@@ -862,20 +862,26 @@ public abstract class MaterialNavigationDrawer<Fragment> extends ActionBarActivi
                     break;
                 case BACKPATTERN_CUSTOM:
                     //code comment because we use own implementation of backClick
-                    MaterialSection backedSection = backToSection(getCurrentSection());
+//                   MaterialSection backedSection = backToSection(getCurrentSection());
+//
+//                    if (currentSection != backedSection)
+//                      {
+//                        if (backedSection.getTarget() != MaterialSection.TARGET_FRAGMENT) {
+//                            throw new RuntimeException("The restored section must have a fragment as target");
+//                        }
+//                        backedSection.select();
+//                        onClick(backedSection);
+//
+//                        setFragment((Fragment) backedSection.getTargetFragment(), backedSection.getTitle(), (Fragment) currentSection.getTargetFragment());
+//                        afterFragmentSetted((Fragment) backedSection.getTargetFragment(),backedSection.getTitle());
+//                        syncSectionsState(backedSection);
+//                    }
+//                    else
+                    if(isDrawerOpen())
+                        closeDrawer();
+                    else
+                        super.onBackPressed();
 
-                    if (currentSection != backedSection)
-                      {
-                        if (backedSection.getTarget() != MaterialSection.TARGET_FRAGMENT) {
-                            throw new RuntimeException("The restored section must have a fragment as target");
-                        }
-                        backedSection.select();
-                        onClick(backedSection);
-
-                        setFragment((Fragment) backedSection.getTargetFragment(), backedSection.getTitle(), (Fragment) currentSection.getTargetFragment());
-                        afterFragmentSetted((Fragment) backedSection.getTargetFragment(),backedSection.getTitle());
-                        syncSectionsState(backedSection);
-                    }
                     break;
             }
         }
