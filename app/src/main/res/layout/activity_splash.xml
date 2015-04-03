@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:id="@+id/etTitle"
-            android:hint="@string/splash_personal_name"
+
             android:textColor="@color/gray"
             android:textColorHint="@color/gray"
             android:background="@color/white"
@@ -54,6 +54,7 @@
             android:focusable="true"
             android:gravity="center"
             android:layout_centerInParent="true" />
+        <!--android:hint="@string/splash_personal_name"-->
 
         <ImageButton
             android:layout_width="wrap_content"

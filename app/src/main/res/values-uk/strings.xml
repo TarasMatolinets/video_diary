@@ -31,7 +31,6 @@
     <string name="menu_share">Поділитися</string>
     <string name="select_image_gallery">Виберіть зображення</string>
     <string name="select_image_gallery_description">Виберіть зображення для чтоби зробити Ваше меню красивішим</string>
-    <string name="splash_name"></string>
     <string name="splash_app_name">В ВІДЕО-ЩОДЕННИК</string>
     <string name="splash_welcome">ЛАСКАВО ПРОСИМО!</string>
     <string name="support_project">Підтримка проекту:</string>
@@ -40,5 +39,5 @@
     <string name="share_text_video">Поділись своім відео за допомогою:</string>
     <string name="share_text_note">Поділись свіоми думками за допомогою:</string>
 
-
+    <string name="banner_ad_unit_id">ca-app-pub-6807003067438136/7737012204</string>
 </resources>
