@@ -161,21 +161,6 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                 if (width > 0 && height > 0) {
 
                     Bitmap bMap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
-                    //this code for devices which file path not save at video dairy folder
-                    if (bMap == null) {
-                        File newFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + File.separator + Constants.VIDEO_FILE_NAME + Constants.FILE_FORMAT);
-
-                        try {
-                            UserHelper.copyFileUsingFileStreams(file, newFile);
-                            bMap = ThumbnailUtils.createVideoThumbnail(newFile.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
-
-                            if(file.exists())
-                                file.delete();
-                       } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
                     Bitmap newImage = UserHelper.cropImage(bMap, width, height);
 
                     mIvThumbnail.setImageBitmap(newImage);

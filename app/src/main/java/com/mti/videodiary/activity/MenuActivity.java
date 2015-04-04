@@ -41,6 +41,8 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
     @Override
     public void init(Bundle bundle) {
 
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
         // create and set the header
         View view = LayoutInflater.from(this).inflate(R.layout.custom_drawer_header, null);
         mChoiceImage = (TextView) view.findViewById(R.id.tvChoiceImage);
