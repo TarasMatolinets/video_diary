@@ -12,26 +12,37 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!--
 
-        <compatible-screens>
-            &lt;!&ndash;<screen android:screenSize="large" android:screenDensity="mdpi" />&ndash;&gt;
-            <screen android:screenSize="large" android:screenDensity="hdpi" />
-            <screen android:screenSize="large" android:screenDensity="xhdpi" />
 
-            <screen android:screenSize="xlarge" android:screenDensity="mdpi" />
-            <screen android:screenSize="xlarge" android:screenDensity="hdpi" />
-            <screen android:screenSize="xlarge" android:screenDensity="xhdpi" />
+    <!--  <compatible-screens>
+         <screen
+             android:screenSize="large"
+             android:screenDensity="mdpi" />
+         <screen
+             android:screenSize="large"
+             android:screenDensity="hdpi" />
+         <screen
+             android:screenSize="large"
+             android:screenDensity="xhdpi" />
+
+         <screen
+             android:screenSize="xlarge"
+             android:screenDensity="mdpi" />
+         <screen
+             android:screenSize="xlarge"
+             android:screenDensity="hdpi" />
+        <screen
+             android:screenSize="xlarge"
+             android:screenDensity="xhdpi" />
 
     </compatible-screens>-->
 
-
-    <supports-screens
-        android:smallScreens="false"
-        android:normalScreens="false"
-        android:largeScreens="true"
-        android:xlargeScreens="false"
-        android:anyDensity="true" />
+   <!--     <supports-screens
+            android:smallScreens="false"
+            android:normalScreens="false"
+            android:largeScreens="true"
+            android:xlargeScreens="true"
+            android:anyDensity="true" />-->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />

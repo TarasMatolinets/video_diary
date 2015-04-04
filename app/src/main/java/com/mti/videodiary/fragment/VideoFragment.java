@@ -219,7 +219,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
                     Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                   // intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                    // intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
 
                     startActivityForResult(intent, REQUEST_VIDEO_CAPTURE);
                 } else {
@@ -238,7 +238,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             return mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + Constants.VIDEO_FILE_NAME);
         } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-          return  mediaFile = new File(getActivity().getFilesDir() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + Constants.VIDEO_FILE_NAME);
+            return mediaFile = new File(getActivity().getFilesDir() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + Constants.VIDEO_FILE_NAME);
         }
         return null;
     }
@@ -248,13 +248,11 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_VIDEO_CAPTURE:
-                if (resultCode == getActivity().RESULT_OK) {
+                if (resultCode == getActivity().RESULT_OK && data != null) {
                     startVideoActivity(data);
-                } else if (resultCode == getActivity().RESULT_CANCELED) {
-                    Log.w(VideoDiaryApplication.TAG, "Video recording cancelled.");
-                } else {
-                    Log.e(VideoDiaryApplication.TAG, "Failed to record video");
-                }
+                } else
+                    showSnackView();
+
                 break;
 
             case Constants.UPDATE_VIDEO_ADAPTER:
@@ -268,6 +266,12 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
                 showEmptyView();
                 break;
         }
+    }
+
+    private void showSnackView() {
+        SnackBar snackbar = new SnackBar(getActivity(), getResources().getString(R.string.fragment_broken_camera_warning), null, null);
+        snackbar.setBackgroundSnackBar(getResources().getColor(R.color.blue));
+        snackbar.show();
     }
 
     private void startVideoActivity(Intent data) {
