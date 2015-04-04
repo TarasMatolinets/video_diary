@@ -219,7 +219,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
                     Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                    // intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
 
                     startActivityForResult(intent, REQUEST_VIDEO_CAPTURE);
                 } else {
