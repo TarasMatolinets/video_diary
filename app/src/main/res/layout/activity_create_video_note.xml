@@ -60,7 +60,7 @@
                     android:textStyle="normal"
                     android:visibility="gone"
                     android:gravity="center"
-                    android:drawablePadding="@dimen/edge_medium"
+                    android:drawablePadding="@dimen/edge_normal"
                     android:textColor="@color/gray"
                     android:textSize="@dimen/text_medium"
                     android:layout_centerInParent="true" />

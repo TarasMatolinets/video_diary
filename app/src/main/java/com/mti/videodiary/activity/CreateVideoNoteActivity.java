@@ -25,7 +25,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -89,6 +91,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         initActionBar();
     }
 
+
     private void initActionBar() {
         mActionBar = getSupportActionBar();
 
@@ -122,7 +125,6 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     private void setDataToView(Bundle savedInstanceState) {
-
         mCardView.setCardBackgroundColor(Color.TRANSPARENT);
 
         Bundle bundle = getIntent().getExtras();
