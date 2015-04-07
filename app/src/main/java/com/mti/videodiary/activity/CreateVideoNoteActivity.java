@@ -50,6 +50,7 @@ import mti.com.videodiary.R;
  * Created by Taras Matolinets on 01.03.15.
  */
 public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher, View.OnClickListener {
+    private static final String FILE_PLAY_VIDEO = "file://";
 
     private static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
     private static final TimeInterpolator sAccelerator = new AccelerateInterpolator();
@@ -683,12 +684,12 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             case R.id.ivPlay:
                 String videoFilePath;
                 if (!isEditVideoDaily)
-                    videoFilePath = getIntent().getStringExtra(Constants.KEY_VIDEO_PATH);
+                    videoFilePath = FILE_PLAY_VIDEO + getIntent().getStringExtra(Constants.KEY_VIDEO_PATH);
                 else {
                     int position = getIntent().getIntExtra(Constants.KEY_POSITION, DEFAULT_ITEM_POSITION);
                     VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
                     Video video = videoDataManager.getVideoByPosition(position);
-                    videoFilePath = video.getVideoName();
+                    videoFilePath = FILE_PLAY_VIDEO + video.getVideoName();
                 }
 
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoFilePath));
