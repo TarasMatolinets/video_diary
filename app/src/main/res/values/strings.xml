@@ -74,6 +74,8 @@
     <string name="first_number_card" translatable="false"><b>EuroBank: </b>5167 3200 1402 7726</string>
     <string name="second_number_card" translatable="false"><b>Private Bank: </b>5168 7572 6860 7100</string>
 
+    <string name="error_play_video">Can\'t open current video file</string>
+
     <!--warnings-->
     <string name="fragment_broken_camera_warning">Something going wrong with your camera</string>
     <string name="error_picture">Please choose another picture</string>

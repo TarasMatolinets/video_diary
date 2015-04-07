@@ -1,11 +1,11 @@
 package com.mti.videodiary.adapter;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +14,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.gc.materialdesign.widgets.SnackBar;
 import com.mti.videodiary.activity.BaseActivity;
 import com.mti.videodiary.activity.CreateVideoNoteActivity;
 import com.mti.videodiary.activity.MenuActivity;
@@ -29,7 +29,6 @@ import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.dao.Video;
 import com.mti.videodiary.data.manager.VideoDataManager;
 import com.mti.videodiary.dialog.DeleteItemDialogFragment;
-import com.mti.videodiary.fragment.VideoFragment;
 import com.mti.videodiary.interfaces.OnDialogClickListener;
 import com.mti.videodiary.utils.Constants;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -46,8 +45,8 @@ import mti.com.videodiary.R;
  */
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> implements View.OnClickListener, OnDialogClickListener {
 
-    private static final String FILE = "file:///";
-
+    private static final String FILE_UNIVERSAL_LOADER = "file:///";
+    private static final String FILE_PLAY_VIDEO = "file://";
     private Context mContext;
     private List<Video> mListVideos;
     private View view;
@@ -88,7 +87,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         }
         holder.tvTitle.setText(video.getTitle());
 
-        ImageLoader.getInstance().displayImage(FILE + video.getImageUrl(), holder.imIcon, new SimpleImageLoadingListener() {
+        ImageLoader.getInstance().displayImage(FILE_UNIVERSAL_LOADER + video.getImageUrl(), holder.imIcon, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
 
@@ -132,13 +131,19 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
                 break;
 
             case R.id.ivPlay:
-                VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
-                Video video = videoDataManager.getVideoByPosition(position);
-                String videoFilePath = video.getVideoName();
+                try {
+                    VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
+                    Video video = videoDataManager.getVideoByPosition(position);
+                    String videoFilePath = FILE_PLAY_VIDEO + video.getVideoName();
 
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoFilePath));
-                intent.setDataAndType(Uri.parse(videoFilePath), "video/mp4");
-                mContext.startActivity(intent);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoFilePath));
+                    intent.setDataAndType(Uri.parse(videoFilePath), "video/mp4");
+                    mContext.startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    SnackBar snackbar = new SnackBar((Activity) mContext, mContext.getString(R.string.error_play_video), null, null);
+                    snackbar.setBackgroundSnackBar(mContext.getResources().getColor(R.color.blue));
+                    snackbar.show();
+                }
 
                 break;
             case R.id.ivEdit:
