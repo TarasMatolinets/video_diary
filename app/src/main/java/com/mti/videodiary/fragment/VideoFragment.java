@@ -45,6 +45,7 @@ import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.dao.Video;
 import com.mti.videodiary.data.manager.VideoDataManager;
 import com.mti.videodiary.utils.Constants;
+import com.mti.videodiary.utils.UserHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
 
     private View mView;
     private RecyclerView mRecyclerView;
-    private VideoAdapter mAdapter;
+    private static VideoAdapter mAdapter;
     private StaggeredGridLayoutManager mLayoutManager;
     private ButtonFloat mButtonFloat;
     private ImageView mIvCameraOff;
@@ -96,7 +97,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_video, container, false);
 
-        AdView mAdView = (AdView) mView.findViewById(R.id.adViewVideo);
+        AdView    mAdView = (AdView) mView.findViewById(R.id.adViewVideo);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
@@ -250,7 +251,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
             case REQUEST_VIDEO_CAPTURE:
                 if (resultCode == getActivity().RESULT_OK && data != null) {
                     startVideoActivity(data);
-                } else
+                } else if (resultCode == getActivity().RESULT_OK)
                     showSnackView();
 
                 break;
