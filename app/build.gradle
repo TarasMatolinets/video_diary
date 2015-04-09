@@ -15,7 +15,7 @@ android {
         applicationId "mti.com.videodiary"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 10
+        versionCode 16
         versionName "1.0"
     }
     signingConfigs {
@@ -48,7 +48,6 @@ dependencies {
     compile 'com.daimajia.easing:library:1.0.0@aar'
     compile 'com.daimajia.androidanimations:library:1.1.2@aar'
     compile 'jp.wasabeef:recyclerview-animators:1.1.0@aar'
-    compile 'com.makeramen:roundedimageview:2.0.1'
 
     compile 'com.google.android.gms:play-services:7.0.0'
 

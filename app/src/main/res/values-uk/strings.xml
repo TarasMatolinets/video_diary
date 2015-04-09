@@ -15,7 +15,7 @@
     <string name="edit_video_note">Редагувати відео-замітку</string>
     <string name="error_picture">Будь-ласка виберіть другу картинку</string>
     <string name="fragment_broken_camera_warning">Щось не так із вашою камерою</string>
-    <string name="menu_about_me">Підтримка</string>
+    <string name="menu_about_me">Контакти</string>
     <string name="menu_act_choice_image">Виберіть картинку</string>
     <string name="menu_act_no_notes">Нема заміток</string>
     <string name="menu_act_no_videos">Нема відео записів</string>

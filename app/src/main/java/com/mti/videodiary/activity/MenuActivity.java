@@ -57,9 +57,6 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
         addSection(newSection(getString(R.string.menu_notes), R.drawable.ic_note_add_black, new NoteFragment()).setSectionColor(selectedColor));
         addSection(newSection(getString(R.string.menu_about_me), R.drawable.ic_person_black, new SupportFragment()).setSectionColor(selectedColor));
 
-        //show settings where you can change personal name
-     //   addBottomSection(newSection(getString(R.string.menu_settings), R.drawable.ic_settings_black, new SettingFragment()).setSectionColor(selectedColor));
-
         String videoFolder = File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR;
         String noteFolder = File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.NOTE_DIR;
         String imageDir = File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.IMAGE_DIR;
