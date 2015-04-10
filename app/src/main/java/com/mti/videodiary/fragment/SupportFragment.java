@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.mti.videodiary.utils.VideoDairySharePreferences;
 
 import mti.com.videodiary.R;
 
@@ -18,12 +20,13 @@ import mti.com.videodiary.R;
  */
 
 public class SupportFragment extends BaseFragment {
+    private AdView mAdView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_support, container, false);
 
-        AdView mAdView = (AdView) view.findViewById(R.id.adViewSupport);
+        mAdView = (AdView) view.findViewById(R.id.adViewSupport);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
@@ -34,6 +37,27 @@ public class SupportFragment extends BaseFragment {
         setLinkLinkenIn(tvLinkenIn);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null)
+            mAdView.resume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mAdView != null)
+            mAdView.pause();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null)
+            mAdView.destroy();
+        super.onDestroy();
     }
 
     private void setLinkLinkenIn(TextView tvLinkenIn) {
@@ -51,4 +75,5 @@ public class SupportFragment extends BaseFragment {
         Linkify.addLinks(mes, Linkify.EMAIL_ADDRESSES);
         tvEmail.setText(mes);
     }
+
 }

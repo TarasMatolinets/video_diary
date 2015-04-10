@@ -68,6 +68,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
     private ButtonFloat mButtonFloat;
     private ImageView mIvCameraOff;
     private TextView mTvNoRecords;
+    private AdView mAdView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +89,8 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
 
     @Override
     public void onDestroy() {
+        if (mAdView != null)
+            mAdView.destroy();
         // Unregister since the activity is about to be closed.
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
         super.onDestroy();
@@ -97,7 +100,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_video, container, false);
 
-        AdView    mAdView = (AdView) mView.findViewById(R.id.adViewVideo);
+        mAdView = (AdView) mView.findViewById(R.id.adViewVideo);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
@@ -108,6 +111,21 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
 
         return mView;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null)
+            mAdView.resume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mAdView != null)
+            mAdView.pause();
+    }
+
 
     private void showEmptyView() {
 

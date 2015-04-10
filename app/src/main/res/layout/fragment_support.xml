@@ -5,43 +5,43 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_menu">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/support_project"
-        android:id="@+id/tvSupportProject"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textSize="@dimen/text_normal"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/edge_large" />
+    <!--   <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textAppearance="?android:attr/textAppearanceLarge"
+           android:text="@string/support_project"
+           android:id="@+id/tvSupportProject"
+           android:textColor="@color/white"
+           android:textStyle="bold"
+           android:textSize="@dimen/text_normal"
+           android:layout_centerHorizontal="true"
+           android:layout_marginTop="@dimen/edge_large" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/tvFirstCard"
-        android:layout_below="@+id/tvSupportProject"
-        android:text="@string/first_number_card"
-        android:textStyle="normal"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_mini_normal"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/edge_above" />
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textAppearance="?android:attr/textAppearanceLarge"
+           android:id="@+id/tvFirstCard"
+           android:layout_below="@+id/tvSupportProject"
+           android:text="@string/first_number_card"
+           android:textStyle="normal"
+           android:textColor="@color/white"
+           android:textSize="@dimen/text_mini_normal"
+           android:layout_centerHorizontal="true"
+           android:layout_marginTop="@dimen/edge_above" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/second_number_card"
-        android:id="@+id/tvSecondCard"
-        android:textStyle="normal"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_mini_normal"
-        android:layout_below="@+id/tvFirstCard"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/edge_above" />
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textAppearance="?android:attr/textAppearanceLarge"
+           android:text="@string/second_number_card"
+           android:id="@+id/tvSecondCard"
+           android:textStyle="normal"
+           android:textColor="@color/white"
+           android:textSize="@dimen/text_mini_normal"
+           android:layout_below="@+id/tvFirstCard"
+           android:layout_centerHorizontal="true"
+           android:layout_marginTop="@dimen/edge_above" />-->
 
     <TextView
         android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
         android:textSize="@dimen/text_normal"
         android:textColor="@color/white"
         android:textStyle="bold"
-        android:layout_below="@+id/tvSecondCard"
+
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/edge_large" />
 
@@ -80,17 +80,26 @@
         android:layout_alignParentLeft="true"
         android:textColor="@color/white"
         android:textStyle="normal"
+        android:visibility="visible"
         android:layout_below="@+id/tvEmail"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/edge_medium"
         android:layout_marginTop="@dimen/edge_above" />
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adViewSupport"
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adViewSupport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id"/>
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/tvCount"
+        android:layout_marginRight="55dp"
+        android:layout_marginEnd="55dp"
+        android:textColor="@color/white"
+        android:layout_centerInParent="true" />
 </RelativeLayout>

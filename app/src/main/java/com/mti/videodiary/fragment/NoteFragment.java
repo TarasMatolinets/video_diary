@@ -57,6 +57,7 @@ public class NoteFragment extends BaseFragment implements View.OnClickListener, 
     private ButtonFloat mButtonFloat;
     private ImageView mIvNote;
     private TextView mTvNoNotes;
+    private AdView mAdView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +72,7 @@ public class NoteFragment extends BaseFragment implements View.OnClickListener, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_note, container, false);
 
-        AdView mAdView = (AdView) mView.findViewById(R.id.adViewNote);
+        mAdView = (AdView) mView.findViewById(R.id.adViewNote);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
@@ -81,6 +82,27 @@ public class NoteFragment extends BaseFragment implements View.OnClickListener, 
         showEmptyView();
 
         return mView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null)
+            mAdView.resume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mAdView != null)
+            mAdView.pause();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null)
+            mAdView.destroy();
+        super.onDestroy();
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {

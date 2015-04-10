@@ -15,7 +15,7 @@ android {
         applicationId "mti.com.videodiary"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 16
+        versionCode 18
         versionName "1.0"
     }
     signingConfigs {
