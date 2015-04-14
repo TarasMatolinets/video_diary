@@ -65,8 +65,7 @@
             android:textSize="@dimen/text_mini_normal"
             android:textStyle="normal"
             android:gravity="top"
-            android:textColor="@color/black"
-             />
+            android:textColor="@color/black" />
 
         <include
             layout="@layout/view_divider"
@@ -74,36 +73,43 @@
             android:layout_height="1dp"
             android:layout_alignBottom="@+id/etDescription" />
 
-        <ImageView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/trash"
-            android:layout_margin="@dimen/edge_medium"
-            android:background="@drawable/ic_delete_grey"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="false"
-            android:layout_below="@+id/etDescription" />
+            android:orientation="horizontal"
+            android:layout_below="@+id/etDescription"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/llElements">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ivShare"
-            android:layout_marginRight="@dimen/edge_big"
-            android:layout_marginBottom="@dimen/edge_medium"
-            android:layout_marginTop="@dimen/edge_medium"
-            android:background="@drawable/ic_share_grey"
-            android:layout_toLeftOf="@+id/trash"
-            android:layout_below="@+id/etDescription" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ivEdit"
-            android:layout_marginRight="@dimen/edge_big"
-            android:layout_marginBottom="@dimen/edge_medium"
-            android:layout_marginTop="@dimen/edge_medium"
-            android:background="@drawable/ic_edit_grey"
-            android:layout_toLeftOf="@+id/ivShare"
-            android:layout_below="@+id/etDescription" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivEdit"
+                android:layout_marginRight="@dimen/edge_big"
+                android:layout_marginBottom="@dimen/edge_medium"
+                android:layout_marginTop="@dimen/edge_medium"
+                android:background="@drawable/ic_edit_grey" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivShare"
+                android:layout_marginRight="@dimen/edge_big"
+                android:layout_marginBottom="@dimen/edge_medium"
+                android:layout_marginTop="@dimen/edge_medium"
+                android:background="@drawable/ic_share_grey" />
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/trash"
+                android:layout_margin="@dimen/edge_medium"
+                android:background="@drawable/ic_delete_grey" />
+
+        </LinearLayout>
+
+
     </RelativeLayout>
 </android.support.v7.widget.CardView>
