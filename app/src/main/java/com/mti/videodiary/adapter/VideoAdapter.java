@@ -21,12 +21,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.gc.materialdesign.widgets.SnackBar;
 import com.mti.videodiary.activity.BaseActivity;
 import com.mti.videodiary.activity.CreateVideoNoteActivity;
 import com.mti.videodiary.activity.MenuActivity;
-import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.dao.Video;
+import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.manager.VideoDataManager;
 import com.mti.videodiary.dialog.DeleteItemDialogFragment;
 import com.mti.videodiary.interfaces.OnDialogClickListener;
@@ -38,6 +37,8 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import java.io.File;
 import java.util.List;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 import mti.com.videodiary.R;
 
 /**
@@ -140,9 +141,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
                     intent.setDataAndType(Uri.parse(videoFilePath), "video/mp4");
                     mContext.startActivity(intent);
                 } catch (ActivityNotFoundException e) {
-                    SnackBar snackbar = new SnackBar((Activity) mContext, mContext.getString(R.string.error_play_video), null, null);
-                    snackbar.setBackgroundSnackBar(mContext.getResources().getColor(R.color.blue));
-                    snackbar.show();
+                    Crouton.makeText((Activity) mContext, mContext.getString(R.string.error_play_video), Style.ALERT).show();
                 }
 
                 break;

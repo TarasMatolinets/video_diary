@@ -71,13 +71,10 @@
     <string name="email" translatable="false">ernest.hyst@gmail.com</string>
     <string name="linken_in" translatable="false">https://www.linkedin.com/in/tarasmatolinets</string>
 
-    <string name="first_number_card" translatable="false"><b>EuroBank: </b>5167 3200 1402 7726</string>
-    <string name="second_number_card" translatable="false"><b>Private Bank: </b>5168 7572 6860 7100</string>
-
-    <string name="error_play_video">Can\'t open current video file</string>
+     <string name="error_play_video">Can\'t open current video file</string>
 
     <!--warnings-->
-    <string name="fragment_broken_camera_warning">Something going wrong with your camera</string>
+    <string name="fragment_video_not_recorded_warning">Video has not been recorded</string>
     <string name="error_picture">Please choose another picture</string>
     <string name="error" translatable="false">error message</string>
     <string name="error_format" translatable="false">error format</string>

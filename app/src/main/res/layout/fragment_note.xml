@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:id="@+id/flMain"
     android:layout_width="match_parent"
@@ -35,15 +35,22 @@
             ads:adSize="BANNER"
             ads:adUnitId="@string/banner_ad_unit_id"/>
 
-        <com.gc.materialdesign.views.ButtonFloat
+        <com.software.shell.fab.ActionButton
             android:id="@+id/buttonFloat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="@dimen/edge_large"
-            materialdesign:animate="true"
-            materialdesign:iconDrawable="@drawable/ic_action_new" />
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:layout_marginRight="@dimen/fab_margin"
+            fab:button_color="@color/blue"
+            fab:button_colorRipple="@color/blue"
+            fab:hide_animation="@anim/fab_roll_to_down"
+            fab:image="@drawable/fab_plus_icon"
+            fab:image_size="@dimen/edge_large"
+            fab:rippleEffect_enabled="true"
+            fab:shadowResponsiveEffect_enabled="true"
+            fab:show_animation="@anim/fab_roll_from_down" />
 
     </RelativeLayout>
 </FrameLayout>

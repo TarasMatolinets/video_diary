@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.gc.materialdesign.widgets.SnackBar;
 import com.mti.videodiary.dialog.DialogTakePictureFragment;
 import com.mti.videodiary.fragment.SupportFragment;
 import com.mti.videodiary.fragment.NoteFragment;
@@ -28,6 +27,8 @@ import com.mti.videodiary.utils.VideoDairySharePreferences;
 
 import java.io.File;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 import it.neokree.materialnavigationdrawer.MaterialNavigationDrawer;
 import it.neokree.materialnavigationdrawer.elements.MaterialSection;
 import mti.com.videodiary.R;
@@ -134,9 +135,7 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
     }
 
     private void showSnackView() {
-        SnackBar snackbar = new SnackBar(this, getResources().getString(R.string.error_picture), null, null);
-        snackbar.setBackgroundSnackBar(getResources().getColor(R.color.blue));
-        snackbar.show();
+        Crouton.makeText(this, getResources().getString(R.string.error_picture), Style.ALERT).show();
     }
 
     private void setImageInBackground(final String picturePath) {
@@ -157,7 +156,7 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
                     Bitmap newImage = UserHelper.cropImage(bitmap, width, height);
                     Drawable drawable = new BitmapDrawable(getResources(), newImage);
 
-                        mFrameLayoutMain.setBackgroundDrawable(drawable);
+                    mFrameLayoutMain.setBackgroundDrawable(drawable);
                 }
             }
         });

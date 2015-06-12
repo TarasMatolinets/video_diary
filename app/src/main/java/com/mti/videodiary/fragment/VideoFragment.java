@@ -1,11 +1,11 @@
 package com.mti.videodiary.fragment;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -32,8 +32,6 @@ import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.gc.materialdesign.views.ButtonFloat;
-import com.gc.materialdesign.widgets.SnackBar;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.mti.videodiary.activity.BaseActivity;
@@ -41,16 +39,18 @@ import com.mti.videodiary.activity.CreateVideoNoteActivity;
 import com.mti.videodiary.activity.MenuActivity;
 import com.mti.videodiary.adapter.VideoAdapter;
 import com.mti.videodiary.application.VideoDiaryApplication;
-import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.dao.Video;
+import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.manager.VideoDataManager;
 import com.mti.videodiary.utils.Constants;
-import com.mti.videodiary.utils.UserHelper;
+import com.software.shell.fab.ActionButton;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 import mti.com.videodiary.R;
 
 import static android.view.View.OnClickListener;
@@ -65,7 +65,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
     private RecyclerView mRecyclerView;
     private static VideoAdapter mAdapter;
     private StaggeredGridLayoutManager mLayoutManager;
-    private ButtonFloat mButtonFloat;
+    private ActionButton mButtonFloat;
     private ImageView mIvCameraOff;
     private TextView mTvNoRecords;
     private AdView mAdView;
@@ -153,7 +153,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
         mTvNoRecords = (TextView) mView.findViewById(R.id.tvNoRecords);
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.videoRecycleView);
 
-        mButtonFloat = (ButtonFloat) mView.findViewById(R.id.buttonFloat);
+        mButtonFloat = (ActionButton) mView.findViewById(R.id.buttonFloat);
     }
 
     private void initListeners() {
@@ -208,15 +208,6 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
         search.setOnQueryTextListener(this);
     }
 
-    private boolean hasCamera() {
-        if (getActivity().getPackageManager().hasSystemFeature(
-                PackageManager.FEATURE_CAMERA)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -232,20 +223,14 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonFloat:
-                if (hasCamera()) {
-                    Uri fileUri = Uri.fromFile(saveFileInStorage());
+                Uri fileUri = Uri.fromFile(saveFileInStorage());
 
-                    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
 
-                    startActivityForResult(intent, REQUEST_VIDEO_CAPTURE);
-                } else {
-                    SnackBar snackbar = new SnackBar(getActivity(), getResources().getString(R.string.fragment_broken_camera_warning), null, null);
-                    snackbar.setBackgroundSnackBar(getResources().getColor(R.color.blue));
-                    snackbar.show();
-                }
+                startActivityForResult(intent, REQUEST_VIDEO_CAPTURE);
                 break;
         }
     }
@@ -255,11 +240,11 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
         File mediaFile = null;
 
         if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + Constants.VIDEO_FILE_NAME);
+            mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + Constants.VIDEO_FILE_NAME);
         } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return mediaFile = new File(getActivity().getFilesDir() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + Constants.VIDEO_FILE_NAME);
+            mediaFile = new File(getActivity().getFilesDir() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + Constants.VIDEO_FILE_NAME);
         }
-        return null;
+        return mediaFile;
     }
 
     @Override
@@ -267,9 +252,9 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_VIDEO_CAPTURE:
-                if (resultCode == getActivity().RESULT_OK && data != null) {
+                if (resultCode == Activity.RESULT_OK && data != null) {
                     startVideoActivity(data);
-                } else if (resultCode == getActivity().RESULT_OK)
+                } else if (resultCode == Activity.RESULT_OK)
                     showSnackView();
 
                 break;
@@ -288,9 +273,7 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
     }
 
     private void showSnackView() {
-        SnackBar snackbar = new SnackBar(getActivity(), getResources().getString(R.string.fragment_broken_camera_warning), null, null);
-        snackbar.setBackgroundSnackBar(getResources().getColor(R.color.blue));
-        snackbar.show();
+        Crouton.makeText(getActivity(), getResources().getString(R.string.fragment_video_not_recorded_warning), Style.ALERT).show();
     }
 
     private void startVideoActivity(Intent data) {

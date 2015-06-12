@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.gc.materialdesign.widgets.SnackBar;
 import com.mti.videodiary.interfaces.OnDialogClickListener;
 import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.VideoDairySharePreferences;
@@ -46,7 +45,7 @@ public class DialogAvatarFragment extends DialogFragment implements View.OnClick
         title.setTextColor(getActivity().getResources().getColor(R.color.black));
         title.setTypeface(null, Typeface.NORMAL);
         title.setTextSize(20);
-        title.setBackground(new ColorDrawable(Color.WHITE));
+      //  title.setBackground(new ColorDrawable(Color.WHITE));
 
         mRbGallery = (RadioButton) dialog.findViewById(R.id.rbGallery);
         mRbPhoto = (RadioButton) dialog.findViewById(R.id.rbPhoto);
@@ -128,7 +127,6 @@ public class DialogAvatarFragment extends DialogFragment implements View.OnClick
                             mDialogClick.dialogWithDataClick(picturePath);
                         VideoDairySharePreferences.setDataToSharePreferences(Constants.IMAGE_AVATAR, picturePath, VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING);
                     } else {
-                        showSnackView();
                     }
                     break;
                 case REQUEST_IMAGE_FROM_CAMERA:
@@ -140,9 +138,4 @@ public class DialogAvatarFragment extends DialogFragment implements View.OnClick
         }
     }
 
-    private void showSnackView() {
-        SnackBar snackbar = new SnackBar(getActivity(), getResources().getString(R.string.error_picture), null, null);
-        snackbar.setBackgroundSnackBar(getResources().getColor(R.color.blue));
-        snackbar.show();
-    }
 }

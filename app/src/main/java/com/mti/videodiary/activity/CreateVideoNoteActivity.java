@@ -19,30 +19,25 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
-import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.mti.videodiary.application.VideoDiaryApplication;
-import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.dao.Video;
+import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.manager.VideoDataManager;
 import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.UserHelper;
 
 import java.io.File;
-import java.io.IOException;
 
 import mti.com.videodiary.R;
 

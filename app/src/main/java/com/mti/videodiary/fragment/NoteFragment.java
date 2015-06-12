@@ -12,7 +12,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,19 +25,16 @@ import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.gc.materialdesign.views.ButtonFloat;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.mti.videodiary.activity.CreateNoteActivity;
 import com.mti.videodiary.activity.MenuActivity;
 import com.mti.videodiary.adapter.NoteAdapter;
-import com.mti.videodiary.application.VideoDiaryApplication;
 import com.mti.videodiary.data.dao.Note;
-import com.mti.videodiary.data.dao.Video;
 import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.manager.NoteDataManager;
-import com.mti.videodiary.data.manager.VideoDataManager;
 import com.mti.videodiary.utils.Constants;
+import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +50,7 @@ public class NoteFragment extends BaseFragment implements View.OnClickListener, 
     private RecyclerView mRecyclerView;
     private NoteAdapter mAdapter;
     private StaggeredGridLayoutManager mLayoutManager;
-    private ButtonFloat mButtonFloat;
+    private ActionButton mButtonFloat;
     private ImageView mIvNote;
     private TextView mTvNoNotes;
     private AdView mAdView;
@@ -133,7 +129,7 @@ public class NoteFragment extends BaseFragment implements View.OnClickListener, 
         mIvNote = (ImageView) mView.findViewById(R.id.ivCameraOff);
         mTvNoNotes = (TextView) mView.findViewById(R.id.tvNoRecords);
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.noteRecycleView);
-        mButtonFloat = (ButtonFloat) mView.findViewById(R.id.buttonFloat);
+        mButtonFloat = (ActionButton) mView.findViewById(R.id.buttonFloat);
     }
 
     private void initListeners() {
