@@ -43,9 +43,11 @@ import com.mti.videodiary.data.dao.Video;
 import com.mti.videodiary.data.manager.DataBaseManager;
 import com.mti.videodiary.data.manager.VideoDataManager;
 import com.mti.videodiary.utils.Constants;
+import com.mti.videodiary.utils.UserHelper;
 import com.software.shell.fab.ActionButton;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +62,7 @@ import static android.view.View.OnClickListener;
  */
 public class VideoFragment extends BaseFragment implements OnClickListener, SearchView.OnQueryTextListener {
     private static final int REQUEST_VIDEO_CAPTURE = 101;
+    public static final String CONTENT_MEDIA = "/external/video";
 
     private View mView;
     private RecyclerView mRecyclerView;
@@ -247,6 +250,31 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
         return mediaFile;
     }
 
+
+    private File createFileFromUri(Uri uri) {
+        String state = Environment.getExternalStorageState();
+        File mediaFile = null;
+        String path = UserHelper.getRealPathFromURI(getActivity(),uri);
+        File videoFile = new File(path);
+
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + Constants.VIDEO_FILE_NAME);
+        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            mediaFile = new File(getActivity().getFilesDir() + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR + Constants.VIDEO_FILE_NAME);
+        }
+        try {
+            UserHelper.copyFileUsingFileStreams(videoFile, mediaFile);
+        } catch (IOException e) {
+            Log.e(VideoDiaryApplication.TAG, "exception " + e.toString());
+        }
+
+        if (videoFile.exists())
+            videoFile.delete();
+
+        return mediaFile;
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -280,12 +308,17 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
         final Uri videoUri = data.getData();
         String videoFilePath = videoUri.getPath();
 
+        if (videoFilePath.contains(CONTENT_MEDIA)) {
+            File file = createFileFromUri(videoUri);
+            videoFilePath = file.getAbsolutePath();
+        }
+
         Intent intent = new Intent(getActivity(), CreateVideoNoteActivity.class);
         intent.putExtra(Constants.KEY_VIDEO_PATH, videoFilePath);
 
         startActivityForResult(intent, Constants.UPDATE_VIDEO_ADAPTER);
 
-        Log.i(VideoDiaryApplication.TAG, "Video has been saved to: " + data.getData());
+        Log.i(VideoDiaryApplication.TAG, "Video has been saved to: " + videoFilePath);
     }
 
     @Override
