@@ -28,6 +28,7 @@ ext {
     shellSoftwareVersion = '1.1.1'
     universalImageLoaderVersion = '1.9.3'
     googlePlayServiceVersion = '9.8.00'
+    creshlitics = '2.2.2@aar'
 
     //Testing
     robolectricVersion = '3.0'

@@ -1,4 +1,5 @@
 apply from: 'buildsystem/dependencies.gradle'
+
 buildscript {
     repositories {
 
@@ -20,4 +21,10 @@ allprojects {
         androidVersionCode = 20
         androidVersionName = "1.0"
     }
+
+    tasks.withType(JavaCompile) {
+        sourceCompatibility = 1.7
+        targetCompatibility = 1.7
+    }
+
 }
