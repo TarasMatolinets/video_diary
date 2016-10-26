@@ -1,7 +1,7 @@
-package co.otenti.domain.interactor;
+package interactor;
 
-import co.otenti.domain.executor.PostExecutionThread;
-import co.otenti.domain.executor.ThreadExecutor;
+import executor.PostExecutionThread;
+import executor.ThreadExecutor;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;

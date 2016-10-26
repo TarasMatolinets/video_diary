@@ -1,4 +1,4 @@
-package co.otenti.domain.executor;
+package executor;
 
 import rx.Scheduler;
 

@@ -27,7 +27,7 @@ ext {
     recyclerViewAnimatorsVersion = '1.1.0@aar'
     shellSoftwareVersion = '1.1.1'
     universalImageLoaderVersion = '1.9.3'
-    googlePlayServiceVersion = '9.8.00'
+    googlePlayServiceVersion = '9.8.0'
     creshlitics = '2.2.2@aar'
 
     //Testing

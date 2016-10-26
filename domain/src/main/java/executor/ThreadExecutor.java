@@ -1,7 +1,8 @@
-package co.otenti.domain.executor;
+package executor;
 
 import java.util.concurrent.Executor;
 
+import co.otenti.domain.interactor.UseCase;
 
 /**
  * Executor implementation can be based on different frameworks or techniques of asynchronous

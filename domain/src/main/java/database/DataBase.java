@@ -1,6 +1,4 @@
-package co.otenti.domain.database;
-
-import java.util.List;
+package database;
 
 import rx.Observable;
 
@@ -9,4 +7,5 @@ import rx.Observable;
  */
 public interface DataBase {
 
+    Observable<Void> saveProductInfo();
 }

@@ -2,20 +2,25 @@ package com.mti.videodiary.di.module;
 
 import android.content.Context;
 
+import com.it.im.data.executor.JobExecutor;
+import com.mti.videodiary.UIThread;
 import com.mti.videodiary.application.VideoDiaryApplication;
 
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
+import database.DataBase;
+import executor.PostExecutionThread;
+import executor.ThreadExecutor;
 
 /**
  * Dagger module that provides objects which will live during the application lifecycle.
  */
 @Module
-public class OtenticoAppModule {
+public class VideoDiaryAppModule {
     private final VideoDiaryApplication application;
 
-    public OtenticoAppModule(VideoDiaryApplication app) {
+    public VideoDiaryAppModule(VideoDiaryApplication app) {
         application = app;
     }
 
@@ -25,24 +30,19 @@ public class OtenticoAppModule {
         return application;
     }
 
-//    @Provides
-//    @Singleton
-//    ThreadExecutor provideThreadExecutor(JobExecutor executor) {
-//        return executor;
-//    }
-//
-//    @Provides
-//    @Singleton
-//    PostExecutionThread provideUIThreadExecutor(UIThread uiThread) {
-//        return uiThread;
-//    }
+    @Provides
+    @Singleton
+    ThreadExecutor provideThreadExecutor(JobExecutor executor) {
+        return executor;
+    }
 
-//    @Provides
-//    @Singleton
-//    OtenticoCloud provideNylasCloud(OtenticoCloudFactory factory) {
-//        return factory;
-//    }
-//
+    @Provides
+    @Singleton
+    PostExecutionThread provideUIThreadExecutor(UIThread uiThread) {
+        return uiThread;
+    }
+
+
 //    @Provides
 //    @Singleton
 //    DataBase providePlanckDataBase(OntenticoDataBaseFactory planckDataBase) {
