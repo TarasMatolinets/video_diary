@@ -2,14 +2,13 @@ package com.mti.videodiary.di.module;
 
 import android.content.Context;
 
-import com.it.im.data.executor.JobExecutor;
 import com.mti.videodiary.UIThread;
 import com.mti.videodiary.application.VideoDiaryApplication;
+import com.mti.videodiary.data.executor.JobExecutor;
 
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
-import database.DataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 
@@ -42,10 +41,4 @@ public class VideoDiaryAppModule {
         return uiThread;
     }
 
-
-//    @Provides
-//    @Singleton
-//    DataBase providePlanckDataBase(OntenticoDataBaseFactory planckDataBase) {
-//        return planckDataBase;
-//    }
 }

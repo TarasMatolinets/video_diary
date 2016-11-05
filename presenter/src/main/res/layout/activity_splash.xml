@@ -1,71 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/gradient_menu"
-    android:id="@+id/flSplashMain">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:id="@+id/flSplashMain"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@drawable/gradient_menu">
+
     <RelativeLayout
+        android:id="@+id/flSplash"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/flSplash"
         android:clipChildren="false"
         tools:ignore="UselessParent">
 
         <view
+            android:id="@+id/tvWelcome"
             class="com.mti.videodiary.animation.SkewableTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/splash_welcome"
-            android:id="@+id/tvWelcome"
-            android:textColor="@color/white"
-            android:gravity="center"
             android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/splash_welcome"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/white"
             android:textSize="@dimen/extra_huge"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <view
+            android:id="@+id/tvTitle"
             class="com.mti.videodiary.animation.SkewableTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/splash_app_name"
-            android:id="@+id/tvTitle"
-            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:gravity="center"
+            android:text="@string/splash_app_name"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/white"
             android:textSize="@dimen/extra_huge"
-            android:visibility="invisible"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="invisible"/>
+
         <EditText
+            android:id="@+id/etTitle"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:id="@+id/etTitle"
+            android:layout_centerInParent="true"
 
-            android:textColor="@color/gray"
-            android:textColorHint="@color/gray"
             android:background="@color/white"
-            android:textSize="@dimen/text_medium"
-            android:visibility="gone"
             android:focusable="true"
             android:gravity="center"
-            android:layout_centerInParent="true" />
-        <!--android:hint="@string/splash_personal_name"-->
+            android:inputType="textPersonName"
+            android:textColor="@color/gray"
+            android:textColorHint="@color/gray"
+            android:textSize="@dimen/text_medium"
+            android:visibility="gone"/>
 
         <ImageButton
+            android:id="@+id/splashBtClickNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/splashBtClickNext"
-            android:visibility="gone"
-            android:gravity="center"
-            android:background="@drawable/ic_keyboard_arrow_right_white"
-            tools:ignore="ContentDescription"
+            android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/etTitle"
-            android:layout_centerVertical="true" />
+            android:background="@drawable/ic_keyboard_arrow_right_white"
+            android:gravity="center"
+            android:visibility="gone"
+            tools:ignore="ContentDescription"/>
 
     </RelativeLayout>
 

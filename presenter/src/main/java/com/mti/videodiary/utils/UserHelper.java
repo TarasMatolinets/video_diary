@@ -12,7 +12,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.mti.videodiary.mvp.activity.BaseActivity;
+import com.mti.videodiary.mvp.view.BaseActivity;
 
 import java.io.File;
 import java.io.FileInputStream;

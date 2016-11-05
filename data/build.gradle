@@ -25,6 +25,8 @@ android {
 }
 
 dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
     def dataDependencies = rootProject.ext.dataDependencies
 
     compile project(':domain')
@@ -35,5 +37,6 @@ dependencies {
     compile dataDependencies.rxJava
     compile dataDependencies.rxAndroid
     compile dataDependencies.androidAnnotations
+
 }
 

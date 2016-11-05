@@ -12,11 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mti.videodiary.mvp.activity.CreateNoteActivity;
-import com.mti.videodiary.mvp.activity.MenuActivity;
-import com.mti.videodiary.data.dao.Note;
-import com.mti.videodiary.data.manager.DataBaseManager;
-import com.mti.videodiary.data.manager.NoteDataManager;
+import com.mti.videodiary.mvp.view.activity.CreateNoteActivity;
+import com.mti.videodiary.mvp.view.activity.MenuActivity;
+import com.mti.videodiary.data.storage.dao.Note;
+import com.mti.videodiary.data.storage.manager.DataBaseManager;
+import com.mti.videodiary.data.storage.manager.NoteDataManager;
 import com.mti.videodiary.dialog.DeleteItemDialogFragment;
 import com.mti.videodiary.interfaces.OnDialogClickListener;
 import com.mti.videodiary.utils.Constants;

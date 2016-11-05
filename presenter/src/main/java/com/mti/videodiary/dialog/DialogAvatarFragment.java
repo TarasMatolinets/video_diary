@@ -4,9 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,7 +17,7 @@ import android.widget.TextView;
 
 import com.mti.videodiary.interfaces.OnDialogClickListener;
 import com.mti.videodiary.utils.Constants;
-import com.mti.videodiary.utils.VideoDairySharePreferences;
+import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 
 import mti.com.videodiary.R;
 

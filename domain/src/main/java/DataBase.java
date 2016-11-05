@@ -1,6 +1,5 @@
 import java.util.List;
 
-import co.otenti.domain.model.ProductInfoDomain;
 import rx.Observable;
 
 /**
@@ -8,6 +7,5 @@ import rx.Observable;
  */
 public interface DataBase {
 
-    Observable<List<ProductInfoDomain>> getProductInfo();
-    Observable<Void> saveProductInfo(ProductInfoDomain tagProductDB);
+    Observable<Void> saveProductInfo();
 }

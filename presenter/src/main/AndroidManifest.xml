@@ -24,7 +24,7 @@
         tools:replace="android:icon"
         android:label="@string/app_name">
         <activity
-            android:name="com.mti.videodiary.mvp.activity.SplashActivity"
+            android:name="com.mti.videodiary.mvp.view.activity.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:noHistory="true"
@@ -36,12 +36,12 @@
         </activity>
 
         <activity
-            android:name="com.mti.videodiary.mvp.activity.MenuActivity"
+            android:name="com.mti.videodiary.mvp.view.activity.MenuActivity"
             android:theme="@style/MyNavigationDrawerTheme"
             android:configChanges="orientation|screenSize|keyboardHidden" />
 
         <activity
-            android:name="com.mti.videodiary.mvp.activity.CreateVideoNoteActivity"
+            android:name="com.mti.videodiary.mvp.view.activity.CreateVideoNoteActivity"
             android:theme="@style/VideoDailyActionBar"
             android:label="@string/create_video_note"
             android:screenOrientation="portrait"
@@ -50,7 +50,7 @@
 
 
         <activity
-            android:name="com.mti.videodiary.mvp.activity.CreateNoteActivity"
+            android:name="com.mti.videodiary.mvp.view.activity.CreateNoteActivity"
             android:theme="@style/NoteDailyActionBar"
             android:label="@string/create_note"
             android:configChanges="orientation|screenSize"
