@@ -8,11 +8,14 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 @DatabaseTable
 public class Note {
-    @DatabaseField(generatedId = true)
+    public static final String TITLE = "title";
+    public static final String ID = "id";
+    public static final String DESCRIPTION = "description";
+    @DatabaseField(generatedId = true,columnName = ID)
     private int id;
-    @DatabaseField
+    @DatabaseField(columnName = TITLE)
     private String title;
-    @DatabaseField
+    @DatabaseField(columnName = DESCRIPTION)
     private String description;
 
     public void setId(int id) {

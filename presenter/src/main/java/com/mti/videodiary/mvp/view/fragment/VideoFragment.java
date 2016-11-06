@@ -40,7 +40,6 @@ import com.mti.videodiary.adapter.VideoAdapter;
 import com.mti.videodiary.application.VideoDiaryApplication;
 import com.mti.videodiary.data.storage.dao.Video;
 import com.mti.videodiary.data.storage.manager.DataBaseManager;
-import com.mti.videodiary.data.storage.manager.VideoDataManager;
 import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.UserHelper;
 import com.software.shell.fab.ActionButton;

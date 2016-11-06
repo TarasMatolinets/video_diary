@@ -8,16 +8,22 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 
 @DatabaseTable
-public class Video{
-    @DatabaseField(generatedId = true)
+public class Video {
+    public static final String TITLE = "title";
+    public static final String ID = "id";
+    public static final String DESCRIPTION = "description";
+    public static final String VIDEO_URL = "videoUrl";
+    public static final String IMAGE_URL = "imageUrl";
+
+    @DatabaseField(generatedId = true, columnName = ID)
     private int id;
-    @DatabaseField
+    @DatabaseField(columnName = VIDEO_URL)
     private String videoUrl;
-    @DatabaseField
+    @DatabaseField(columnName = IMAGE_URL)
     private String imageUrl;
-    @DatabaseField
+    @DatabaseField(columnName = TITLE)
     private String title;
-    @DatabaseField
+    @DatabaseField(columnName = DESCRIPTION)
     private String description;
 
     public String getImageUrl() {

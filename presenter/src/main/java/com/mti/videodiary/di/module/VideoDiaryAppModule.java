@@ -5,10 +5,14 @@ import android.content.Context;
 import com.mti.videodiary.UIThread;
 import com.mti.videodiary.application.VideoDiaryApplication;
 import com.mti.videodiary.data.executor.JobExecutor;
+import com.mti.videodiary.data.storage.manager.NoteDataBaseFactory;
+import com.mti.videodiary.data.storage.manager.VideoNoteDataBaseFactory;
 
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
+import database.DataBase;
+import database.VideoDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 
@@ -39,6 +43,18 @@ public class VideoDiaryAppModule {
     @Singleton
     PostExecutionThread provideUIThreadExecutor(UIThread uiThread) {
         return uiThread;
+    }
+
+    @Provides
+    @Singleton
+    DataBase provideNoteDataBase(NoteDataBaseFactory factory) {
+        return factory;
+    }
+
+    @Provides
+    @Singleton
+    DataBase provideVideoDataBase(VideoNoteDataBaseFactory factory) {
+        return factory;
     }
 
 }

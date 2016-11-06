@@ -2,12 +2,11 @@ package com.mti.videodiary.mvp.presenter;
 
 import android.util.Log;
 
-import com.mti.videodiary.application.VideoDiaryApplication;
 import com.mti.videodiary.di.annotation.PerActivity;
 
 import javax.inject.Inject;
 
-import database.DataBase;
+import database.NoteDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
@@ -26,11 +25,11 @@ public class NoteFragmentPresenter {
     private final ThreadExecutor mExecutor;
     private final PostExecutionThread mPostExecutorThread;
     private final CompositeSubscription mComposeSubscriptionList;
-    private final DataBase mDataBase;
+    private final NoteDataBase mDataBase;
     private NoteFragmentPresenter mView;
 
     @Inject
-    NoteFragmentPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, DataBase dataBase) {
+    NoteFragmentPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, NoteDataBase dataBase) {
         mExecutor = executor;
         mPostExecutorThread = postExecutionThread;
         mComposeSubscriptionList = new CompositeSubscription();

@@ -27,15 +27,12 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.mti.videodiary.data.storage.VideoDairySharePreferences;
-import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.mvp.view.activity.CreateNoteActivity;
 import com.mti.videodiary.mvp.view.activity.MenuActivity;
 import com.mti.videodiary.adapter.NoteAdapter;
 import com.mti.videodiary.data.storage.dao.Note;
 import com.mti.videodiary.data.storage.manager.DataBaseManager;
-import com.mti.videodiary.data.storage.manager.NoteDataManager;
 import com.mti.videodiary.utils.Constants;
 import com.software.shell.fab.ActionButton;
 

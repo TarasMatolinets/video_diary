@@ -1,6 +1,7 @@
 package interactor;
 
 import database.DataBase;
+import database.NoteDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import rx.Observable;
@@ -9,13 +10,13 @@ import rx.Observable;
  * Created by Terry on 11/6/2016.
  */
 
-public class UseCaseGetNotes  extends UseCase{
+public class UseCaseGetNotesList extends UseCase{
 
-    private final DataBase mDataBase;
+    private final NoteDataBase mDataBase;
 
-    public UseCaseGetNotes(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, DataBase dataBase) {
+    public UseCaseGetNotesList(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, DataBase dataBase) {
         super(threadExecutor, postExecutionThread);
-        mDataBase  = dataBase;
+        mDataBase  = (NoteDataBase) dataBase;
     }
 
     @Override

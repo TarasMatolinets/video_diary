@@ -33,7 +33,6 @@ import android.widget.TextView;
 
 import com.mti.videodiary.data.storage.dao.Video;
 import com.mti.videodiary.data.storage.manager.DataBaseManager;
-import com.mti.videodiary.data.storage.manager.VideoDataManager;
 import com.mti.videodiary.mvp.view.BaseActivity;
 import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.UserHelper;

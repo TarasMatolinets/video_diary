@@ -10,7 +10,6 @@ import android.widget.EditText;
 
 import com.mti.videodiary.data.storage.dao.Note;
 import com.mti.videodiary.data.storage.manager.DataBaseManager;
-import com.mti.videodiary.data.storage.manager.NoteDataManager;
 import com.mti.videodiary.mvp.view.BaseActivity;
 import com.mti.videodiary.utils.Constants;
 

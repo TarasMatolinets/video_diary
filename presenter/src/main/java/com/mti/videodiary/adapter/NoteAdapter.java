@@ -16,7 +16,6 @@ import com.mti.videodiary.mvp.view.activity.CreateNoteActivity;
 import com.mti.videodiary.mvp.view.activity.MenuActivity;
 import com.mti.videodiary.data.storage.dao.Note;
 import com.mti.videodiary.data.storage.manager.DataBaseManager;
-import com.mti.videodiary.data.storage.manager.NoteDataManager;
 import com.mti.videodiary.dialog.DeleteItemDialogFragment;
 import com.mti.videodiary.interfaces.OnDialogClickListener;
 import com.mti.videodiary.utils.Constants;

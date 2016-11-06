@@ -1,9 +1,12 @@
 package com.mti.videodiary.data.storage.manager;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.mti.videodiary.data.storage.DataBaseHelper;
 import com.mti.videodiary.data.storage.dao.Note;
 import com.mti.videodiary.data.transformer.DataToDomainTransformer;
+import com.mti.videodiary.data.transformer.DomainToDataTransformer;
 
 import java.sql.SQLException;
 import java.util.Collections;
@@ -11,23 +14,24 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import database.DataBase;
+import database.NoteDataBase;
 import model.NoteDomain;
-import model.VideoDomain;
 import rx.Observable;
 import rx.Subscriber;
 
+import static com.mti.videodiary.data.storage.dao.Note.ID;
+
 /**
  * Created by Terry on 11/6/2016.
- * Implements {@link DataBase} for communicate with database
+ * Implements {@link NoteDataBase} for communicate with database
  */
 
-public class DataBaseManagerFactory implements DataBase {
+public class NoteDataBaseFactory implements NoteDataBase {
 
     private final DataBaseHelper mHelper;
 
     @Inject
-    DataBaseManagerFactory(DataBaseHelper helper) {
+    public NoteDataBaseFactory(DataBaseHelper helper) {
         mHelper = helper;
     }
 
@@ -54,12 +58,7 @@ public class DataBaseManagerFactory implements DataBase {
     }
 
     @Override
-    public Observable<List<VideoDomain>> getListVideoNotes() {
-        return null;
-    }
-
-    @Override
-    public Observable<Void> deleteNoteById(int id) {
+    public Observable<Void> deleteItemById(int id) {
         return Observable.create(new Observable.OnSubscribe<Void>() {
             @Override
             public void call(Subscriber<? super Void> subscriber) {
@@ -80,62 +79,81 @@ public class DataBaseManagerFactory implements DataBase {
     }
 
     @Override
-    public Observable<NoteDomain> getNoteByPosition(int id) {
+    public Observable<NoteDomain> getNoteByPosition(final int id) {
         return Observable.create(new Observable.OnSubscribe<NoteDomain>() {
             @Override
             public void call(Subscriber<? super NoteDomain> subscriber) {
                 try {
-                    mHelper.getNoteListDao().deleteById(id);
+                    QueryBuilder<Note, Integer> queryBuilder = mHelper.getNoteListDao().queryBuilder();
+                    queryBuilder.where().eq(ID, id);
+
+                    PreparedQuery<Note> preparedQuery = queryBuilder.prepare();
+                    List<Note> accountList = mHelper.getNoteListDao().query(preparedQuery);
+
+                    int defaultValue = 0;
+                    Note note = accountList.get(defaultValue);
+                    mHelper.getNoteListDao().delete(note);
+
+                    DataToDomainTransformer transformer = new DataToDomainTransformer();
+                    NoteDomain noteDomain = transformer.transform(note);
+                    subscriber.onNext(noteDomain);
+
+                    subscriber.onCompleted();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    subscriber.onError(e);
                 }
             }
         });
     }
 
     @Override
-    public Observable<Void> createNote(NoteDomain note) {
+    public Observable<Void> createNote(final NoteDomain note) {
         return Observable.create(new Observable.OnSubscribe<Void>() {
             @Override
             public void call(Subscriber<? super Void> subscriber) {
-                Note note = null;
+                try {
+                    DomainToDataTransformer transformer = new DomainToDataTransformer();
+                    Note noteData = transformer.transform(note);
+                    mHelper.getNoteListDao().create(noteData);
+
+                    subscriber.onCompleted();
+                } catch (SQLException e) {
+                    subscriber.onError(e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public Observable<Void> updateNoteList(final NoteDomain note) {
+        return Observable.create(new Observable.OnSubscribe<Void>() {
+            @Override
+            public void call(Subscriber<? super Void> subscriber) {
+                try {
+                    DomainToDataTransformer transformer = new DomainToDataTransformer();
+                    Note noteData = transformer.transform(note);
+                    mHelper.getNoteListDao().update(noteData);
+
+                    subscriber.onCompleted();
+                } catch (SQLException e) {
+                    subscriber.onError(e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public Observable<Void> deleteList() {
+        return Observable.create(new Observable.OnSubscribe<Void>() {
+            @Override
+            public void call(Subscriber<? super Void> subscriber) {
                 try {
                     List<Note> noteList = mHelper.getNoteListDao().queryForAll();
-                    Collections.reverse(noteList);
+                    mHelper.getNoteListDao().delete(noteList);
 
-                    note = noteList.get(id);
-
+                    subscriber.onCompleted();
                 } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return note;
-            }
-        });
-    }
-
-    @Override
-    public Observable<Void> updateNoteList(NoteDomain note) {
-        return Observable.create(new Observable.OnSubscribe<Void>() {
-            @Override
-            public void call(Subscriber<? super Void> subscriber) {
-                try {
-                    mHelper.getNoteListDao().create(note);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    @Override
-    public Observable<Void> deleteNotesList() {
-        return Observable.create(new Observable.OnSubscribe<Void>() {
-            @Override
-            public void call(Subscriber<? super Void> subscriber) {
-                try {
-                    mHelper.getNoteListDao().update(note);
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                    subscriber.onError(e);
                 }
             }
         });

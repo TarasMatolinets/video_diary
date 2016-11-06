@@ -23,7 +23,7 @@ public abstract class UseCase {
 
     private Subscription subscription = Subscriptions.empty();
 
-    protected UseCase(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+    public UseCase(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
         this.threadExecutor = threadExecutor;
         this.postExecutionThread = postExecutionThread;
     }
@@ -31,7 +31,7 @@ public abstract class UseCase {
     /**
      * Builds an {@link Observable} which will be used when executing the current {@link UseCase}.
      */
-    protected abstract Observable buildUseCaseObservable();
+    public abstract Observable buildUseCaseObservable();
 
     /**
      * Executes the current use case.
