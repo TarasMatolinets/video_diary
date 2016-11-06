@@ -18,6 +18,6 @@ package com.mti.videodiary.di;
 /**
  * Interface representing a contract for clients that contains a component for dependency injection.
  */
-public interface HasComponent<C> {
+public interface IHasComponent<C> {
     C getComponent();
 }

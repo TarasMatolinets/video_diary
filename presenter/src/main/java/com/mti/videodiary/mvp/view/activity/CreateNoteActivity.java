@@ -77,7 +77,7 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher {
     }
 
     private void initViews() {
-        mEtTitle = (EditText) findViewById(R.id.etTitle);
+        mEtTitle = (EditText) findViewById(R.id.et_title);
         mEtDescription = (EditText) findViewById(R.id.etDescription);
     }
 

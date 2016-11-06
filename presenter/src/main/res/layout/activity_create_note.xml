@@ -24,7 +24,7 @@
             android:layout_weight="0.2">
 
             <EditText
-                android:id="@+id/etTitle"
+                android:id="@+id/et_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textCursorDrawable="@drawable/keyboard_cursor_color"

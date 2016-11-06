@@ -238,7 +238,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             super(itemLayoutView);
 
             tvDescription = (TextView) itemLayoutView.findViewById(R.id.etDescription);
-            tvTitle = (TextView) itemLayoutView.findViewById(R.id.etTitle);
+            tvTitle = (TextView) itemLayoutView.findViewById(R.id.et_title);
             imIcon = (ImageView) itemLayoutView.findViewById(R.id.ivVideoThumbnail);
             share = (ImageView) itemLayoutView.findViewById(R.id.ivShare);
             delete = (ImageView) itemLayoutView.findViewById(R.id.trash);

@@ -45,6 +45,8 @@
     <string name="dialog_ok" translatable="false">OK</string>
     <string name="dialog_cancel">Cancel</string>
 
+    <string name="video_notes">@string/menu_notes</string>
+
     <string name="menu_no_record">No Video Records</string>
     <string name="menu_no_notes">No Notes</string>
 
@@ -71,7 +73,7 @@
     <string name="email" translatable="false">ernest.hyst@gmail.com</string>
     <string name="linken_in" translatable="false">https://www.linkedin.com/in/tarasmatolinets</string>
 
-     <string name="error_play_video">Can\'t open current video file</string>
+    <string name="error_play_video">Can\'t open current video file</string>
 
     <!--warnings-->
     <string name="fragment_video_not_recorded_warning">Video has not been recorded</string>

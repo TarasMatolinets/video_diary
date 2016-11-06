@@ -3,14 +3,19 @@ package com.mti.videodiary.application;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Environment;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.mti.videodiary.di.component.VideoDiaryAppComponent;
 import com.mti.videodiary.di.module.VideoDiaryAppModule;
+import com.mti.videodiary.mvp.view.BaseActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+
+import java.io.File;
 
 import io.fabric.sdk.android.Fabric;
 import mti.com.videodiary.R;
@@ -21,6 +26,12 @@ import mti.com.videodiary.R;
  */
 public class VideoDiaryApplication extends Application {
     public static final String TAG = "com.mti.video_diary";
+
+    private static final String APPLICATION_DIRECTORY = "videoDairy";
+    private static final String VIDEO_DIR = "video";
+    private static final String NOTE_DIR = "/note";
+    private static final String IMAGE_DIR = "image";
+
     public static final int MAX_CACHE_SIZE = 50 * 1024 * 1024;
     private VideoDiaryAppComponent mVideoDiaryAppComponent;
 
@@ -29,9 +40,22 @@ public class VideoDiaryApplication extends Application {
         super.onCreate();
 
         buildGraph();
+
+        createFolder();
+
         Fabric.with(this, new Crashlytics());
         initImageLoader(getApplicationContext());
 
+    }
+
+    private void createFolder() {
+        String videoFolder = File.separator + APPLICATION_DIRECTORY + File.separator + VIDEO_DIR;
+        String noteFolder = File.separator + APPLICATION_DIRECTORY + File.separator + NOTE_DIR;
+        String imageDir = File.separator + APPLICATION_DIRECTORY + File.separator + IMAGE_DIR;
+
+        createFolder(videoFolder);
+        createFolder(noteFolder);
+        createFolder(imageDir);
     }
 
     private void buildGraph() {
@@ -60,4 +84,22 @@ public class VideoDiaryApplication extends Application {
     public VideoDiaryAppComponent getVideoDiaryAppComponent() {
         return mVideoDiaryAppComponent;
     }
+
+    /**
+     * create folders for feature files
+     *
+     * @param nameFolder folder name
+     */
+    private void createFolder(String nameFolder) {
+        File f = new File(Environment.getExternalStorageDirectory(), nameFolder);
+
+        if (!f.exists()) {
+            boolean isCreated = f.mkdirs();
+
+            if (isCreated) {
+                Log.i(TAG, "folder " + nameFolder + " created");
+            }
+        }
+    }
+
 }

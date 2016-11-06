@@ -7,91 +7,81 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.v4.widget.DrawerLayout;
-import android.view.LayoutInflater;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.mti.videodiary.dialog.DialogTakePictureFragment;
-import com.mti.videodiary.mvp.view.fragment.SupportFragment;
-import com.mti.videodiary.mvp.view.fragment.NoteFragment;
-import com.mti.videodiary.mvp.view.fragment.VideoFragment;
-import com.mti.videodiary.interfaces.OnDialogClickListener;
+import com.mti.videodiary.data.storage.VideoDairySharePreferences;
+import com.mti.videodiary.di.IHasComponent;
+import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.mvp.view.BaseActivity;
+import com.mti.videodiary.mvp.view.fragment.NoteFragment;
+import com.mti.videodiary.mvp.view.fragment.SupportFragment;
+import com.mti.videodiary.mvp.view.fragment.VideoFragment;
+import com.mti.videodiary.navigator.Navigator;
 import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.UserHelper;
-import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 
-import java.io.File;
+import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import it.neokree.materialnavigationdrawer.MaterialNavigationDrawer;
-import it.neokree.materialnavigationdrawer.elements.MaterialSection;
 import mti.com.videodiary.R;
 
+import static android.view.View.GONE;
 
-public class MenuActivity extends MaterialNavigationDrawer implements View.OnClickListener, DrawerLayout.DrawerListener {
-    private FrameLayout mFrameLayoutMain;
-    private TextView mChoiceImage;
+/**
+ * Created by Taras Matolinets on 23.02.15.
+ * Main activity
+ */
+public class MenuActivity extends BaseActivity implements IHasComponent<ActivityComponent>, OnNavigationItemSelectedListener {
+
+    @BindView(R.id.navigation_view) NavigationView mNavigationView;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @BindView(R.id.fl_main_header) FrameLayout mFrameLayoutMain;
+    @BindView(R.id.tv_choice_image) TextView mChoiceImage;
+    @BindView(R.id.toolbar) Toolbar mToolBar;
+
+    @Inject VideoDairySharePreferences mPreferences;
+    @Inject Navigator mNavigator;
+
+    private ActivityComponent mActivityComponent;
     private boolean isImageAlreadySet;
 
     @Override
-    public void init(Bundle bundle) {
-
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        ButterKnife.bind(this);
 
-        // create and set the header
-        View view = LayoutInflater.from(this).inflate(R.layout.custom_drawer_header, null);
-        mChoiceImage = (TextView) view.findViewById(R.id.tvChoiceImage);
-        mFrameLayoutMain = (FrameLayout) view.findViewById(R.id.flMain);
+        setSupportActionBar(mToolBar);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
-        setDrawerListener(this);
-        setDrawerHeaderCustom(view);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar, R.string.video_notes, R.string.video_notes) {
 
-        int selectedColor = getResources().getColor(R.color.blue);
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+            }
 
-        addSection(newSection(getString(R.string.menu_records), R.drawable.ic_videocam_black, new VideoFragment()).setSectionColor(selectedColor));
-        addSection(newSection(getString(R.string.menu_notes), R.drawable.ic_note_add_black, new NoteFragment()).setSectionColor(selectedColor));
-        addSection(newSection(getString(R.string.menu_about_me), R.drawable.ic_person_black, new SupportFragment()).setSectionColor(selectedColor));
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+        };
 
-        String videoFolder = File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.VIDEO_DIR;
-        String noteFolder = File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.NOTE_DIR;
-        String imageDir = File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.IMAGE_DIR;
-
-        createFolder(videoFolder);
-        createFolder(noteFolder);
-        createFolder(imageDir);
-
-
-        setBackPattern(MaterialNavigationDrawer.BACKPATTERN_CUSTOM);
-        getHeaderView().setOnClickListener(this);
-    }
-
-    /**
-     * create folders for feature files
-     *
-     * @param nameFolder folder name
-     */
-    private void createFolder(String nameFolder) {
-        File f = new File(Environment.getExternalStorageDirectory(), nameFolder);
-
-        if (!f.exists()) {
-            f.mkdirs();
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        //close drawer on start
-        if (isDrawerOpen())
-            closeDrawer();
+        mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
     }
 
     @Override
@@ -110,26 +100,25 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
 
                     if (picturePath != null) {
                         setImageInBackground(picturePath);
-                        VideoDairySharePreferences.setDataToSharePreferences(Constants.IMAGE_HEADER_MENU, picturePath, VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING);
+                        mPreferences.setDataToSharePreferences(Constants.IMAGE_HEADER_MENU, picturePath, VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING);
                     } else {
                         showSnackView();
                     }
                     break;
                 case Constants.UPDATE_VIDEO_ADAPTER:
-                    Fragment fragment = (Fragment) getCurrentSection().getTargetFragment();
-
-                    // update current note card data
-                    if (fragment instanceof VideoFragment)
-                        fragment.onActivityResult(requestCode, resultCode, data);
+//                    Fragment fragment = (Fragment) getCurrentSection().getTargetFragment();
+//
+//                    // update current note card data
+//                    if (fragment instanceof VideoFragment)
+//                        fragment.onActivityResult(requestCode, resultCode, data);
                     break;
 
-
                 case Constants.UPDATE_NOTE_ADAPTER:
-                    Fragment noteFragment = (Fragment) getCurrentSection().getTargetFragment();
-
-                    // update current note card data
-                    if (noteFragment instanceof NoteFragment)
-                        noteFragment.onActivityResult(requestCode, resultCode, data);
+//                    Fragment noteFragment = (Fragment) getCurrentSection().getTargetFragment();
+//
+//                    // update current note card data
+//                    if (noteFragment instanceof NoteFragment)
+//                        noteFragment.onActivityResult(requestCode, resultCode, data);
                     break;
             }
         }
@@ -140,7 +129,7 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
     }
 
     private void setImageInBackground(final String picturePath) {
-        mChoiceImage.setVisibility(View.GONE);
+        mChoiceImage.setVisibility(GONE);
 
         mFrameLayoutMain.post(new Runnable() {
             @Override
@@ -157,73 +146,61 @@ public class MenuActivity extends MaterialNavigationDrawer implements View.OnCli
                     Bitmap newImage = UserHelper.cropImage(bitmap, width, height);
                     Drawable drawable = new BitmapDrawable(getResources(), newImage);
 
-                    mFrameLayoutMain.setBackgroundDrawable(drawable);
+                    mFrameLayoutMain.setBackground(drawable);
                 }
             }
         });
     }
 
-    @Override
-    protected MaterialSection backToSection(MaterialSection currentSection) {
-        MaterialSection section;
-        int sectionPos = currentSection.getPosition();
+//    @OnClick(R.id.tv_choice_image)
+//    public void clickChoiceImage() {
+//        DialogTakePictureFragment dialog = new DialogTakePictureFragment();
+//        dialog.setDialogClickListener(this);
+//        dialog.show(getSupportFragmentManager(), null);
+//    }
 
-        switch (sectionPos) {
-            case 0:
-                section = getSectionAtCurrentPosition(sectionPos);
-                break;
-            case 1:
-                section = getSectionAtCurrentPosition(sectionPos);
-
-                break;
-            case 2:
-                section = getSectionAtCurrentPosition(sectionPos);
-
-                break;
-            default:
-                section = super.backToSection(currentSection);
-                break;
-        }
-
-        return section;
-    }
-
-    @Override
-    public void onClick(View v) {
-        DialogTakePictureFragment dialog = new DialogTakePictureFragment();
-        dialog.setDialogClickListener(this);
-        dialog.show(getSupportFragmentManager(), null);
-    }
-
-    @Override
-    public void onDrawerSlide(View drawerView, float slideOffset) {
-    }
-
-    @Override
-    public void onDrawerOpened(View drawerView) {
-    }
-
-    @Override
-    public void onDrawerClosed(View drawerView) {
-    }
-
-    @Override
     public void onDrawerStateChanged(int newState) {
         //bug image height == 0. That's why we set image when drawerOpen
         if (!isImageAlreadySet) {
-            String picturePath = VideoDairySharePreferences.getSharedPreferences().getString(Constants.IMAGE_HEADER_MENU, null);
+            String picturePath = mPreferences.getSharedPreferences().getString(Constants.IMAGE_HEADER_MENU, null);
             if (picturePath != null)
                 setImageInBackground(picturePath);
         }
     }
 
+
+//    @Override
+//    public void dialogClick() {
+//        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        startActivityForResult(i, Constants.RESULT_LOAD_IMAGE);
+//    }
+
     @Override
-    public void dialogWithDataClick(Object object) {
+    public void setComponent() {
+        mActivityComponent = getActivityComponent();
+        mActivityComponent.inject(this);
     }
 
     @Override
-    public void dialogClick() {
-        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, Constants.RESULT_LOAD_IMAGE);
+    public ActivityComponent getComponent() {
+        return mActivityComponent;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        mDrawerLayout.closeDrawers();
+
+        switch (item.getItemId()) {
+            case R.id.action_record:
+                mNavigator.replace(this, VideoFragment.class, R.id.main_container, null, false);
+                break;
+            case R.id.action_notes:
+                mNavigator.replace(this, NoteFragment.class, R.id.main_container, null, false);
+                break;
+            case R.id.action_contact:
+                mNavigator.replace(this, SupportFragment.class, R.id.main_container, null, false);
+                break;
+        }
+        return false;
     }
 }

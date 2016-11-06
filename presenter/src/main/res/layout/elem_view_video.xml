@@ -35,7 +35,7 @@
         </FrameLayout>
 
         <TextView
-            android:id="@+id/etTitle"
+            android:id="@+id/et_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/flVideoCreate"
@@ -52,13 +52,13 @@
             layout="@layout/view_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_alignBottom="@+id/etTitle" />
+            android:layout_alignBottom="@+id/et_title" />
 
         <TextView
             android:id="@+id/etDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/etTitle"
+            android:layout_below="@+id/et_title"
             android:layout_margin="@dimen/edge_medium"
             android:maxLines="4"
             android:ellipsize="end"

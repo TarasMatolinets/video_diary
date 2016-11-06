@@ -68,9 +68,9 @@ public class SplashActivity extends BaseActivity implements OnPreDrawListener, T
 
     @BindView(R.id.tvTitle) SkewableTextView mName;
     @BindView(R.id.tvWelcome) SkewableTextView mWelcome;
-    @BindView(R.id.flSplash) RelativeLayout mContainer;
-    @BindView(R.id.etTitle) EditText mPersonalName;
-    @BindView(R.id.splashBtClickNext) ImageButton mClickNext;
+    @BindView(R.id.fl_splash) RelativeLayout mContainer;
+    @BindView(R.id.et_title) EditText mPersonalName;
+    @BindView(R.id.tv_splash_click_next) ImageButton mClickNext;
 
     @Inject Navigator mNavigator;
     @Inject VideoDairySharePreferences mPreferences;
@@ -221,7 +221,7 @@ public class SplashActivity extends BaseActivity implements OnPreDrawListener, T
     public void afterTextChanged(Editable s) {
     }
 
-    @OnClick(R.id.splashBtClickNext)
+    @OnClick(R.id.tv_splash_click_next)
     private void splashButtonClick() {
         String name = mPreferences.getSharedPreferences().getString(KEY_PERSON_NAME, null);
 

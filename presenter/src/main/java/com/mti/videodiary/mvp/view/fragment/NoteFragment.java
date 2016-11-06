@@ -27,6 +27,9 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.mti.videodiary.data.storage.VideoDairySharePreferences;
+import com.mti.videodiary.di.IHasComponent;
+import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.mvp.view.activity.CreateNoteActivity;
 import com.mti.videodiary.mvp.view.activity.MenuActivity;
 import com.mti.videodiary.adapter.NoteAdapter;
@@ -39,45 +42,55 @@ import com.software.shell.fab.ActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import mti.com.videodiary.R;
 
 /**
  * Created by Taras Matolinets on 23.02.15.
+ * Screen for present saved notes
  */
-public class NoteFragment extends BaseFragment implements View.OnClickListener, SearchView.OnQueryTextListener {
+public class NoteFragment extends BaseFragment implements SearchView.OnQueryTextListener {
 
-    private View mView;
-    private RecyclerView mRecyclerView;
+    private static final long DURATION = 1500;
+    @BindView(R.id.note_recycle_view) RecyclerView mRecyclerView;
+    @BindView(R.id.buttonFloat) ActionButton mButtonFloat;
+    @BindView(R.id.ivCameraOff) ImageView mIvNote;
+    @BindView(R.id.tvNoRecords) TextView mTvNoNotes;
+    @BindView(R.id.adViewNote) AdView mAdView;
+
     private NoteAdapter mAdapter;
     private StaggeredGridLayoutManager mLayoutManager;
-    private ActionButton mButtonFloat;
-    private ImageView mIvNote;
-    private TextView mTvNoNotes;
-    private AdView mAdView;
+    private Unbinder mBinder;
+
+    @Inject DataBaseManager mDataBaseManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver,
-                new IntentFilter(Constants.UPDATE_ADAPTER_INTENT));
+        getComponent(ActivityComponent.class).inject(this);
+
+        mBinder = ButterKnife.bind(this, getActivity());
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, new IntentFilter(Constants.UPDATE_ADAPTER_INTENT));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_note, container, false);
+        View view = inflater.inflate(R.layout.fragment_note, container, false);
 
-        mAdView = (AdView) mView.findViewById(R.id.adViewNote);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        initViews();
         setupRecycleView();
-        initListeners();
         showEmptyView();
 
-        return mView;
+        return view;
     }
 
     @Override
@@ -96,8 +109,10 @@ public class NoteFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onDestroy() {
-        if (mAdView != null)
+        if (mAdView != null) {
             mAdView.destroy();
+        }
+        mBinder.unbind();
         super.onDestroy();
     }
 
@@ -113,7 +128,7 @@ public class NoteFragment extends BaseFragment implements View.OnClickListener, 
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case Constants.UPDATE_NOTE_ADAPTER:
-                NoteDataManager noteDataManager = (NoteDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.NOTE_MANAGER);
+                NoteDataManager noteDataManager = (NoteDataManager) mDataBaseManager.getCurrentManager(DataBaseManager.DataManager.NOTE_MANAGER);
 
                 final List<Note> notesList = noteDataManager.getAllNotesList();
 
@@ -125,19 +140,8 @@ public class NoteFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    private void initViews() {
-        mIvNote = (ImageView) mView.findViewById(R.id.ivCameraOff);
-        mTvNoNotes = (TextView) mView.findViewById(R.id.tvNoRecords);
-        mRecyclerView = (RecyclerView) mView.findViewById(R.id.noteRecycleView);
-        mButtonFloat = (ActionButton) mView.findViewById(R.id.buttonFloat);
-    }
-
-    private void initListeners() {
-        mButtonFloat.setOnClickListener(this);
-    }
-
     private void showEmptyView() {
-        NoteDataManager noteManager = (NoteDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.NOTE_MANAGER);
+        NoteDataManager noteManager = (NoteDataManager) mDataBaseManager.getCurrentManager(DataBaseManager.DataManager.NOTE_MANAGER);
         final List<Note> listNotes = noteManager.getAllNotesList();
 
         if (listNotes.isEmpty()) {
@@ -157,7 +161,7 @@ public class NoteFragment extends BaseFragment implements View.OnClickListener, 
 
 
     private void setupRecycleView() {
-        NoteDataManager noteDataManager = (NoteDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.NOTE_MANAGER);
+        NoteDataManager noteDataManager = (NoteDataManager) mDataBaseManager.getCurrentManager(DataBaseManager.DataManager.NOTE_MANAGER);
         final List<Note> listNotes = noteDataManager.getAllNotesList();
 
         mRecyclerView.setHasFixedSize(true);
@@ -189,15 +193,10 @@ public class NoteFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.buttonFloat:
-                Intent intent = new Intent(getActivity(), CreateNoteActivity.class);
-                startActivityForResult(intent, Constants.UPDATE_NOTE_ADAPTER);
-                break;
-        }
+    @OnClick(R.id.buttonFloat)
+    public void addNoteClick() {
+        Intent intent = new Intent(getActivity(), CreateNoteActivity.class);
+        startActivityForResult(intent, Constants.UPDATE_NOTE_ADAPTER);
     }
 
     @Override
@@ -220,7 +219,7 @@ public class NoteFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public boolean onQueryTextChange(String s) {
-        NoteDataManager noteDataManager = (NoteDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.NOTE_MANAGER);
+        NoteDataManager noteDataManager = (NoteDataManager) mDataBaseManager.getCurrentManager(DataBaseManager.DataManager.NOTE_MANAGER);
 
         final List<Note> listNotes = noteDataManager.getAllNotesList();
 

@@ -135,7 +135,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
             super(itemLayoutView);
 
             tvDescription = (TextView) itemLayoutView.findViewById(R.id.etDescription);
-            tvTitle = (TextView) itemLayoutView.findViewById(R.id.etTitle);
+            tvTitle = (TextView) itemLayoutView.findViewById(R.id.et_title);
             delete = (ImageView) itemLayoutView.findViewById(R.id.ivDelete);
             share = (ImageView) itemLayoutView.findViewById(R.id.ivShare);
             cardView = (CardView) itemLayoutView.findViewById(R.id.cardViewCreateNote);

@@ -2,8 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="@drawable/gradient_dark_blue"
-    android:id="@+id/flMain">
-
+    android:id="@+id/fl_main_header">
 
     <TextView
         android:layout_width="wrap_content"
@@ -11,5 +10,5 @@
         style="@style/VideoDailyTextStyle"
         android:layout_gravity="center"
         android:text="@string/menu_act_choice_image"
-        android:id="@+id/tvChoiceImage" />
+        android:id="@+id/tv_choice_image" />
 </FrameLayout>

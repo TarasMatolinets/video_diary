@@ -104,7 +104,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
     private void initViews() {
         mIvPlay = (ImageView) findViewById(R.id.ivPlay);
-        mEtTitle = (EditText) findViewById(R.id.etTitle);
+        mEtTitle = (EditText) findViewById(R.id.et_title);
         mTvAddVideoNote = (TextView) findViewById(R.id.tvAddVideo);
         mEtDescription = (EditText) findViewById(R.id.etDescription);
         mIvThumbnail = (ImageView) findViewById(R.id.ivVideoThumbnail);

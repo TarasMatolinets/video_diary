@@ -14,12 +14,6 @@ import com.mti.videodiary.di.module.ActivityModule;
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
-    public static final String APPLICATION_DIRECTORY = "videoDairy";
-    public static final String VIDEO_DIR = "video";
-    public static final String NOTE_DIR = "/note";
-    public static final String IMAGE_DIR = "image";
-    public static final String PACKAGE = "com.mti.videodairy";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
