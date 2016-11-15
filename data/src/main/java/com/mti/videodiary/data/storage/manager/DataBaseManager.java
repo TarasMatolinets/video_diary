@@ -15,8 +15,6 @@ public class DataBaseManager {
 
     private DataBaseManager instanceDataManager;
     private Context mContext;
-    private NoteDataManager instanceNoteData;
-    private VideoDataManager instanceVideoData;
 
     private DataBaseHelper mHelper;
 
@@ -26,32 +24,32 @@ public class DataBaseManager {
         mHelper = new DataBaseHelper(ctx);
     }
 
-    public DataBaseManager getCurrentManager(DataManager manager) {
-        switch (manager) {
-            case NOTE_MANAGER:
-                return instanceNoteData = getNoteManager(mContext);
-            case VIDEO_MANAGER:
-                return instanceVideoData = getVideoManager(mContext);
-
-            default:
-                return instanceDataManager;
-        }
-
-    }
-
-    private NoteDataManager getNoteManager(Context ctx) {
-        if (null == instanceNoteData) {
-            return instanceNoteData = new NoteDataManager(ctx);
-        } else
-            return instanceNoteData;
-    }
-
-    private VideoDataManager getVideoManager(Context ctx) {
-        if (null == instanceVideoData) {
-            return instanceVideoData = new VideoDataManager(ctx);
-        } else
-            return instanceVideoData;
-    }
+//    public DataBaseManager getCurrentManager(DataManager manager) {
+//        switch (manager) {
+//            case NOTE_MANAGER:
+//                return instanceNoteData = getNoteManager(mContext);
+//            case VIDEO_MANAGER:
+//                return instanceVideoData = getVideoManager(mContext);
+//
+//            default:
+//                return instanceDataManager;
+//        }
+//
+//    }
+//
+//    private NoteDataManager getNoteManager(Context ctx) {
+//        if (null == instanceNoteData) {
+//            return instanceNoteData = new NoteDataManager(ctx);
+//        } else
+//            return instanceNoteData;
+//    }
+//
+//    private VideoDataManager getVideoManager(Context ctx) {
+//        if (null == instanceVideoData) {
+//            return instanceVideoData = new VideoDataManager(ctx);
+//        } else
+//            return instanceVideoData;
+//    }
 
     private DataBaseHelper getHelper() {
         return mHelper;

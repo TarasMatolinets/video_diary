@@ -132,7 +132,10 @@ public class Navigator {
 
     public void replaceActivity(Activity activity, Class className, Bundle bundle) {
         Intent intent = new Intent(activity, className);
-        intent.putExtras(bundle);
+
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
         activity.startActivity(intent);
     }
 

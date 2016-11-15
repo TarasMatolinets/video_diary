@@ -23,9 +23,9 @@ import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.mvp.view.BaseActivity;
-import com.mti.videodiary.mvp.view.fragment.NoteFragment;
-import com.mti.videodiary.mvp.view.fragment.SupportFragment;
-import com.mti.videodiary.mvp.view.fragment.VideoFragment;
+//import com.mti.videodiary.mvp.view.fragment.NoteFragment;
+//import com.mti.videodiary.mvp.view.fragment.SupportFragment;
+//import com.mti.videodiary.mvp.view.fragment.VideoFragment;
 import com.mti.videodiary.navigator.Navigator;
 import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.UserHelper;
@@ -62,6 +62,7 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolBar);
@@ -192,13 +193,13 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
 
         switch (item.getItemId()) {
             case R.id.action_record:
-                mNavigator.replace(this, VideoFragment.class, R.id.main_container, null, false);
+                //      mNavigator.replace(this, VideoFragment.class, R.id.main_container, null, false);
                 break;
             case R.id.action_notes:
-                mNavigator.replace(this, NoteFragment.class, R.id.main_container, null, false);
+                //     mNavigator.replace(this, NoteFragment.class, R.id.main_container, null, false);
                 break;
             case R.id.action_contact:
-                mNavigator.replace(this, SupportFragment.class, R.id.main_container, null, false);
+                //    mNavigator.replace(this, SupportFragment.class, R.id.main_container, null, false);
                 break;
         }
         return false;

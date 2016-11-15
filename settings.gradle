@@ -1,4 +1,3 @@
 include ':presenter'
-include ':MaterialNavigationDrawerModule'
 include ':data'
 include ':domain'

@@ -68,7 +68,7 @@ public class SplashActivity extends BaseActivity implements OnPreDrawListener, T
 
     @BindView(R.id.tvTitle) SkewableTextView mName;
     @BindView(R.id.tvWelcome) SkewableTextView mWelcome;
-    @BindView(R.id.fl_splash) RelativeLayout mContainer;
+    @BindView(R.id.rl_splash) RelativeLayout mContainer;
     @BindView(R.id.et_title) EditText mPersonalName;
     @BindView(R.id.tv_splash_click_next) ImageButton mClickNext;
 
@@ -78,9 +78,9 @@ public class SplashActivity extends BaseActivity implements OnPreDrawListener, T
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
+
         setListeners();
     }
 
@@ -222,7 +222,7 @@ public class SplashActivity extends BaseActivity implements OnPreDrawListener, T
     }
 
     @OnClick(R.id.tv_splash_click_next)
-    private void splashButtonClick() {
+    public void splashButtonClick() {
         String name = mPreferences.getSharedPreferences().getString(KEY_PERSON_NAME, null);
 
         if (!TextUtils.isEmpty(name)) {

@@ -13,7 +13,7 @@ ext {
 
     //Libraries
     supportVersion = '25.0.0'
-    daggerVersion = '2.2'
+    daggerVersion = '2.5'
     butterKnifeVersion = '8.4.0'
     recyclerViewVersion = '21.0.3'
     rxJavaVersion = '1.1.6'
@@ -59,6 +59,7 @@ ext {
             daggerCompiler        : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger                : "com.google.dagger:dagger:${daggerVersion}",
             butterKnife           : "com.jakewharton:butterknife:${butterKnifeVersion}",
+            butterKnifeCompiler   : "com.jakewharton:butterknife-compiler:${butterKnifeVersion}",
             rxJava                : "io.reactivex:rxjava:${rxJavaVersion}",
             rxAndroid             : "io.reactivex:rxandroid:${rxAndroidVersion}",
             javaxAnnotation       : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",

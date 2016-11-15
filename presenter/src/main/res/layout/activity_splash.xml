@@ -8,7 +8,7 @@
              android:background="@drawable/gradient_menu">
 
     <RelativeLayout
-        android:id="@+id/fl_splash"
+        android:id="@+id/rl_splash"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="false"

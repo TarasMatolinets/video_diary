@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 
 repositories {
@@ -49,11 +48,8 @@ dependencies {
 
     compile project(':domain')
     compile project(':data')
-    compile project(':MaterialNavigationDrawerModule')
 
     def presentationDependencies = rootProject.ext.presentationDependencies
-
-    apt presentationDependencies.daggerCompiler
 
     compile presentationDependencies.appCompatSupport
     compile presentationDependencies.supportAndroid
@@ -73,6 +69,9 @@ dependencies {
     compile presentationDependencies.butterKnife
     compile presentationDependencies.dagger
     compile presentationDependencies.designAndroid
+
+    annotationProcessor  presentationDependencies.daggerCompiler
+    annotationProcessor  presentationDependencies.butterKnifeCompiler
 
     compile('com.crashlytics.sdk.android:crashlytics:2.2.2@aar') {
         transitive = true;
