@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="VideoDailyNoActionBar" parent="@style/Theme.AppCompat.NoActionBar">
+    <style name="VideoDailyNoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimaryDark">@color/darkblue</item>
     </style>

@@ -48,13 +48,13 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
 
     @BindView(R.id.navigation_view) NavigationView mNavigationView;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @BindView(R.id.fl_main_header) FrameLayout mFrameLayoutMain;
-    @BindView(R.id.tv_choice_image) TextView mChoiceImage;
     @BindView(R.id.toolbar) Toolbar mToolBar;
 
     @Inject VideoDairySharePreferences mPreferences;
     @Inject Navigator mNavigator;
 
+    private FrameLayout mFrameLayoutMain;
+    private TextView mChoiceImage;
     private ActivityComponent mActivityComponent;
     private boolean isImageAlreadySet;
 
@@ -67,6 +67,8 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
 
         setSupportActionBar(mToolBar);
         mNavigationView.setNavigationItemSelectedListener(this);
+        mFrameLayoutMain = (FrameLayout) findViewById(R.id.fl_main_header);
+        mChoiceImage = (TextView) findViewById(R.id.tv_choice_image);
 
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar, R.string.video_notes, R.string.video_notes) {
 
@@ -82,6 +84,8 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
         };
 
         mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
+        mNavigationView.getMenu().getItem(0).setChecked(true);
+
         actionBarDrawerToggle.syncState();
     }
 

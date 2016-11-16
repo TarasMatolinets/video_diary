@@ -1,12 +1,12 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="VideoDailyNoActionBar" parent="@style/Theme.AppCompat.NoActionBar">
+    <style name="VideoDailyNoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:colorPrimaryDark">@color/darkblue</item>
     </style>
 
-    <style name="MyNavigationDrawerTheme">
+    <style name="MyNavigationDrawerTheme" parent="VideoDailyNoActionBar">
         <item name="colorPrimaryDark">@color/darkblue</item>
         <item name="colorPrimary">@color/blue</item>
         <item name="colorAccent">#FFFFFF</item>
