@@ -32,7 +32,7 @@
         android:layout_marginTop="@dimen/edge_medium">
 
         <Button
-            android:id="@+id/btCancel"
+            android:id="@+id/bt_cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
@@ -44,7 +44,7 @@
             android:textSize="@dimen/text_normal" />
 
         <Button
-            android:id="@+id/btOkay"
+            android:id="@+id/bt_okay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"

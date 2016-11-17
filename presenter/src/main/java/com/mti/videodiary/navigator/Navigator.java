@@ -141,7 +141,9 @@ public class Navigator {
 
     public void replaceActivityForResult(Activity activity, Class className, Bundle bundle, int requestCode) {
         Intent intent = new Intent(activity, className);
-        intent.putExtras(bundle);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
         activity.startActivityForResult(intent, requestCode);
     }
 

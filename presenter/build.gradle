@@ -60,7 +60,6 @@ dependencies {
     compile presentationDependencies.googlePlayServices
     compile presentationDependencies.shellSoftware
     compile presentationDependencies.universalImageLoader
-    compile presentationDependencies.croutonVersion
     compile presentationDependencies.recyclerView
     compile presentationDependencies.cardViewVersion
     compile presentationDependencies.rxJava
@@ -69,6 +68,7 @@ dependencies {
     compile presentationDependencies.butterKnife
     compile presentationDependencies.dagger
     compile presentationDependencies.designAndroid
+    compile presentationDependencies.eventBus
 
     annotationProcessor  presentationDependencies.daggerCompiler
     annotationProcessor  presentationDependencies.butterKnifeCompiler

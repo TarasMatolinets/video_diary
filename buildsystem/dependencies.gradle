@@ -20,7 +20,6 @@ ext {
     rxAndroidVersion = '1.2.1'
     javaxAnnotationVersion = '1.0'
     androidAnnotationsVersion = '21.0.3'
-    croutonVersion = '1.8.5@aar'
     nineOldAndroidsVersion = '2.4.0'
     daimajiaVersion = '1.0.0'
     daimajiaAndroidanimationsVersion = '1.1.2@aar'
@@ -28,7 +27,7 @@ ext {
     shellSoftwareVersion = '1.1.1'
     universalImageLoaderVersion = '1.9.3'
     googlePlayServiceVersion = '9.8.0'
-    creshlitics = '2.2.2@aar'
+    eventBusVersion = '3.0.0'
 
     //Testing
     robolectricVersion = '3.0'
@@ -55,14 +54,14 @@ ext {
             googlePlayServices    : "com.google.android.gms:play-services:${googlePlayServiceVersion}",
             shellSoftware         : "com.github.shell-software:fab:${shellSoftwareVersion}",
             universalImageLoader  : "com.nostra13.universalimageloader:universal-image-loader:${universalImageLoaderVersion}",
-            croutonVersion        : "de.keyboardsurfer.android.widget:crouton:${croutonVersion}",
-            daggerCompiler        : "com.google.dagger:dagger-compiler:${daggerVersion}",
+             daggerCompiler        : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger                : "com.google.dagger:dagger:${daggerVersion}",
             butterKnife           : "com.jakewharton:butterknife:${butterKnifeVersion}",
             butterKnifeCompiler   : "com.jakewharton:butterknife-compiler:${butterKnifeVersion}",
             rxJava                : "io.reactivex:rxjava:${rxJavaVersion}",
             rxAndroid             : "io.reactivex:rxandroid:${rxAndroidVersion}",
             javaxAnnotation       : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+            eventBus              : "org.greenrobot:eventbus:${eventBusVersion}"
     ]
 
     presentationTestDependencies = [

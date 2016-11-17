@@ -1,5 +1,7 @@
 package com.mti.videodiary.di.component;
 
+import android.app.DialogFragment;
+
 import com.mti.videodiary.di.annotation.PerActivity;
 import com.mti.videodiary.di.module.ActivityModule;
 //import com.mti.videodiary.mvp.view.activity.CreateNoteActivity;

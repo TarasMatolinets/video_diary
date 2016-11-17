@@ -2,17 +2,14 @@
 
     <!-- Base application theme. -->
     <style name="VideoDailyNoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/blue</item>
         <item name="android:colorPrimaryDark">@color/darkblue</item>
     </style>
 
     <style name="MyNavigationDrawerTheme" parent="VideoDailyNoActionBar">
-        <item name="colorPrimaryDark">@color/darkblue</item>
-        <item name="colorPrimary">@color/blue</item>
         <item name="colorAccent">#FFFFFF</item>
         <item name="actionBarStyle">@style/VideoDailyActionBarStyle</item>
         <item name="android:elevation">0dp</item>
-
         <!-- enable window content transitions -->
         <item name="android:windowContentTransitions">true</item>
         <!-- enable overlapping of exiting and entering activities-->

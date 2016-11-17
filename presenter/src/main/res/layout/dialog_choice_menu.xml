@@ -1,50 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@android:color/white">
+              android:id="@+id/ll_main"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@android:color/white"
+              android:orientation="vertical">
+
 
     <TextView
+        android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/select_image_gallery_description"
-        android:id="@+id/tvDesc"
-        android:gravity="center_horizontal"
         android:layout_marginTop="@dimen/edge_big"
+        android:gravity="center_horizontal"
+        android:text="@string/select_image_gallery"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"
+        android:textStyle="normal"/>
+
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/edge_big"
+        android:gravity="center_horizontal"
+        android:text="@string/select_image_gallery_description"
+        android:textColor="@color/gray"
         android:textSize="@dimen/text_mini_normal"
-        android:textStyle="normal"
-        android:textColor="@color/gray" />
+        android:textStyle="normal"/>
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/ll_buttons"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/edge_medium">
+        android:layout_marginTop="@dimen/edge_medium"
+        android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btCancel"
+            android:id="@+id/bt_cancel"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@android:color/transparent"
+            android:gravity="center"
             android:text="@string/dialog_cancel"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:textStyle="normal"
             android:textColor="@color/blue"
-            android:textSize="@dimen/text_normal" />
+            android:textSize="@dimen/text_normal"
+            android:textStyle="normal"/>
 
         <Button
-            android:id="@+id/btOkay"
+            android:id="@+id/bt_okay"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:text="@string/dialog_ok"
             android:layout_weight="1"
-            android:textColor="@color/blue"
-            android:textStyle="normal"
+            android:background="@android:color/transparent"
             android:gravity="center"
-            android:textSize="@dimen/text_normal" />
+            android:text="@string/dialog_ok"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/text_normal"
+            android:textStyle="normal"/>
     </LinearLayout>
 
 </LinearLayout>

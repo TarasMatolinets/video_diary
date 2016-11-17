@@ -1,8 +1,10 @@
 package com.mti.videodiary.mvp.view.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -11,40 +13,53 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
+import com.mti.videodiary.dialog.DialogTakePictureFragment;
 import com.mti.videodiary.mvp.view.BaseActivity;
-//import com.mti.videodiary.mvp.view.fragment.NoteFragment;
-//import com.mti.videodiary.mvp.view.fragment.SupportFragment;
-//import com.mti.videodiary.mvp.view.fragment.VideoFragment;
 import com.mti.videodiary.navigator.Navigator;
-import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.utils.UserHelper;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
+
 import mti.com.videodiary.R;
 
+import static android.provider.MediaStore.MediaColumns.DATA;
 import static android.view.View.GONE;
+import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING;
+import static com.mti.videodiary.utils.Constants.IMAGE_HEADER_MENU;
+import static com.mti.videodiary.utils.Constants.RESULT_LOAD_IMAGE;
+import static com.mti.videodiary.utils.Constants.UPDATE_NOTE_ADAPTER;
+import static com.mti.videodiary.utils.Constants.UPDATE_VIDEO_ADAPTER;
+
+//import com.mti.videodiary.mvp.view.fragment.NoteFragment;
+//import com.mti.videodiary.mvp.view.fragment.SupportFragment;
+//import com.mti.videodiary.mvp.view.fragment.VideoFragment;
 
 /**
  * Created by Taras Matolinets on 23.02.15.
  * Main activity
  */
-public class MenuActivity extends BaseActivity implements IHasComponent<ActivityComponent>, OnNavigationItemSelectedListener {
+public class MenuActivity extends BaseActivity implements IHasComponent<ActivityComponent>, OnNavigationItemSelectedListener, OnClickListener {
 
     @BindView(R.id.navigation_view) NavigationView mNavigationView;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
@@ -53,10 +68,9 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
     @Inject VideoDairySharePreferences mPreferences;
     @Inject Navigator mNavigator;
 
-    private FrameLayout mFrameLayoutMain;
     private TextView mChoiceImage;
     private ActivityComponent mActivityComponent;
-    private boolean isImageAlreadySet;
+    private View mHeaderView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +80,20 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolBar);
+
+        mHeaderView = mNavigationView.getHeaderView(0);
+        mChoiceImage = (TextView) mHeaderView.findViewById(R.id.tv_choice_image);
+        mHeaderView.setOnClickListener(this);
+
         mNavigationView.setNavigationItemSelectedListener(this);
-        mFrameLayoutMain = (FrameLayout) findViewById(R.id.fl_main_header);
-        mChoiceImage = (TextView) findViewById(R.id.tv_choice_image);
+        mNavigationView.getMenu().getItem(0).setChecked(true);
 
+        syncActionBarToggle();
+        setImageToHeaderView();
+    }
+
+    private void syncActionBarToggle() {
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar, R.string.video_notes, R.string.video_notes) {
-
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
@@ -84,8 +106,6 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
         };
 
         mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
-        mNavigationView.getMenu().getItem(0).setChecked(true);
-
         actionBarDrawerToggle.syncState();
     }
 
@@ -94,23 +114,30 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case Constants.RESULT_LOAD_IMAGE:
+                case RESULT_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                    Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                    cursor.moveToFirst();
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    String picturePath = cursor.getString(columnIndex);
-                    cursor.close();
+                    String image = getImageUrlWithAuthority(this, selectedImage);
 
-                    if (picturePath != null) {
-                        setImageInBackground(picturePath);
-                        mPreferences.setDataToSharePreferences(Constants.IMAGE_HEADER_MENU, picturePath, VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING);
+                    String[] filePathColumn = {DATA};
+                    Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+
+                    if (cursor != null) {
+                        cursor.moveToFirst();
+                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                        String picturePath = cursor.getString(columnIndex);
+                        cursor.close();
+
+                        if (!TextUtils.isEmpty(picturePath)) {
+                            setImageInBackground(picturePath);
+                            mPreferences.setDataToSharePreferences(IMAGE_HEADER_MENU, picturePath, STRING);
+                        } else {
+                            showSnackView();
+                        }
                     } else {
                         showSnackView();
                     }
                     break;
-                case Constants.UPDATE_VIDEO_ADAPTER:
+                case UPDATE_VIDEO_ADAPTER:
 //                    Fragment fragment = (Fragment) getCurrentSection().getTargetFragment();
 //
 //                    // update current note card data
@@ -118,7 +145,7 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
 //                        fragment.onActivityResult(requestCode, resultCode, data);
                     break;
 
-                case Constants.UPDATE_NOTE_ADAPTER:
+                case UPDATE_NOTE_ADAPTER:
 //                    Fragment noteFragment = (Fragment) getCurrentSection().getTargetFragment();
 //
 //                    // update current note card data
@@ -129,56 +156,57 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
         }
     }
 
+
+    public static String getImageUrlWithAuthority(Context context, Uri uri) {
+        InputStream is = null;
+        if (uri.getAuthority() != null) {
+            try {
+                is = context.getContentResolver().openInputStream(uri);
+                Bitmap bmp = BitmapFactory.decodeStream(is);
+                return writeToTempImageAndGetPathUri(context, bmp).toString();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
+    public static Uri writeToTempImageAndGetPathUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
     private void showSnackView() {
-        Crouton.makeText(this, getResources().getString(R.string.error_picture), Style.ALERT).show();
+        Snackbar snackbar = Snackbar.make(mNavigationView, getString(R.string.error_picture), Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
 
     private void setImageInBackground(final String picturePath) {
         mChoiceImage.setVisibility(GONE);
+        Bitmap bitmap = UserHelper.decodeSampledBitmapFromResource(picturePath);
 
-        mFrameLayoutMain.post(new Runnable() {
-            @Override
-            public void run() {
-                isImageAlreadySet = true;
+        int width = 300;
+        int height = 200;
 
-                int width = mFrameLayoutMain.getMeasuredWidth();
-                int height = mFrameLayoutMain.getMeasuredHeight();
-
-                if (width > 0 && height > 0) {
-
-                    Bitmap bitmap = UserHelper.decodeSampledBitmapFromResource(picturePath);
-
-                    Bitmap newImage = UserHelper.cropImage(bitmap, width, height);
-                    Drawable drawable = new BitmapDrawable(getResources(), newImage);
-
-                    mFrameLayoutMain.setBackground(drawable);
-                }
-            }
-        });
+        Bitmap newImage = UserHelper.cropImage(bitmap, width, height);
+        Drawable drawable = new BitmapDrawable(getResources(), newImage);
+        mHeaderView.setBackground(drawable);
     }
 
-//    @OnClick(R.id.tv_choice_image)
-//    public void clickChoiceImage() {
-//        DialogTakePictureFragment dialog = new DialogTakePictureFragment();
-//        dialog.setDialogClickListener(this);
-//        dialog.show(getSupportFragmentManager(), null);
-//    }
-
-    public void onDrawerStateChanged(int newState) {
-        //bug image height == 0. That's why we set image when drawerOpen
-        if (!isImageAlreadySet) {
-            String picturePath = mPreferences.getSharedPreferences().getString(Constants.IMAGE_HEADER_MENU, null);
-            if (picturePath != null)
-                setImageInBackground(picturePath);
+    private void setImageToHeaderView() {
+        String picturePath = mPreferences.getSharedPreferences().getString(IMAGE_HEADER_MENU, null);
+        if (!TextUtils.isEmpty(picturePath)) {
+            setImageInBackground(picturePath);
         }
     }
-
-
-//    @Override
-//    public void dialogClick() {
-//        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        startActivityForResult(i, Constants.RESULT_LOAD_IMAGE);
-//    }
 
     @Override
     public void setComponent() {
@@ -207,5 +235,15 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
                 break;
         }
         return false;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fl_main_header:
+                DialogTakePictureFragment dialog = new DialogTakePictureFragment();
+                dialog.show(getSupportFragmentManager(), null);
+                break;
+        }
     }
 }
