@@ -35,7 +35,7 @@
 //import com.mti.videodiary.data.storage.manager.DataBaseManager;
 //import com.mti.videodiary.mvp.view.BaseActivity;
 //import com.mti.videodiary.utils.Constants;
-//import com.mti.videodiary.utils.UserHelper;
+//import com.mti.videodiary.data.helper.UserHelper;
 //
 //import java.io.File;
 //

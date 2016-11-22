@@ -26,7 +26,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.mti.videodiary.animation.SkewableTextView;
 import com.mti.videodiary.mvp.view.BaseActivity;
 import com.mti.videodiary.navigator.Navigator;
-import com.mti.videodiary.utils.UserHelper;
+import com.mti.videodiary.data.helper.UserHelper;
 import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 
 import javax.inject.Inject;

@@ -21,6 +21,11 @@ import java.io.File;
 import io.fabric.sdk.android.Fabric;
 import mti.com.videodiary.R;
 
+import static com.mti.videodiary.data.Constants.APPLICATION_DIRECTORY;
+import static com.mti.videodiary.data.Constants.IMAGE_DIR;
+import static com.mti.videodiary.data.Constants.NOTE_DIR;
+import static com.mti.videodiary.data.Constants.VIDEO_DIR;
+
 /**
  * Created by Taras Matolinets on 09.11.14.
  * Android main application
@@ -28,10 +33,6 @@ import mti.com.videodiary.R;
 public class VideoDiaryApplication extends Application {
     public static final String TAG = "com.mti.video_diary";
 
-    private static final String APPLICATION_DIRECTORY = "videoDairy";
-    private static final String VIDEO_DIR = "video";
-    private static final String NOTE_DIR = "/note";
-    private static final String IMAGE_DIR = "image";
 
     public static final int MAX_CACHE_SIZE = 50 * 1024 * 1024;
     private VideoDiaryAppComponent mVideoDiaryAppComponent;

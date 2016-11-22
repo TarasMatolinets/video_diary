@@ -1,6 +1,5 @@
 package com.mti.videodiary.mvp.view.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,7 +8,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
@@ -18,22 +16,23 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.mti.videodiary.application.VideoDiaryApplication;
 import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.dialog.DialogTakePictureFragment;
+import com.mti.videodiary.mvp.presenter.MenuPresenter;
 import com.mti.videodiary.mvp.view.BaseActivity;
 import com.mti.videodiary.navigator.Navigator;
-import com.mti.videodiary.utils.UserHelper;
+import com.mti.videodiary.data.helper.UserHelper;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 
 import javax.inject.Inject;
@@ -61,12 +60,14 @@ import static com.mti.videodiary.utils.Constants.UPDATE_VIDEO_ADAPTER;
  */
 public class MenuActivity extends BaseActivity implements IHasComponent<ActivityComponent>, OnNavigationItemSelectedListener, OnClickListener {
 
+    public static final String GOOGLE_PHOTOS_CONTENT = "content://com.google.android.apps.photos.content";
     @BindView(R.id.navigation_view) NavigationView mNavigationView;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.toolbar) Toolbar mToolBar;
 
     @Inject VideoDairySharePreferences mPreferences;
     @Inject Navigator mNavigator;
+    @Inject MenuPresenter mPresenter;
 
     private TextView mChoiceImage;
     private ActivityComponent mActivityComponent;
@@ -81,6 +82,8 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
 
         setSupportActionBar(mToolBar);
 
+        mPresenter.setView(this);
+
         mHeaderView = mNavigationView.getHeaderView(0);
         mChoiceImage = (TextView) mHeaderView.findViewById(R.id.tv_choice_image);
         mHeaderView.setOnClickListener(this);
@@ -90,6 +93,8 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
 
         syncActionBarToggle();
         setImageToHeaderView();
+
+
     }
 
     private void syncActionBarToggle() {
@@ -116,25 +121,11 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
             switch (requestCode) {
                 case RESULT_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
-                    String image = getImageUrlWithAuthority(this, selectedImage);
 
-                    String[] filePathColumn = {DATA};
-                    Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-
-                    if (cursor != null) {
-                        cursor.moveToFirst();
-                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                        String picturePath = cursor.getString(columnIndex);
-                        cursor.close();
-
-                        if (!TextUtils.isEmpty(picturePath)) {
-                            setImageInBackground(picturePath);
-                            mPreferences.setDataToSharePreferences(IMAGE_HEADER_MENU, picturePath, STRING);
-                        } else {
-                            showSnackView();
-                        }
+                    if (selectedImage.toString().startsWith(GOOGLE_PHOTOS_CONTENT)) {
+                        mPresenter.storeImage(selectedImage.toString());
                     } else {
-                        showSnackView();
+                        getImageFromStorage(selectedImage);
                     }
                     break;
                 case UPDATE_VIDEO_ADAPTER:
@@ -154,34 +145,26 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
                     break;
             }
         }
+
     }
 
+    private void getImageFromStorage(Uri selectedImage) {
+        String[] filePathColumn = {DATA};
+        Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
 
-    public static String getImageUrlWithAuthority(Context context, Uri uri) {
-        InputStream is = null;
-        if (uri.getAuthority() != null) {
-            try {
-                is = context.getContentResolver().openInputStream(uri);
-                Bitmap bmp = BitmapFactory.decodeStream(is);
-                return writeToTempImageAndGetPathUri(context, bmp).toString();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        if (cursor != null) {
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            if (!TextUtils.isEmpty(picturePath)) {
+                setImageInBackground(picturePath);
+                mPreferences.setDataToSharePreferences(IMAGE_HEADER_MENU, picturePath, STRING);
+            } else {
+                showSnackView();
             }
         }
-        return null;
-    }
-
-    public static Uri writeToTempImageAndGetPathUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
     }
 
     private void showSnackView() {
@@ -189,7 +172,7 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
         snackbar.show();
     }
 
-    private void setImageInBackground(final String picturePath) {
+    public void setImageInBackground(final String picturePath) {
         mChoiceImage.setVisibility(GONE);
         Bitmap bitmap = UserHelper.decodeSampledBitmapFromResource(picturePath);
 
@@ -206,6 +189,12 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
         if (!TextUtils.isEmpty(picturePath)) {
             setImageInBackground(picturePath);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.destroy();
     }
 
     @Override

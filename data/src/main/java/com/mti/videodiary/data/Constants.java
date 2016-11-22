@@ -8,6 +8,13 @@ import java.io.File;
 
 public class Constants {
     public static final String TAG = "com.video.diary";
+
+    public static final String APPLICATION_DIRECTORY = "videoDairy";
+    public static final String VIDEO_DIR = "video";
+    public static final String NOTE_DIR = "note";
+    public static final String IMAGE_DIR = "image";
+
+
     /*splash activity*/
     public static final String KEY_PERSON_NAME = "com.video.daily.personal.name";
 

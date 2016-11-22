@@ -1,4 +1,4 @@
-package com.mti.videodiary.utils;
+package com.mti.videodiary.data.helper;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,7 +12,8 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.mti.videodiary.mvp.view.BaseActivity;
+
+import com.mti.videodiary.data.Constants;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,6 +22,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Random;
+
+import static com.mti.videodiary.data.Constants.APPLICATION_DIRECTORY;
+import static com.mti.videodiary.data.Constants.IMAGE_DIR;
 
 /**
  * Created by Taras Matolinets on 15.11.14.
@@ -84,32 +88,32 @@ public class UserHelper {
         }
     }
 
-//    public static String saveBitmapToSD(Bitmap finalBitmap) {
-//        String root = Environment.getExternalStorageDirectory().toString();
-//
-//        File imageDir = new File(root + File.separator + BaseActivity.APPLICATION_DIRECTORY + File.separator + BaseActivity.IMAGE_DIR);
-//
-//        if (!imageDir.exists())
-//            imageDir.mkdirs();
-//
-//        Random generator = new Random();
-//        int n = 10000;
-//        n = generator.nextInt(n);
-//        String fname = "Image-" + n + ".jpg";
-//
-//        final File file = new File(imageDir, fname);
-//
-//        try {
-//            FileOutputStream out = new FileOutputStream(file);
-//            finalBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-//            out.flush();
-//            out.close();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return file.getAbsolutePath();
-//    }
+    public static String saveBitmapToSD(Bitmap finalBitmap) {
+        String root = Environment.getExternalStorageDirectory().toString();
+
+        File imageDir = new File(root + File.separator + APPLICATION_DIRECTORY + File.separator + IMAGE_DIR);
+
+        if (!imageDir.exists())
+            imageDir.mkdirs();
+
+        Random generator = new Random();
+        int n = 10000;
+        n = generator.nextInt(n);
+        String fname = "Image-" + n + ".jpg";
+
+        final File file = new File(imageDir, fname);
+
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file.getAbsolutePath();
+    }
 
     public static Bitmap decodeSampledBitmapFromResource(String path) {
         //Adjust image resolution to 200 x 200.
