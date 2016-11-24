@@ -93,9 +93,7 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
 
         syncActionBarToggle();
         setImageToHeaderView();
-
-
-    }
+   }
 
     private void syncActionBarToggle() {
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar, R.string.video_notes, R.string.video_notes) {
@@ -123,6 +121,7 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
                     Uri selectedImage = data.getData();
 
                     if (selectedImage.toString().startsWith(GOOGLE_PHOTOS_CONTENT)) {
+
                         mPresenter.storeImage(selectedImage.toString());
                     } else {
                         getImageFromStorage(selectedImage);

@@ -61,7 +61,7 @@ public class VideoDiaryAppModule {
 
     @Provides
     @Singleton
-    VideoDairyAction provideVideDairyAction(VideoDairyActionImpl videoDairyAction) {
+    VideoDairyAction provideVideoDairyAction(VideoDairyActionImpl videoDairyAction) {
         return videoDairyAction;
     }
 

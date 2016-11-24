@@ -2,6 +2,7 @@ package com.mti.videodiary.mvp.presenter;
 
 import android.util.Log;
 
+import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 import com.mti.videodiary.di.annotation.PerActivity;
 import com.mti.videodiary.mvp.view.activity.MenuActivity;
 
@@ -16,6 +17,8 @@ import rx.subscriptions.CompositeSubscription;
 import storage.VideoDairyAction;
 
 import static com.mti.videodiary.application.VideoDiaryApplication.TAG;
+import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING;
+import static com.mti.videodiary.utils.Constants.IMAGE_HEADER_MENU;
 
 /**
  * Created by Terry on 11/20/2016.
@@ -29,12 +32,15 @@ public class MenuPresenter {
     private final VideoDairyAction mAction;
     private MenuActivity mView;
 
+    private VideoDairySharePreferences mPreferences;
+
     @Inject
-    public MenuPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, VideoDairyAction action) {
+    public MenuPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, VideoDairyAction action, VideoDairySharePreferences sharePreferences) {
         mExecutor = executor;
         mPostExecutorThread = postExecutionThread;
         mComposeSubscriptionList = new CompositeSubscription();
         mAction = action;
+        mPreferences = sharePreferences;
     }
 
     public void setView(MenuActivity view) {
@@ -68,6 +74,7 @@ public class MenuPresenter {
         @Override
         public void onNext(String imagePath) {
             mView.setImageInBackground(imagePath);
+            mPreferences.setDataToSharePreferences(IMAGE_HEADER_MENU, imagePath, STRING);
         }
     }
     //endregion

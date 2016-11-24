@@ -20,7 +20,7 @@ import rx.Subscriber;
 public class VideoDairyActionFactory {
 
 
-    public Observable<String> getSavedImagePath(final Context context, final String selectedImage) {
+     Observable<String> getSavedImagePath(final Context context, final String selectedImage) {
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
