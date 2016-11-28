@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.mti.videodiary.UIThread;
 import com.mti.videodiary.application.VideoDiaryApplication;
-import com.mti.videodiary.data.action.VideoDairyActionImpl;
 import com.mti.videodiary.data.executor.JobExecutor;
 import com.mti.videodiary.data.storage.manager.NoteDataBaseFactory;
 import com.mti.videodiary.data.storage.manager.VideoNoteDataBaseFactory;
@@ -13,10 +12,8 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import database.DataBase;
-import database.VideoDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
-import storage.VideoDairyAction;
 
 /**
  * Dagger module that provides objects which will live during the application lifecycle.
@@ -57,12 +54,6 @@ public class VideoDiaryAppModule {
     @Singleton
     DataBase provideVideoDataBase(VideoNoteDataBaseFactory factory) {
         return factory;
-    }
-
-    @Provides
-    @Singleton
-    VideoDairyAction provideVideoDairyAction(VideoDairyActionImpl videoDairyAction) {
-        return videoDairyAction;
     }
 
 }

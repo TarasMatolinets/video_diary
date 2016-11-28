@@ -31,6 +31,8 @@ import static com.mti.videodiary.data.Constants.IMAGE_DIR;
  */
 public class UserHelper {
 
+    private static final String JPG = ".jpg";
+
     /**
      * hide keyboard under viewDivider
      */
@@ -88,31 +90,29 @@ public class UserHelper {
         }
     }
 
-    public static String saveBitmapToSD(Bitmap finalBitmap) {
+    public static String saveBitmapToSD(String imageName, Bitmap finalBitmap) {
         String root = Environment.getExternalStorageDirectory().toString();
 
         File imageDir = new File(root + File.separator + APPLICATION_DIRECTORY + File.separator + IMAGE_DIR);
 
-        if (!imageDir.exists())
-            imageDir.mkdirs();
+        boolean isExist = imageDir.mkdirs();
 
-        Random generator = new Random();
-        int n = 10000;
-        n = generator.nextInt(n);
-        String fname = "Image-" + n + ".jpg";
+        if (!isExist) {
+            final File file = new File(imageDir, imageName + JPG);
 
-        final File file = new File(imageDir, fname);
+            try {
+                FileOutputStream out = new FileOutputStream(file);
+                finalBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                out.flush();
+                out.close();
 
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-            out.flush();
-            out.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            return file.getAbsolutePath();
         }
-        return file.getAbsolutePath();
+        return null;
     }
 
     public static Bitmap decodeSampledBitmapFromResource(String path) {

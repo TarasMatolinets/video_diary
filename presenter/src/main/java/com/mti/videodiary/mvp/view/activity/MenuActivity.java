@@ -43,6 +43,7 @@ import butterknife.ButterKnife;
 import mti.com.videodiary.R;
 
 import static android.provider.MediaStore.MediaColumns.DATA;
+import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 import static android.view.View.GONE;
 import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING;
 import static com.mti.videodiary.utils.Constants.IMAGE_HEADER_MENU;
@@ -93,7 +94,7 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
 
         syncActionBarToggle();
         setImageToHeaderView();
-   }
+    }
 
     private void syncActionBarToggle() {
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar, R.string.video_notes, R.string.video_notes) {
@@ -121,7 +122,6 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
                     Uri selectedImage = data.getData();
 
                     if (selectedImage.toString().startsWith(GOOGLE_PHOTOS_CONTENT)) {
-
                         mPresenter.storeImage(selectedImage.toString());
                     } else {
                         getImageFromStorage(selectedImage);
@@ -167,24 +167,28 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
     }
 
     private void showSnackView() {
-        Snackbar snackbar = Snackbar.make(mNavigationView, getString(R.string.error_picture), Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(mNavigationView, getString(R.string.error_picture), LENGTH_SHORT);
         snackbar.show();
     }
 
     public void setImageInBackground(final String picturePath) {
-        mChoiceImage.setVisibility(GONE);
         Bitmap bitmap = UserHelper.decodeSampledBitmapFromResource(picturePath);
 
         int width = 300;
         int height = 200;
 
-        Bitmap newImage = UserHelper.cropImage(bitmap, width, height);
-        Drawable drawable = new BitmapDrawable(getResources(), newImage);
-        mHeaderView.setBackground(drawable);
+        //check if image was deleted from storage manually
+        if (bitmap != null) {
+            mChoiceImage.setVisibility(GONE);
+            Bitmap newImage = UserHelper.cropImage(bitmap, width, height);
+            Drawable drawable = new BitmapDrawable(getResources(), newImage);
+            mHeaderView.setBackground(drawable);
+        }
     }
 
     private void setImageToHeaderView() {
         String picturePath = mPreferences.getSharedPreferences().getString(IMAGE_HEADER_MENU, null);
+
         if (!TextUtils.isEmpty(picturePath)) {
             setImageInBackground(picturePath);
         }

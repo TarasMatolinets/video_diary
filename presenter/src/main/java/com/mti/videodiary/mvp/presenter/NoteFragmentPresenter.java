@@ -66,5 +66,5 @@ public class NoteFragmentPresenter {
 
         }
     }
-    //end region
+    //endregion
 }

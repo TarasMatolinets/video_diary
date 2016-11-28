@@ -1,10 +1,18 @@
 package com.mti.videodiary.mvp.presenter;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
 
+import com.mti.videodiary.data.helper.UserHelper;
 import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 import com.mti.videodiary.di.annotation.PerActivity;
 import com.mti.videodiary.mvp.view.activity.MenuActivity;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import javax.inject.Inject;
 
@@ -12,9 +20,12 @@ import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
 import interactor.UseCase;
-import interactor.UseCaseSaveImage;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-import storage.VideoDairyAction;
 
 import static com.mti.videodiary.application.VideoDiaryApplication.TAG;
 import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING;
@@ -29,17 +40,15 @@ public class MenuPresenter {
     private final ThreadExecutor mExecutor;
     private final PostExecutionThread mPostExecutorThread;
     private final CompositeSubscription mComposeSubscriptionList;
-    private final VideoDairyAction mAction;
     private MenuActivity mView;
 
     private VideoDairySharePreferences mPreferences;
 
     @Inject
-    public MenuPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, VideoDairyAction action, VideoDairySharePreferences sharePreferences) {
+    public MenuPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, VideoDairySharePreferences sharePreferences) {
         mExecutor = executor;
         mPostExecutorThread = postExecutionThread;
         mComposeSubscriptionList = new CompositeSubscription();
-        mAction = action;
         mPreferences = sharePreferences;
     }
 
@@ -52,11 +61,37 @@ public class MenuPresenter {
         mComposeSubscriptionList.unsubscribe();
     }
 
-    public void storeImage(String imagePath) {
-        UseCase useCaseStoreImage = new UseCaseSaveImage(mExecutor, mPostExecutorThread, mAction, imagePath);
+    public void storeImage(String path) {
+        String[] splitArray = path.split("/");
+        String imageName = splitArray[splitArray.length - 1];
+
         GetSavedImagePathSubscriber subscriber = new GetSavedImagePathSubscriber();
-        useCaseStoreImage.execute(subscriber);
+        getSavedImagePathObserver(mView, path, imageName).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+
         mComposeSubscriptionList.add(subscriber);
+    }
+
+    private Observable<String> getSavedImagePathObserver(final Context context, final String imagePath, final String imageName) {
+        return Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                try {
+                    Uri uri = Uri.parse(imagePath);
+                    InputStream is = context.getContentResolver().openInputStream(uri);
+                    if (is != null) {
+                        Bitmap pictureBitmap = BitmapFactory.decodeStream(is);
+
+                        String url = UserHelper.saveBitmapToSD(imageName,pictureBitmap);
+                        subscriber.onNext(url);
+                        subscriber.onCompleted();
+                    }
+                } catch (FileNotFoundException e) {
+                    subscriber.onError(e);
+                }
+            }
+        });
     }
 
     //region SUBSCRIBER
