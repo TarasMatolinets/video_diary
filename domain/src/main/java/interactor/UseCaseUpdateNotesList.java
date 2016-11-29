@@ -12,17 +12,21 @@ import rx.Observable;
  */
 
 public class UseCaseUpdateNotesList extends UseCase {
-    private final NoteDomain mNoteDomain;
+    private final String mDescription;
+    private final String mTitle;
+    private final int mPosition;
     private NoteDataBase mDataBase;
 
-    public UseCaseUpdateNotesList(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, NoteDomain noteDomain, DataBase dataBase) {
+    public UseCaseUpdateNotesList(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, DataBase dataBase, String description, String title, int position) {
         super(threadExecutor, postExecutionThread);
         mDataBase = (NoteDataBase) dataBase;
-        mNoteDomain = noteDomain;
+        mDescription = description;
+        mTitle = title;
+        mPosition = position;
     }
 
     @Override
     public Observable buildUseCaseObservable() {
-        return mDataBase.updateNoteList(mNoteDomain);
+        return mDataBase.updateNoteList(mDescription, mTitle, mPosition);
     }
 }

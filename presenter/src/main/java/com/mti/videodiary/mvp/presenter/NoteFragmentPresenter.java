@@ -2,6 +2,7 @@ package com.mti.videodiary.mvp.presenter;
 
 import android.util.Log;
 
+import com.mti.videodiary.data.storage.dao.Note;
 import com.mti.videodiary.di.annotation.PerActivity;
 
 import javax.inject.Inject;
@@ -10,6 +11,9 @@ import database.NoteDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
+import interactor.UseCase;
+import interactor.UseCaseGetNoteByPosition;
+import model.NoteDomain;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.mti.videodiary.application.VideoDiaryApplication.TAG;
@@ -66,5 +70,6 @@ public class NoteFragmentPresenter {
 
         }
     }
+
     //endregion
 }

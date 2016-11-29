@@ -6,7 +6,6 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.mti.videodiary.data.storage.DataBaseHelper;
 import com.mti.videodiary.data.storage.dao.Note;
 import com.mti.videodiary.data.transformer.DataToDomainTransformer;
-import com.mti.videodiary.data.transformer.DomainToDataTransformer;
 
 import java.sql.SQLException;
 import java.util.Collections;
@@ -107,14 +106,16 @@ public class NoteDataBaseFactory implements NoteDataBase {
     }
 
     @Override
-    public Observable<Void> createNote(final NoteDomain note) {
+    public Observable<Void> createNote(final String description, final String title) {
         return Observable.create(new Observable.OnSubscribe<Void>() {
             @Override
             public void call(Subscriber<? super Void> subscriber) {
                 try {
-                    DomainToDataTransformer transformer = new DomainToDataTransformer();
-                    Note noteData = transformer.transform(note);
-                    mHelper.getNoteListDao().create(noteData);
+                    Note note = new Note();
+                    note.setTitle(title);
+                    note.setDescription(description);
+
+                    mHelper.getNoteListDao().create(note);
 
                     subscriber.onCompleted();
                 } catch (SQLException e) {
@@ -125,14 +126,24 @@ public class NoteDataBaseFactory implements NoteDataBase {
     }
 
     @Override
-    public Observable<Void> updateNoteList(final NoteDomain note) {
+    public Observable<Void> updateNoteList(final String description, final String title, final int position) {
         return Observable.create(new Observable.OnSubscribe<Void>() {
             @Override
             public void call(Subscriber<? super Void> subscriber) {
                 try {
-                    DomainToDataTransformer transformer = new DomainToDataTransformer();
-                    Note noteData = transformer.transform(note);
-                    mHelper.getNoteListDao().update(noteData);
+                    QueryBuilder<Note, Integer> queryBuilder = mHelper.getNoteListDao().queryBuilder();
+                    queryBuilder.where().eq(ID, position);
+
+                    PreparedQuery<Note> preparedQuery = queryBuilder.prepare();
+                    List<Note> accountList = mHelper.getNoteListDao().query(preparedQuery);
+
+                    int defaultValue = 0;
+
+                    Note note = accountList.get(defaultValue);
+                    note.setDescription(description);
+                    note.setTitle(title);
+
+                    mHelper.getNoteListDao().update(note);
 
                     subscriber.onCompleted();
                 } catch (SQLException e) {

@@ -7,23 +7,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import com.mti.videodiary.data.storage.dao.Note;
-import com.mti.videodiary.data.storage.manager.NoteDataBaseFactory;
 import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
-import com.mti.videodiary.mvp.presenter.NoteFragmentPresenter;
+import com.mti.videodiary.mvp.presenter.CreateNotePresenter;
 import com.mti.videodiary.mvp.view.BaseActivity;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import model.NoteDomain;
 import mti.com.videodiary.R;
 
 import static com.mti.videodiary.utils.Constants.KEY_POSITION;
 
 /**
  * Created by Taras Matolinets on 29.03.15.
- * Activity for create a new note
+ * Activity for create or edit note
  */
 public class CreateNoteActivity extends BaseActivity implements TextWatcher, IHasComponent<ActivityComponent> {
     public static final int DEFAULT_VALUE = -1;
@@ -31,8 +31,7 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher, IHa
     @BindView(R.id.et_title) EditText mEtTitle;
     @BindView(R.id.etDescription) EditText mEtDescription;
 
-    @Inject NoteDataBaseFactory mNoteDataBase;
-    @Inject NoteFragmentPresenter mPresenter;
+    @Inject CreateNotePresenter mPresenter;
 
     private ActivityComponent mComponent;
     private boolean isShowSave;
@@ -41,14 +40,14 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher, IHa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
         setContentView(R.layout.activity_create_note);
+
+        ButterKnife.bind(this);
 
         initListeners();
         initActionBar();
-        fillData();
+        getNoteByPosition();
     }
 
     @Override
@@ -57,22 +56,22 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher, IHa
         mComponent.inject(this);
     }
 
-    private void fillData() {
+    private void getNoteByPosition() {
         int position = getIntent().getIntExtra(KEY_POSITION, DEFAULT_VALUE);
 
         if (position != DEFAULT_VALUE) {
             isEditNote = true;
-
-            Note note = mNoteDataBase.getNoteByPosition(position);
-
-            mEtDescription.setText(note.getDescription());
-            mEtTitle.setText(note.getTitle());
+            mPresenter.getNoteByPosition(position);
         }
     }
 
+    public void fillNoteByPosition(NoteDomain note) {
+        mEtDescription.setText(note.getDescription());
+        mEtTitle.setText(note.getTitle());
+    }
 
     private void initActionBar() {
-        int position = getIntent().getIntExtra(KEY_POSITION, -1);
+        int position = getIntent().getIntExtra(KEY_POSITION, DEFAULT_VALUE);
 
         if (getSupportActionBar() != null) {
             if (position == DEFAULT_VALUE) {
@@ -87,6 +86,12 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher, IHa
     private void initListeners() {
         mEtTitle.addTextChangedListener(this);
         mEtDescription.addTextChangedListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.destroy();
     }
 
     @Override
@@ -106,6 +111,7 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher, IHa
 
         int defValue = 0;
         MenuItem item = menu.getItem(defValue);
+
         if (isShowSave) {
             item.setVisible(true);
         } else {
@@ -121,7 +127,7 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher, IHa
 
         switch (id) {
             case R.id.action_save:
-                saveNote();
+                saveEditNote();
                 break;
         }
         onBackPressed();
@@ -129,32 +135,28 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher, IHa
         return false;
     }
 
-    private void saveNote() {
+    private void saveEditNote() {
         if (!isEditNote) {
             createNewNoteDaily();
-        } else
+        } else {
             updateNoteDaily();
-
-        setResult(RESULT_OK, null);
+        }
     }
 
     private void updateNoteDaily() {
         int position = getIntent().getIntExtra(KEY_POSITION, DEFAULT_VALUE);
 
-        Note video = noteDataManager.getNoteByPosition(position);
-        video.setDescription(mEtDescription.getText().toString());
-        video.setTitle(mEtTitle.getText().toString());
+        String description = mEtDescription.getText().toString();
+        String title = mEtTitle.getText().toString();
 
-        noteDataManager.updateNoteList(video);
+        mPresenter.updateNoteList(description, title, position);
     }
 
     private void createNewNoteDaily() {
-        Note video = new Note();
+        String description = mEtDescription.getText().toString();
+        String title = mEtTitle.getText().toString();
 
-        video.setTitle(mEtTitle.getText().toString());
-        video.setDescription(mEtDescription.getText().toString());
-
-        noteDataManager.createNote(video);
+        mPresenter.createNotePresenter(description, title);
     }
 
     @Override
@@ -166,11 +168,7 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher, IHa
         boolean isTitleFill = mEtTitle.getText().length() > 0;
         boolean isDescriptionFill = mEtDescription.getText().length() > 0;
 
-        if (isTitleFill && isDescriptionFill)
-            isShowSave = true;
-        else
-            isShowSave = false;
-
+        isShowSave = isTitleFill && isDescriptionFill;
         invalidateOptionsMenu();
     }
 

@@ -27,10 +27,14 @@ import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.dialog.DialogTakePictureFragment;
+import com.mti.videodiary.mvp.presenter.CreateNotePresenter;
+import com.mti.videodiary.mvp.presenter.CreateNotePresenter.SaveEditNoteText;
 import com.mti.videodiary.mvp.presenter.MenuPresenter;
 import com.mti.videodiary.mvp.view.BaseActivity;
 import com.mti.videodiary.navigator.Navigator;
 import com.mti.videodiary.data.helper.UserHelper;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -164,6 +168,12 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
                 showSnackView();
             }
         }
+    }
+
+    @Subscribe
+    public void messageNoteAction(SaveEditNoteText saveEditNoteText) {
+        Snackbar snackbar = Snackbar.make(mNavigationView, saveEditNoteText.getText(), LENGTH_SHORT);
+        snackbar.show();
     }
 
     private void showSnackView() {
