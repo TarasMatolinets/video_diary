@@ -115,13 +115,15 @@ public class Navigator {
             final FragmentTransaction ft = fm.beginTransaction();
 
             // specify replace parameters for fragment
-            if (null != args)
+            if (null != args) {
                 fragment.setArguments(args);
+            }
+
             ft.replace(fragmentPlace, fragment, className);
 
-            if (useStack)
+            if (useStack) {
                 ft.addToBackStack(className);
-
+            }
             ft.commitAllowingStateLoss();
         }
     }

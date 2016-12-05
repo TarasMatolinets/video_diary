@@ -19,6 +19,7 @@ import rx.Observable;
 import rx.Subscriber;
 
 import static com.mti.videodiary.data.storage.dao.Note.ID;
+import static com.mti.videodiary.data.storage.dao.Note.TITLE;
 
 /**
  * Created by Terry on 11/6/2016.
@@ -61,13 +62,12 @@ public class NoteDataBaseFactory implements NoteDataBase {
         return Observable.create(new Observable.OnSubscribe<Void>() {
             @Override
             public void call(Subscriber<? super Void> subscriber) {
-
                 try {
                     Dao<Note, Integer> daoVideoList = mHelper.getNoteListDao();
                     List<Note> noteList = daoVideoList.queryForAll();
+                    Note note = noteList.get(0);
 
-                    Collections.reverse(noteList);
-                    daoVideoList.delete(noteList);
+                    daoVideoList.delete(note);
 
                     subscriber.onCompleted();
                 } catch (SQLException e) {
@@ -152,6 +152,33 @@ public class NoteDataBaseFactory implements NoteDataBase {
             }
         });
     }
+
+
+    @Override
+    public Observable<List<NoteDomain>> getNotesByTitle(final String title) {
+        return Observable.create(new Observable.OnSubscribe<List<NoteDomain>>() {
+            @Override
+            public void call(Subscriber<? super List<NoteDomain>> subscriber) {
+                try {
+                    QueryBuilder<Note, Integer> queryBuilder = mHelper.getNoteListDao().queryBuilder();
+                    queryBuilder.where().eq(TITLE, title);
+
+                    PreparedQuery<Note> preparedQuery = queryBuilder.prepare();
+                    List<Note> listNotes = mHelper.getNoteListDao().query(preparedQuery);
+
+                    DataToDomainTransformer transformer = new DataToDomainTransformer();
+                    List<NoteDomain> noteDomainList = transformer.transformNoteList(listNotes);
+
+                    subscriber.onNext(noteDomainList);
+
+                    subscriber.onCompleted();
+                } catch (SQLException e) {
+                    subscriber.onError(e);
+                }
+            }
+        });
+    }
+
 
     @Override
     public Observable<Void> deleteList() {

@@ -1,56 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/flMain"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:ads="http://schemas.android.com/apk/res-auto"
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/flMain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <RelativeLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/videoRecycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/gradient_menu"
-        android:id="@+id/rlMain">
+        android:scrollbars="vertical"/>
 
+    <include
+        layout="@layout/empty_video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/videoRecycleView"
-            android:background="@drawable/gradient_menu"
-            android:scrollbars="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id"/>
 
-        <include
-            layout="@layout/empty_video_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+<!--    <com.software.shell.fab.ActionButton
+        android:id="@+id/buttonFloat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        fab:button_color="@color/blue"
+        fab:button_colorRipple="@color/blue"
+        fab:hide_animation="@anim/fab_roll_to_down"
+        fab:image="@drawable/fab_plus_icon"
+        fab:image_size="@dimen/edge_large"
+        fab:rippleEffect_enabled="true"
+        fab:shadowResponsiveEffect_enabled="true"
+        fab:show_animation="@anim/fab_roll_from_down"/>-->
 
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adViewVideo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:visibility="visible"
-            android:layout_alignParentBottom="true"
-            ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id"/>
-
-        <com.software.shell.fab.ActionButton
-            android:id="@+id/buttonFloat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
-            fab:button_color="@color/blue"
-            fab:button_colorRipple="@color/blue"
-            fab:hide_animation="@anim/fab_roll_to_down"
-            fab:image="@drawable/fab_plus_icon"
-            fab:image_size="@dimen/edge_large"
-            fab:rippleEffect_enabled="true"
-            fab:shadowResponsiveEffect_enabled="true"
-            fab:show_animation="@anim/fab_roll_from_down" />
-
-    </RelativeLayout>
-</FrameLayout>
+</RelativeLayout>

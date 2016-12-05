@@ -43,8 +43,10 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher, IHa
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_create_note);
 
+        setComponent();
         ButterKnife.bind(this);
 
+        mPresenter.setView(this);
         initListeners();
         initActionBar();
         getNoteByPosition();
@@ -129,8 +131,10 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher, IHa
             case R.id.action_save:
                 saveEditNote();
                 break;
+            case android.R.id.home:
+                finish();
+                break;
         }
-        onBackPressed();
 
         return false;
     }

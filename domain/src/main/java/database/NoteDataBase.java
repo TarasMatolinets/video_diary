@@ -12,6 +12,8 @@ public interface NoteDataBase extends DataBase {
 
     Observable<List<NoteDomain>> getListNotes();
 
+    Observable<List<NoteDomain>> getNotesByTitle(String title);
+
     Observable<NoteDomain> getNoteByPosition(int id);
 
     Observable<Void> createNote(String description, String title);

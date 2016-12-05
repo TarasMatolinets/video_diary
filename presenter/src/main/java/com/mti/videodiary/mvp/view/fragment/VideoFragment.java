@@ -83,7 +83,7 @@
 //    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 //        @Override
 //        public void onReceive(Context context, Intent intent) {
-//            showEmptyView();
+//            loadNoteList();
 //        }
 //    };
 //
@@ -108,7 +108,7 @@
 //        initViews();
 //        setupRecycleView();
 //        initListeners();
-//        showEmptyView();
+//        loadNoteList();
 //
 //        return mView;
 //    }
@@ -128,7 +128,7 @@
 //    }
 //
 //
-//    private void showEmptyView() {
+//    private void loadNoteList() {
 //
 //        VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
 //
@@ -293,7 +293,7 @@
 //                mAdapter.setListVideos(listVideos);
 //                mAdapter.notifyDataSetChanged();
 //
-//                showEmptyView();
+//                loadNoteList();
 //                break;
 //        }
 //    }

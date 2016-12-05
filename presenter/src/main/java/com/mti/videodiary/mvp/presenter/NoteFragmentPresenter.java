@@ -3,7 +3,11 @@ package com.mti.videodiary.mvp.presenter;
 import android.util.Log;
 
 import com.mti.videodiary.data.storage.dao.Note;
+import com.mti.videodiary.data.storage.manager.NoteDataBaseFactory;
 import com.mti.videodiary.di.annotation.PerActivity;
+import com.mti.videodiary.mvp.view.fragment.NoteFragment;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -12,7 +16,10 @@ import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
 import interactor.UseCase;
+import interactor.UseCaseDeleteNoteId;
 import interactor.UseCaseGetNoteByPosition;
+import interactor.UseCaseGetNotesByTitle;
+import interactor.UseCaseGetNotesList;
 import model.NoteDomain;
 import rx.subscriptions.CompositeSubscription;
 
@@ -29,23 +36,19 @@ public class NoteFragmentPresenter {
     private final ThreadExecutor mExecutor;
     private final PostExecutionThread mPostExecutorThread;
     private final CompositeSubscription mComposeSubscriptionList;
-    private final NoteDataBase mDataBase;
-    private NoteFragmentPresenter mView;
+    private final NoteDataBaseFactory mDataBase;
+    private NoteFragment mView;
 
     @Inject
-    NoteFragmentPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, NoteDataBase dataBase) {
+    NoteFragmentPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, NoteDataBaseFactory dataBase) {
         mExecutor = executor;
         mPostExecutorThread = postExecutionThread;
         mComposeSubscriptionList = new CompositeSubscription();
         mDataBase = dataBase;
     }
 
-    public void setView(NoteFragmentPresenter view) {
+    public void setView(NoteFragment view) {
         mView = view;
-    }
-
-    public void retriveNotesList() {
-
     }
 
     public void destroy() {
@@ -53,8 +56,35 @@ public class NoteFragmentPresenter {
         mComposeSubscriptionList.unsubscribe();
     }
 
+    public void loadNoteList() {
+        UseCase useCaseGetNotesList = new UseCaseGetNotesList(mExecutor, mPostExecutorThread, mDataBase);
+
+        GetListNotesSubscriber subscriber = new GetListNotesSubscriber();
+        useCaseGetNotesList.execute(subscriber);
+
+        mComposeSubscriptionList.add(subscriber);
+    }
+
+    public void loadSearchedNotes(String query) {
+        UseCase useCaseGetSearchList = new UseCaseGetNotesByTitle(mExecutor, mPostExecutorThread, mDataBase, query);
+
+        GetListNotesSearchSubscriber subscriber = new GetListNotesSearchSubscriber();
+        useCaseGetSearchList.execute(subscriber);
+
+        mComposeSubscriptionList.add(subscriber);
+    }
+
+    public void deleteNoteItem(int id) {
+        UseCase useCaseDeleteList = new UseCaseDeleteNoteId(mExecutor, mPostExecutorThread, mDataBase, id);
+
+        DeleteNoteItemSubscriber subscriber = new DeleteNoteItemSubscriber();
+        useCaseDeleteList.execute(subscriber);
+
+        mComposeSubscriptionList.add(subscriber);
+    }
+
     //region SUBSCRIBER
-    private final class GetListNotes extends DefaultSubscriber<String> {
+    private final class GetListNotesSubscriber extends DefaultSubscriber<List<NoteDomain>> {
 
         @Override
         public void onCompleted() {
@@ -66,10 +96,52 @@ public class NoteFragmentPresenter {
         }
 
         @Override
-        public void onNext(String latestAppVersion) {
+        public void onNext(List<NoteDomain> list) {
+            mView.setupRecycleView(list);
 
+            if (list.isEmpty()) {
+                mView.showEmptyView(true);
+            } else {
+                mView.showEmptyView(false);
+            }
         }
     }
 
+    private final class GetListNotesSearchSubscriber extends DefaultSubscriber<List<NoteDomain>> {
+
+        @Override
+        public void onCompleted() {
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.e(TAG, e.toString());
+        }
+
+        @Override
+        public void onNext(List<NoteDomain> list) {
+            if (!list.isEmpty()) {
+                mView.loadQueryNotes(list);
+            }
+        }
+    }
+
+    private final class DeleteNoteItemSubscriber extends DefaultSubscriber<Integer> {
+
+        @Override
+        public void onCompleted() {
+            loadNoteList();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.e(TAG, e.toString());
+        }
+
+        @Override
+        public void onNext(Integer id) {
+            mView.removeNoteFromList(id);
+        }
+    }
     //endregion
 }

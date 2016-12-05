@@ -4,7 +4,7 @@
     <style name="VideoDailyNoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimaryDark">@color/darkblue</item>
         <item name="colorPrimary">@color/blue</item>
-    </style>
+     </style>
 
     <style name="MyNavigationDrawerTheme" parent="@style/VideoDailyNoActionBar">
         <item name="elevation">0dp</item>

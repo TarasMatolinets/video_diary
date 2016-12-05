@@ -1,56 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/flMain"
+    xmlns:app="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_menu">
 
-    <RelativeLayout
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/note_recycle_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient_menu"
-        android:id="@+id/rlMain">
+        android:scrollbars="vertical"/>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/buttonFloat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="@dimen/edge_big"
+        android:layout_marginRight="@dimen/edge_big"
+        android:src="@drawable/ic_create_white"
+        app:backgroundTint="@color/blue"
+        app:fabSize="normal"
+        app:layout_anchor="@id/rvToDoList"
+        app:layout_anchorGravity="bottom|right|end"
+        />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/note_recycle_view"
-            android:background="@drawable/gradient_menu"
-            android:scrollbars="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:visibility="visible"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id"/>
 
-        <include
-            layout="@layout/empty_note_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/ivCameraOff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:alpha="0.2"
+        android:background="@drawable/ic_note_add_white"
+        android:contentDescription=""/>
 
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adViewNote"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:visibility="visible"
-            android:layout_alignParentBottom="true"
-            ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id"/>
+    <TextView
+        android:id="@+id/tvNoRecords"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivCameraOff"
+        android:layout_centerHorizontal="true"
+        android:text="@string/menu_act_no_notes"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_large"
+        android:textStyle="normal"/>
 
-        <com.software.shell.fab.ActionButton
-            android:id="@+id/buttonFloat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
-            fab:button_color="@color/blue"
-            fab:button_colorRipple="@color/blue"
-            fab:hide_animation="@anim/fab_roll_to_down"
-            fab:image="@drawable/fab_plus_icon"
-            fab:image_size="@dimen/edge_large"
-            fab:rippleEffect_enabled="true"
-            fab:shadowResponsiveEffect_enabled="true"
-            fab:show_animation="@anim/fab_roll_from_down" />
-
-    </RelativeLayout>
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

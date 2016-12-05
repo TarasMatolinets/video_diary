@@ -3,6 +3,7 @@ package com.mti.videodiary.mvp.presenter;
 import android.util.Log;
 
 import com.mti.videodiary.data.storage.dao.Note;
+import com.mti.videodiary.data.storage.manager.NoteDataBaseFactory;
 import com.mti.videodiary.di.annotation.PerActivity;
 import com.mti.videodiary.mvp.view.activity.CreateNoteActivity;
 
@@ -26,6 +27,7 @@ import static com.mti.videodiary.application.VideoDiaryApplication.TAG;
 
 /**
  * Created by Terry on 11/5/2016.
+ * Presenter for communicate with data model
  */
 
 @PerActivity
@@ -34,11 +36,11 @@ public class CreateNotePresenter {
     private final ThreadExecutor mExecutor;
     private final PostExecutionThread mPostExecutorThread;
     private final CompositeSubscription mComposeSubscriptionList;
-    private final NoteDataBase mDataBase;
+    private final NoteDataBaseFactory mDataBase;
     private CreateNoteActivity mView;
 
     @Inject
-    public CreateNotePresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, NoteDataBase dataBase) {
+    public CreateNotePresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, NoteDataBaseFactory dataBase) {
         mExecutor = executor;
         mPostExecutorThread = postExecutionThread;
         mComposeSubscriptionList = new CompositeSubscription();
@@ -127,6 +129,7 @@ public class CreateNotePresenter {
             saveEditNoteText.setText(mView.getString(R.string.note_saved_successfully));
 
             EventBus.getDefault().post(saveEditNoteText);
+            mView.onBackPressed();
         }
 
         @Override
