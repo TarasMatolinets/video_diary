@@ -37,25 +37,30 @@
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id"/>
 
-    <ImageView
-        android:id="@+id/ivCameraOff"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:alpha="0.2"
-        android:background="@drawable/ic_note_add_white"
-        android:contentDescription=""/>
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvNoRecords"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivCameraOff"
-        android:layout_centerHorizontal="true"
-        android:text="@string/menu_act_no_notes"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_large"
-        android:textStyle="normal"/>
+        <ImageView
+            android:id="@+id/ivCameraOff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:alpha="0.2"
+            android:background="@drawable/ic_note_add_white"
+            android:contentDescription=""/>
 
+        <TextView
+            android:id="@+id/tvNoRecords"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/menu_act_no_notes"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_large"
+            android:textStyle="normal"/>
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

@@ -29,6 +29,7 @@ import mti.com.videodiary.R;
 
 import static android.content.Intent.ACTION_SEND;
 import static android.content.Intent.EXTRA_TEXT;
+import static com.mti.videodiary.utils.Constants.KEY_POSITION_NOTE;
 import static com.mti.videodiary.utils.Constants.KEY_POSITION_NOTE_ADAPTER;
 
 /**
@@ -97,6 +98,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
             int id = mListNotes.get(getAdapterPosition()).getId();
             Bundle bundle = new Bundle();
             bundle.putInt(KEY_POSITION_NOTE_ADAPTER, id);
+            bundle.putInt(KEY_POSITION_NOTE, getAdapterPosition());
 
             DeleteItemDialogFragment fragment = new DeleteItemDialogFragment();
             fragment.setArguments(bundle);

@@ -58,16 +58,20 @@ public class NoteDataBaseFactory implements NoteDataBase {
     }
 
     @Override
-    public Observable<Void> deleteItemById(int id) {
+    public Observable<Void> deleteItemById(final int id) {
         return Observable.create(new Observable.OnSubscribe<Void>() {
             @Override
             public void call(Subscriber<? super Void> subscriber) {
                 try {
-                    Dao<Note, Integer> daoVideoList = mHelper.getNoteListDao();
-                    List<Note> noteList = daoVideoList.queryForAll();
-                    Note note = noteList.get(0);
+                    QueryBuilder<Note, Integer> queryBuilder = mHelper.getNoteListDao().queryBuilder();
+                    queryBuilder.where().eq(ID, id);
 
-                    daoVideoList.delete(note);
+                    PreparedQuery<Note> preparedQuery = queryBuilder.prepare();
+                    List<Note> accountList = mHelper.getNoteListDao().query(preparedQuery);
+
+                    int defaultValue = 0;
+                    Note note = accountList.get(defaultValue);
+                    mHelper.getNoteListDao().delete(note);
 
                     subscriber.onCompleted();
                 } catch (SQLException e) {
@@ -91,7 +95,6 @@ public class NoteDataBaseFactory implements NoteDataBase {
 
                     int defaultValue = 0;
                     Note note = accountList.get(defaultValue);
-                    mHelper.getNoteListDao().delete(note);
 
                     DataToDomainTransformer transformer = new DataToDomainTransformer();
                     NoteDomain noteDomain = transformer.transform(note);

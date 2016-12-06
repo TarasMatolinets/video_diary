@@ -5,6 +5,7 @@ import android.util.Log;
 import com.mti.videodiary.data.storage.dao.Note;
 import com.mti.videodiary.data.storage.manager.NoteDataBaseFactory;
 import com.mti.videodiary.di.annotation.PerActivity;
+import com.mti.videodiary.di.annotation.PerFragment;
 import com.mti.videodiary.mvp.view.fragment.NoteFragment;
 
 import java.util.List;
@@ -30,7 +31,8 @@ import static com.mti.videodiary.application.VideoDiaryApplication.TAG;
  * Presenter for collaborate between view and model
  */
 
-@PerActivity
+
+@PerFragment
 public class NoteFragmentPresenter {
 
     private final ThreadExecutor mExecutor;
@@ -74,10 +76,10 @@ public class NoteFragmentPresenter {
         mComposeSubscriptionList.add(subscriber);
     }
 
-    public void deleteNoteItem(int id) {
+    public void deleteNoteItem(int id,int notePosition) {
         UseCase useCaseDeleteList = new UseCaseDeleteNoteId(mExecutor, mPostExecutorThread, mDataBase, id);
 
-        DeleteNoteItemSubscriber subscriber = new DeleteNoteItemSubscriber();
+        DeleteNoteItemSubscriber subscriber = new DeleteNoteItemSubscriber(notePosition);
         useCaseDeleteList.execute(subscriber);
 
         mComposeSubscriptionList.add(subscriber);
@@ -126,7 +128,13 @@ public class NoteFragmentPresenter {
         }
     }
 
-    private final class DeleteNoteItemSubscriber extends DefaultSubscriber<Integer> {
+    private final class DeleteNoteItemSubscriber extends DefaultSubscriber<Void> {
+
+        private final int position;
+
+        public DeleteNoteItemSubscriber(int notePosition) {
+            position = notePosition;
+        }
 
         @Override
         public void onCompleted() {
@@ -139,8 +147,8 @@ public class NoteFragmentPresenter {
         }
 
         @Override
-        public void onNext(Integer id) {
-            mView.removeNoteFromList(id);
+        public void onNext(Void nothing) {
+            mView.removeNoteFromList(position);
         }
     }
     //endregion

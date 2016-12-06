@@ -26,6 +26,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.mti.videodiary.adapter.NoteAdapter;
 import com.mti.videodiary.di.component.ActivityComponent;
+import com.mti.videodiary.di.component.FragmentComponent;
+import com.mti.videodiary.di.module.FragmentModule;
 import com.mti.videodiary.dialog.DeleteItemDialogFragment.DeleteItem;
 import com.mti.videodiary.mvp.presenter.NoteFragmentPresenter;
 import com.mti.videodiary.mvp.view.activity.CreateNoteActivity;
@@ -84,7 +86,10 @@ public class NoteFragment extends BaseFragment implements SearchView.OnQueryText
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_note, container, false);
-        getComponent(ActivityComponent.class).inject(this);
+
+        ActivityComponent component = getComponent(ActivityComponent.class);
+        FragmentComponent fragmentComponent = component.plus(new FragmentModule(getActivity()));
+        fragmentComponent.inject(this);
 
         mBinder = ButterKnife.bind(this, view);
 
@@ -93,9 +98,14 @@ public class NoteFragment extends BaseFragment implements SearchView.OnQueryText
         configureRecycleView();
 
         mPresenter.setView(this);
-        mPresenter.loadNoteList();
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mPresenter.loadNoteList();
     }
 
     private void configureRecycleView() {
@@ -145,7 +155,7 @@ public class NoteFragment extends BaseFragment implements SearchView.OnQueryText
 
     @Subscribe
     public void deleteItem(DeleteItem item) {
-        mPresenter.deleteNoteItem(item.getId());
+        mPresenter.deleteNoteItem(item.getId(), item.getNotePosition());
     }
 
     public void showEmptyView(boolean isEmpty) {
@@ -214,7 +224,7 @@ public class NoteFragment extends BaseFragment implements SearchView.OnQueryText
         mAdapter.setListNotes(list);
     }
 
-    public void removeNoteFromList(Integer id) {
+    public void removeNoteFromList(int id) {
         mAdapter.removeNote(id);
     }
 }

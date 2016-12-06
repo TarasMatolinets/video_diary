@@ -129,7 +129,7 @@ public class CreateNotePresenter {
             saveEditNoteText.setText(mView.getString(R.string.note_saved_successfully));
 
             EventBus.getDefault().post(saveEditNoteText);
-            mView.onBackPressed();
+            mView.finish();
         }
 
         @Override

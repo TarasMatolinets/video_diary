@@ -56,6 +56,7 @@ public class DeleteItemDialogFragment extends DialogFragment {
 
     public static class DeleteItem {
         private int id;
+        private int notePosition;
 
         public int getId() {
             return id;
@@ -63,6 +64,14 @@ public class DeleteItemDialogFragment extends DialogFragment {
 
         public void setId(int id) {
             this.id = id;
+        }
+
+        public int getNotePosition() {
+            return notePosition;
+        }
+
+        public void setNotePosition(int notePosition) {
+            this.notePosition = notePosition;
         }
     }
 
