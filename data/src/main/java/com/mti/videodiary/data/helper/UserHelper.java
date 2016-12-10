@@ -25,6 +25,7 @@ import java.util.Random;
 
 import static com.mti.videodiary.data.Constants.APPLICATION_DIRECTORY;
 import static com.mti.videodiary.data.Constants.IMAGE_DIR;
+import static java.io.File.separator;
 
 /**
  * Created by Taras Matolinets on 15.11.14.
@@ -45,7 +46,6 @@ public class UserHelper {
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
-
 
     public static void sleep(long time) {
         try {
@@ -90,19 +90,23 @@ public class UserHelper {
         }
     }
 
-    public static String saveBitmapToSD(String imageName, Bitmap finalBitmap) {
+    public static String saveBitmapToSD(Bitmap finalBitmap) {
         String root = Environment.getExternalStorageDirectory().toString();
 
-        File imageDir = new File(root + File.separator + APPLICATION_DIRECTORY + File.separator + IMAGE_DIR);
+        File imageDir = new File(root + separator + APPLICATION_DIRECTORY + separator + IMAGE_DIR);
 
         boolean isExist = imageDir.mkdirs();
+        Random generator = new Random();
+        int n = 10000;
+        n = generator.nextInt(n);
+        String fname = "Image-" + n + ".jpg";
 
         if (!isExist) {
-            final File file = new File(imageDir, imageName + JPG);
+            final File file = new File(imageDir, fname + JPG);
 
             try {
                 FileOutputStream out = new FileOutputStream(file);
-                finalBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                finalBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
                 out.flush();
                 out.close();
 
@@ -116,8 +120,8 @@ public class UserHelper {
     }
 
     public static Bitmap decodeSampledBitmapFromResource(String path) {
-        //Adjust image resolution to 200 x 200.
-        int IMAGE_RESOLUTION = 200;
+        int height = 200;
+        int width = 300;
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -126,7 +130,7 @@ public class UserHelper {
 
         BitmapFactory.decodeFile(path, options);
         // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, IMAGE_RESOLUTION, IMAGE_RESOLUTION);
+        options.inSampleSize = calculateInSampleSize(options, width, height);
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         options.inPreferredConfig = Bitmap.Config.RGB_565;
@@ -160,9 +164,8 @@ public class UserHelper {
 
 
     public static Bitmap cropImage(Bitmap srcBmp, int width, int height) {
-        Bitmap dstBmp = ThumbnailUtils.extractThumbnail(srcBmp, width, height);
 
-        return dstBmp;
+        return ThumbnailUtils.extractThumbnail(srcBmp, width, height);
     }
 
 }

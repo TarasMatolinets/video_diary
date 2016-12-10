@@ -1,10 +1,10 @@
 package com.mti.videodiary.mvp.view.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,26 +13,25 @@ import android.support.design.widget.NavigationView.OnNavigationItemSelectedList
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.mti.videodiary.data.Constants;
 import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
-import com.mti.videodiary.dialog.DialogTakePictureFragment;
-import com.mti.videodiary.mvp.presenter.CreateNotePresenter.SaveEditNoteText;
 import com.mti.videodiary.mvp.presenter.MenuPresenter;
 import com.mti.videodiary.mvp.view.BaseActivity;
 import com.mti.videodiary.mvp.view.fragment.NoteFragment;
 import com.mti.videodiary.mvp.view.fragment.SupportFragment;
 import com.mti.videodiary.navigator.Navigator;
-import com.mti.videodiary.data.helper.UserHelper;
-
-import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -41,13 +40,15 @@ import butterknife.ButterKnife;
 
 import mti.com.videodiary.R;
 
+import static android.content.Intent.ACTION_PICK;
+import static android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 import static android.provider.MediaStore.MediaColumns.DATA;
 import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING;
 import static com.mti.videodiary.utils.Constants.IMAGE_HEADER_MENU;
 import static com.mti.videodiary.utils.Constants.RESULT_LOAD_IMAGE;
-import static com.mti.videodiary.utils.Constants.UPDATE_NOTE_ADAPTER;
 import static com.mti.videodiary.utils.Constants.UPDATE_VIDEO_ADAPTER;
 
 /**
@@ -69,6 +70,8 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
     private TextView mChoiceImage;
     private ActivityComponent mActivityComponent;
     private View mHeaderView;
+    private ImageView mImageBackground;
+    private ProgressBar mProgressLoadImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,8 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
 
         mHeaderView = mNavigationView.getHeaderView(DEFAULT_VALUE);
         mChoiceImage = (TextView) mHeaderView.findViewById(R.id.tv_choice_image);
+        mImageBackground = (ImageView) mHeaderView.findViewById(R.id.image_background);
+        mProgressLoadImage = (ProgressBar) mHeaderView.findViewById(R.id.progress_load_image);
         mHeaderView.setOnClickListener(this);
 
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -118,7 +123,7 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
                     Uri selectedImage = data.getData();
 
                     if (selectedImage.toString().startsWith(GOOGLE_PHOTOS_CONTENT)) {
-                        mPresenter.storeImage(selectedImage.toString());
+                        mPresenter.loadImage(selectedImage.toString());
                     } else {
                         getImageFromStorage(selectedImage);
                     }
@@ -130,17 +135,16 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
 //                    if (fragment instanceof VideoFragment)
 //                        fragment.onActivityResult(requestCode, resultCode, data);
                     break;
-
-                case UPDATE_NOTE_ADAPTER:
-//                    Fragment noteFragment = (Fragment) getCurrentSection().getTargetFragment();
-//
-//                    // update current note card data
-//                    if (noteFragment instanceof NoteFragment)
-//                        noteFragment.onActivityResult(requestCode, resultCode, data);
-                    break;
             }
         }
+    }
 
+    public void setProgressImageVisibility(int visibility) {
+        mProgressLoadImage.setVisibility(visibility);
+    }
+
+    public void setChoiceImageVisibility(int visibility) {
+        mChoiceImage.setVisibility(visibility);
     }
 
     private void getImageFromStorage(Uri selectedImage) {
@@ -154,45 +158,31 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
             cursor.close();
 
             if (!TextUtils.isEmpty(picturePath)) {
-                setImageInBackground(picturePath);
+                Bitmap image = BitmapFactory.decodeFile(picturePath);
+                setImageInBackground(image);
                 mPreferences.setDataToSharePreferences(IMAGE_HEADER_MENU, picturePath, STRING);
             } else {
-                showSnackView();
+                showSnackView(getString(R.string.error_picture));
             }
         }
     }
 
-    @Subscribe
-    public void messageNoteAction(SaveEditNoteText saveEditNoteText) {
-        Snackbar snackbar = Snackbar.make(mNavigationView, saveEditNoteText.getText(), LENGTH_SHORT);
+    public void showSnackView(String message) {
+        Snackbar snackbar = Snackbar.make(mNavigationView, message, LENGTH_SHORT);
         snackbar.show();
     }
 
-    private void showSnackView() {
-        Snackbar snackbar = Snackbar.make(mNavigationView, getString(R.string.error_picture), LENGTH_SHORT);
-        snackbar.show();
-    }
-
-    public void setImageInBackground(final String picturePath) {
-        Bitmap bitmap = UserHelper.decodeSampledBitmapFromResource(picturePath);
-
-        int width = 300;
-        int height = 200;
-
-        //check if image was deleted from storage manually
-        if (bitmap != null) {
-            mChoiceImage.setVisibility(GONE);
-            Bitmap newImage = UserHelper.cropImage(bitmap, width, height);
-            Drawable drawable = new BitmapDrawable(getResources(), newImage);
-            mHeaderView.setBackground(drawable);
-        }
+    public void setImageInBackground(final Bitmap picture) {
+        mChoiceImage.setVisibility(GONE);
+        mImageBackground.setImageBitmap(picture);
     }
 
     private void setImageToHeaderView() {
         String picturePath = mPreferences.getSharedPreferences().getString(IMAGE_HEADER_MENU, null);
 
         if (!TextUtils.isEmpty(picturePath)) {
-            setImageInBackground(picturePath);
+            Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
+            setImageInBackground(bitmap);
         }
     }
 
@@ -236,8 +226,22 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fl_main_header:
-                DialogTakePictureFragment dialog = new DialogTakePictureFragment();
-                dialog.show(getSupportFragmentManager(), null);
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.select_image_gallery)
+                        .setMessage(R.string.select_image_gallery_description)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent i = new Intent(ACTION_PICK, EXTERNAL_CONTENT_URI);
+                                startActivityForResult(i, Constants.RESULT_LOAD_IMAGE);
+                                setProgressImageVisibility(VISIBLE);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
                 break;
         }
     }

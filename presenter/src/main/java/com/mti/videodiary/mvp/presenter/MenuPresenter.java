@@ -19,14 +19,15 @@ import javax.inject.Inject;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
-import interactor.UseCase;
+import mti.com.videodiary.R;
 import rx.Observable;
-import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static com.mti.videodiary.application.VideoDiaryApplication.TAG;
 import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING;
 import static com.mti.videodiary.utils.Constants.IMAGE_HEADER_MENU;
@@ -61,31 +62,31 @@ public class MenuPresenter {
         mComposeSubscriptionList.unsubscribe();
     }
 
-    public void storeImage(String path) {
-        String[] splitArray = path.split("/");
-        String imageName = splitArray[splitArray.length - 1];
-
+    public void loadImage(String path) {
         GetSavedImagePathSubscriber subscriber = new GetSavedImagePathSubscriber();
-        getSavedImagePathObserver(mView, path, imageName).subscribeOn(Schedulers.io())
+        getLoadedImagePathObserver(mView, path)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
 
         mComposeSubscriptionList.add(subscriber);
     }
 
-    private Observable<String> getSavedImagePathObserver(final Context context, final String imagePath, final String imageName) {
-        return Observable.create(new Observable.OnSubscribe<String>() {
+    private Observable<Bitmap> getLoadedImagePathObserver(final Context context, final String imagePath) {
+        return Observable.create(new Observable.OnSubscribe<Bitmap>() {
             @Override
-            public void call(Subscriber<? super String> subscriber) {
+            public void call(Subscriber<? super Bitmap> subscriber) {
                 try {
                     Uri uri = Uri.parse(imagePath);
                     InputStream is = context.getContentResolver().openInputStream(uri);
                     if (is != null) {
                         Bitmap pictureBitmap = BitmapFactory.decodeStream(is);
 
-                        String url = UserHelper.saveBitmapToSD(imageName,pictureBitmap);
-                        subscriber.onNext(url);
+                        subscriber.onNext(pictureBitmap);
                         subscriber.onCompleted();
+
+                        String imageUrl = UserHelper.saveBitmapToSD(pictureBitmap);
+                        mPreferences.setDataToSharePreferences(IMAGE_HEADER_MENU, imageUrl, STRING);
                     }
                 } catch (FileNotFoundException e) {
                     subscriber.onError(e);
@@ -94,22 +95,27 @@ public class MenuPresenter {
         });
     }
 
-    //region SUBSCRIBER
-    private final class GetSavedImagePathSubscriber extends DefaultSubscriber<String> {
 
+    //region SUBSCRIBER
+    private final class GetSavedImagePathSubscriber extends DefaultSubscriber<Bitmap> {
         @Override
         public void onCompleted() {
+            mView.setChoiceImageVisibility(GONE);
+            mView.setProgressImageVisibility(GONE);
         }
 
         @Override
         public void onError(Throwable e) {
             Log.e(TAG, e.toString());
+            mView.showSnackView(mView.getString(R.string.error_picture));
+            mView.setChoiceImageVisibility(VISIBLE);
+            mView.setProgressImageVisibility(GONE);
         }
 
         @Override
-        public void onNext(String imagePath) {
-            mView.setImageInBackground(imagePath);
-            mPreferences.setDataToSharePreferences(IMAGE_HEADER_MENU, imagePath, STRING);
+        public void onNext(Bitmap image) {
+            mView.setChoiceImageVisibility(GONE);
+            mView.setImageInBackground(image);
         }
     }
     //endregion

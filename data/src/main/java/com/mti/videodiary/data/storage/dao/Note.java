@@ -11,7 +11,7 @@ public class Note {
     public static final String TITLE = "title";
     public static final String ID = "id";
     public static final String DESCRIPTION = "description";
-    @DatabaseField(generatedId = true,columnName = ID)
+    @DatabaseField(generatedId = true, columnName = ID)
     private int id;
     @DatabaseField(columnName = TITLE)
     private String title;

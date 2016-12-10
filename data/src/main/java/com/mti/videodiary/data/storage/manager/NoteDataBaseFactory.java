@@ -66,8 +66,7 @@ public class NoteDataBaseFactory implements NoteDataBase {
                     QueryBuilder<Note, Integer> queryBuilder = mHelper.getNoteListDao().queryBuilder();
                     queryBuilder.where().eq(ID, id);
 
-                    PreparedQuery<Note> preparedQuery = queryBuilder.prepare();
-                    List<Note> accountList = mHelper.getNoteListDao().query(preparedQuery);
+                    List<Note> accountList = queryBuilder.query();
 
                     int defaultValue = 0;
                     Note note = accountList.get(defaultValue);
@@ -90,8 +89,7 @@ public class NoteDataBaseFactory implements NoteDataBase {
                     QueryBuilder<Note, Integer> queryBuilder = mHelper.getNoteListDao().queryBuilder();
                     queryBuilder.where().eq(ID, id);
 
-                    PreparedQuery<Note> preparedQuery = queryBuilder.prepare();
-                    List<Note> accountList = mHelper.getNoteListDao().query(preparedQuery);
+                    List<Note> accountList = queryBuilder.query();
 
                     int defaultValue = 0;
                     Note note = accountList.get(defaultValue);
@@ -137,8 +135,7 @@ public class NoteDataBaseFactory implements NoteDataBase {
                     QueryBuilder<Note, Integer> queryBuilder = mHelper.getNoteListDao().queryBuilder();
                     queryBuilder.where().eq(ID, position);
 
-                    PreparedQuery<Note> preparedQuery = queryBuilder.prepare();
-                    List<Note> accountList = mHelper.getNoteListDao().query(preparedQuery);
+                    List<Note> accountList = queryBuilder.query();
 
                     int defaultValue = 0;
 
@@ -164,10 +161,9 @@ public class NoteDataBaseFactory implements NoteDataBase {
             public void call(Subscriber<? super List<NoteDomain>> subscriber) {
                 try {
                     QueryBuilder<Note, Integer> queryBuilder = mHelper.getNoteListDao().queryBuilder();
-                    queryBuilder.where().eq(TITLE, title);
+                    queryBuilder.where().like(TITLE, "%" + title + "%");
 
-                    PreparedQuery<Note> preparedQuery = queryBuilder.prepare();
-                    List<Note> listNotes = mHelper.getNoteListDao().query(preparedQuery);
+                    List<Note> listNotes = queryBuilder.query();
 
                     DataToDomainTransformer transformer = new DataToDomainTransformer();
                     List<NoteDomain> noteDomainList = transformer.transformNoteList(listNotes);

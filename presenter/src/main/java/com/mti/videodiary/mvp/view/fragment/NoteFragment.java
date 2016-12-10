@@ -1,13 +1,18 @@
 package com.mti.videodiary.mvp.view.fragment;
 
 import android.app.SearchManager;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnCloseListener;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.Display;
@@ -28,7 +33,7 @@ import com.mti.videodiary.adapter.NoteAdapter;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.di.component.FragmentComponent;
 import com.mti.videodiary.di.module.FragmentModule;
-import com.mti.videodiary.dialog.DeleteItemDialogFragment.DeleteItem;
+import com.mti.videodiary.mvp.presenter.CreateNotePresenter.NoteText;
 import com.mti.videodiary.mvp.presenter.NoteFragmentPresenter;
 import com.mti.videodiary.mvp.view.activity.CreateNoteActivity;
 import com.mti.videodiary.utils.Constants;
@@ -51,6 +56,7 @@ import static android.content.Context.SEARCH_SERVICE;
 import static android.content.Context.WINDOW_SERVICE;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
+import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 import static android.support.v7.widget.StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS;
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static android.view.Surface.ROTATION_90;
@@ -60,12 +66,13 @@ import static com.mti.videodiary.utils.Constants.UPDATE_NOTE_ADAPTER;
  * Created by Taras Matolinets on 23.02.15.
  * Screen for present saved notes
  */
-public class NoteFragment extends BaseFragment implements SearchView.OnQueryTextListener {
+public class NoteFragment extends BaseFragment implements OnQueryTextListener, OnCloseListener {
 
     private static final long DURATION = 1500;
 
     @Inject NoteFragmentPresenter mPresenter;
 
+    @BindView(R.id.coor_layout_create_note) CoordinatorLayout mCoordinateLayout;
     @BindView(R.id.note_recycle_view) RecyclerView mRecyclerView;
     @BindView(R.id.ivCameraOff) ImageView mIvNote;
     @BindView(R.id.tvNoRecords) TextView mTvNoNotes;
@@ -98,20 +105,16 @@ public class NoteFragment extends BaseFragment implements SearchView.OnQueryText
         configureRecycleView();
 
         mPresenter.setView(this);
+        mPresenter.loadNoteList();
 
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mPresenter.loadNoteList();
-    }
-
+    @Subscribe()
     private void configureRecycleView() {
         Display display = ((WindowManager) getActivity().getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 
-        if (display.getOrientation() == ROTATION_90) {
+        if (display.getRotation() == ROTATION_90) {
             mLayoutManager = new StaggeredGridLayoutManager(3, VERTICAL);
         } else {
             mLayoutManager = new StaggeredGridLayoutManager(2, VERTICAL);
@@ -154,8 +157,36 @@ public class NoteFragment extends BaseFragment implements SearchView.OnQueryText
     }
 
     @Subscribe
-    public void deleteItem(DeleteItem item) {
-        mPresenter.deleteNoteItem(item.getId(), item.getNotePosition());
+    public void deleteItem(final DeleteItem item) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.delete_item)
+                .setMessage(R.string.delete_note_description)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.deleteNoteItem(item.getId(), item.getNotePosition());
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    @Subscribe
+    public void uodateNote(UpdateNote item) {
+        Intent intent = new Intent(getActivity(), CreateNoteActivity.class);
+        intent.putExtra(Constants.KEY_POSITION, item.getNoteId());
+        startActivity(intent);
+    }
+
+    @Subscribe
+    public void shownoteAction(NoteText noteText) {
+        Snackbar snackbar = Snackbar.make(mCoordinateLayout, noteText.getText(), LENGTH_SHORT);
+        snackbar.show();
+
+        mPresenter.loadNoteList();
     }
 
     public void showEmptyView(boolean isEmpty) {
@@ -205,6 +236,7 @@ public class NoteFragment extends BaseFragment implements SearchView.OnQueryText
 
         search.setSearchableInfo(manager.getSearchableInfo(getActivity().getComponentName()));
         search.setOnQueryTextListener(this);
+        search.setOnCloseListener(this);
     }
 
     @Override
@@ -216,6 +248,8 @@ public class NoteFragment extends BaseFragment implements SearchView.OnQueryText
     public boolean onQueryTextChange(String s) {
         if (!TextUtils.isEmpty(s)) {
             mPresenter.loadSearchedNotes(s);
+        } else {
+            mPresenter.loadNoteList();
         }
         return false;
     }
@@ -226,5 +260,45 @@ public class NoteFragment extends BaseFragment implements SearchView.OnQueryText
 
     public void removeNoteFromList(int id) {
         mAdapter.removeNote(id);
+    }
+
+    @Override
+    public boolean onClose() {
+        mPresenter.loadNoteList();
+        return false;
+    }
+
+    public static class UpdateNote {
+        private int noteId;
+
+        public int getNoteId() {
+            return noteId;
+        }
+
+        public void setNoteId(int noteId) {
+            this.noteId = noteId;
+        }
+    }
+
+    public static class DeleteItem {
+
+        private int id;
+        private int notePosition;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public int getNotePosition() {
+            return notePosition;
+        }
+
+        public void setNotePosition(int notePosition) {
+            this.notePosition = notePosition;
+        }
     }
 }

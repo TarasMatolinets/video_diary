@@ -2,26 +2,24 @@ package com.mti.videodiary.mvp.presenter;
 
 import android.util.Log;
 
-import com.mti.videodiary.data.storage.dao.Note;
 import com.mti.videodiary.data.storage.manager.NoteDataBaseFactory;
-import com.mti.videodiary.di.annotation.PerActivity;
 import com.mti.videodiary.di.annotation.PerFragment;
+import com.mti.videodiary.mvp.presenter.CreateNotePresenter.NoteText;
 import com.mti.videodiary.mvp.view.fragment.NoteFragment;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import database.NoteDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
 import interactor.UseCase;
 import interactor.UseCaseDeleteNoteId;
-import interactor.UseCaseGetNoteByPosition;
 import interactor.UseCaseGetNotesByTitle;
 import interactor.UseCaseGetNotesList;
 import model.NoteDomain;
+import mti.com.videodiary.R;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.mti.videodiary.application.VideoDiaryApplication.TAG;
@@ -76,7 +74,7 @@ public class NoteFragmentPresenter {
         mComposeSubscriptionList.add(subscriber);
     }
 
-    public void deleteNoteItem(int id,int notePosition) {
+    public void deleteNoteItem(int id, int notePosition) {
         UseCase useCaseDeleteList = new UseCaseDeleteNoteId(mExecutor, mPostExecutorThread, mDataBase, id);
 
         DeleteNoteItemSubscriber subscriber = new DeleteNoteItemSubscriber(notePosition);
@@ -122,9 +120,7 @@ public class NoteFragmentPresenter {
 
         @Override
         public void onNext(List<NoteDomain> list) {
-            if (!list.isEmpty()) {
-                mView.loadQueryNotes(list);
-            }
+            mView.loadQueryNotes(list);
         }
     }
 
@@ -148,6 +144,10 @@ public class NoteFragmentPresenter {
 
         @Override
         public void onNext(Void nothing) {
+            NoteText noteText = new NoteText();
+            noteText.setText(mView.getResources().getString(R.string.note_deleted_successfully));
+            mView.shownoteAction(noteText);
+
             mView.removeNoteFromList(position);
         }
     }

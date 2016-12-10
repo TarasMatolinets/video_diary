@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/coor_layout_create_note"
     android:background="@drawable/gradient_menu">
 
 

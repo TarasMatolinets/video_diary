@@ -38,6 +38,7 @@
     <dimen name="edit_text_padding">38dp</dimen>
 
     <dimen name="image_size">120dp</dimen>
+    <dimen name="image_height">200dp</dimen>
 
     <dimen name="video_view_height">300dp</dimen>
 

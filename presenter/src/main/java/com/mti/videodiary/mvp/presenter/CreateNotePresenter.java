@@ -2,7 +2,6 @@ package com.mti.videodiary.mvp.presenter;
 
 import android.util.Log;
 
-import com.mti.videodiary.data.storage.dao.Note;
 import com.mti.videodiary.data.storage.manager.NoteDataBaseFactory;
 import com.mti.videodiary.di.annotation.PerActivity;
 import com.mti.videodiary.mvp.view.activity.CreateNoteActivity;
@@ -11,7 +10,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
-import database.NoteDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
@@ -105,10 +103,11 @@ public class CreateNotePresenter {
 
         @Override
         public void onCompleted() {
-            SaveEditNoteText saveEditNoteText = new SaveEditNoteText();
-            saveEditNoteText.setText(mView.getString(R.string.note_edited_successfully));
+            NoteText noteText = new NoteText();
+            noteText.setText(mView.getString(R.string.note_edited_successfully));
 
-            EventBus.getDefault().post(saveEditNoteText);
+            EventBus.getDefault().post(noteText);
+            mView.finish();
         }
 
         @Override
@@ -125,10 +124,10 @@ public class CreateNotePresenter {
 
         @Override
         public void onCompleted() {
-            SaveEditNoteText saveEditNoteText = new SaveEditNoteText();
-            saveEditNoteText.setText(mView.getString(R.string.note_saved_successfully));
+            NoteText noteText = new NoteText();
+            noteText.setText(mView.getString(R.string.note_saved_successfully));
 
-            EventBus.getDefault().post(saveEditNoteText);
+            EventBus.getDefault().post(noteText);
             mView.finish();
         }
 
@@ -143,7 +142,7 @@ public class CreateNotePresenter {
     }
     //endregion
 
-    public static class SaveEditNoteText {
+    public static class NoteText {
         private String text;
 
         public String getText() {
