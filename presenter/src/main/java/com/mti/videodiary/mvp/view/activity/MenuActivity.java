@@ -205,7 +205,6 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        mDrawerLayout.closeDrawers();
         item.setChecked(true);
 
         switch (item.getItemId()) {
@@ -219,6 +218,8 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
                 mNavigator.replace(this, SupportFragment.class, R.id.main_container, null, false);
                 break;
         }
+        mDrawerLayout.closeDrawers();
+
         return false;
     }
 

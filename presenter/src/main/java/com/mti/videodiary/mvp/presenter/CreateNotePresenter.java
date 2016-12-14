@@ -10,6 +10,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
+import database.NoteDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
@@ -34,7 +35,7 @@ public class CreateNotePresenter {
     private final ThreadExecutor mExecutor;
     private final PostExecutionThread mPostExecutorThread;
     private final CompositeSubscription mComposeSubscriptionList;
-    private final NoteDataBaseFactory mDataBase;
+    private final NoteDataBase mDataBase;
     private CreateNoteActivity mView;
 
     @Inject

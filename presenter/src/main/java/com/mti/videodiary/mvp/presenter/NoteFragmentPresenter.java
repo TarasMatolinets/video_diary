@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import database.NoteDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
@@ -36,11 +37,11 @@ public class NoteFragmentPresenter {
     private final ThreadExecutor mExecutor;
     private final PostExecutionThread mPostExecutorThread;
     private final CompositeSubscription mComposeSubscriptionList;
-    private final NoteDataBaseFactory mDataBase;
+    private final NoteDataBase mDataBase;
     private NoteFragment mView;
 
     @Inject
-    NoteFragmentPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, NoteDataBaseFactory dataBase) {
+    NoteFragmentPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, NoteDataBase dataBase) {
         mExecutor = executor;
         mPostExecutorThread = postExecutionThread;
         mComposeSubscriptionList = new CompositeSubscription();
