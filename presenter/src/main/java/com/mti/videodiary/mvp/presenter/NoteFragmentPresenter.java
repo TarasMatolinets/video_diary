@@ -2,7 +2,6 @@ package com.mti.videodiary.mvp.presenter;
 
 import android.util.Log;
 
-import com.mti.videodiary.data.storage.manager.NoteDataBaseFactory;
 import com.mti.videodiary.di.annotation.PerFragment;
 import com.mti.videodiary.mvp.presenter.CreateNotePresenter.NoteText;
 import com.mti.videodiary.mvp.view.fragment.NoteFragment;
@@ -147,7 +146,7 @@ public class NoteFragmentPresenter {
         public void onNext(Void nothing) {
             NoteText noteText = new NoteText();
             noteText.setText(mView.getResources().getString(R.string.note_deleted_successfully));
-            mView.shownoteAction(noteText);
+            mView.showNoteAction(noteText);
 
             mView.removeNoteFromList(position);
         }

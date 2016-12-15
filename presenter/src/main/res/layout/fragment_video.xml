@@ -3,19 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/tools"
-    android:id="@+id/coor_layout_create_note"
+    android:id="@+id/coor_layout_create_video_note"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_menu">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/note_recycle_view"
+        android:id="@+id/video_note_recycle_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/buttonFloat"
+        android:id="@+id/button_float"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"

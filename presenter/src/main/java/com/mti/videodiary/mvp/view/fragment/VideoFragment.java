@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -33,6 +34,10 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.mti.videodiary.di.component.ActivityComponent;
+import com.mti.videodiary.di.component.FragmentComponent;
+import com.mti.videodiary.di.module.FragmentModule;
+import com.mti.videodiary.mvp.presenter.VideoFragmentPresenter;
 import com.mti.videodiary.mvp.view.BaseActivity;
 import com.mti.videodiary.mvp.view.activity.CreateVideoNoteActivity;
 import com.mti.videodiary.mvp.view.activity.MenuActivity;
@@ -44,13 +49,25 @@ import com.mti.videodiary.utils.Constants;
 import com.mti.videodiary.data.helper.UserHelper;
 import com.software.shell.fab.ActionButton;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import model.VideoDomain;
 import mti.com.videodiary.R;
 
+import static android.provider.MediaStore.ACTION_VIDEO_CAPTURE;
+import static android.provider.MediaStore.EXTRA_OUTPUT;
+import static android.provider.MediaStore.EXTRA_VIDEO_QUALITY;
 import static android.view.View.OnClickListener;
 
 /**
@@ -59,55 +76,52 @@ import static android.view.View.OnClickListener;
 public class VideoFragment extends BaseFragment implements OnClickListener, SearchView.OnQueryTextListener {
     private static final int REQUEST_VIDEO_CAPTURE = 101;
     public static final String CONTENT_MEDIA = "/external/video";
+    private static final long DURATION = 1500;
 
-    private View mView;
+    @Inject VideoFragmentPresenter mPresenter;
+
     private RecyclerView mRecyclerView;
-    private static VideoAdapter mAdapter;
+    private VideoAdapter mAdapter;
     private StaggeredGridLayoutManager mLayoutManager;
     private ImageView mIvCameraOff;
     private TextView mTvNoRecords;
     private AdView mAdView;
+
+    private Unbinder mBinder;
+
+    @BindView(R.id.coor_layout_create_video_note) CoordinatorLayout mCoordinateLayout;
+    @BindView(R.id.video_note_recycle_view) RecyclerView mRecyclerView;
+    @BindView(R.id.ivCameraOff) ImageView mIvNote;
+    @BindView(R.id.tvNoRecords) TextView mTvNoNotes;
+    @BindView(R.id.adViewNote) AdView mAdView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-//        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver,
-//                new IntentFilter(Constants.UPDATE_ADAPTER_INTENT));
+        EventBus.getDefault().register(this);
     }
 
-//    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            loadNoteList();
-//        }
-//    };
-
-
-    @Override
-    public void onDestroy() {
-        if (mAdView != null)
-            mAdView.destroy();
-        // Unregister since the activity is about to be closed.
-//        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
-        super.onDestroy();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_video, container, false);
+        View view = inflater.inflate(R.layout.fragment_video, container, false);
 
-        mAdView = (AdView) mView.findViewById(R.id.adViewVideo);
+        ActivityComponent component = getComponent(ActivityComponent.class);
+        FragmentComponent fragmentComponent = component.plus(new FragmentModule(getActivity()));
+        fragmentComponent.inject(this);
+
+        mBinder = ButterKnife.bind(this, view);
+        mPresenter.setView(this);
+
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        initViews();
         setupRecycleView();
-        initListeners();
-        loadNoteList();
+        mPresenter.loadVideoNoteList();
 
-        return mView;
+        return view;
     }
 
     @Override
@@ -126,56 +140,32 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
         }
     }
 
-
-    private void loadNoteList() {
-        VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
-
-        final List<Video> listVideos = videoDataManager.getAllVideosList();
-
-        if (listVideos.isEmpty()) {
-            mIvCameraOff.setVisibility(View.VISIBLE);
-            mTvNoRecords.setVisibility(View.VISIBLE);
-
-            YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.ZoomIn);
-            personalAnim.duration(DURATION);
-            personalAnim.playOn(mIvCameraOff);
-            personalAnim.playOn(mTvNoRecords);
-
-        } else {
-            mIvCameraOff.setVisibility(View.GONE);
-            mTvNoRecords.setVisibility(View.GONE);
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
         }
+        mBinder.unbind();
+        mPresenter.destroy();
+        EventBus.getDefault().unregister(this);
+
+        super.onDestroy();
     }
 
-    private void initViews() {
-        mIvCameraOff = (ImageView) mView.findViewById(R.id.ivCameraOff);
-        mTvNoRecords = (TextView) mView.findViewById(R.id.tvNoRecords);
-        mRecyclerView = (RecyclerView) mView.findViewById(R.id.videoRecycleView);
 
-        mButtonFloat = (ActionButton) mView.findViewById(R.id.buttonFloat);
-    }
-
-    private void initListeners() {
-        mButtonFloat.setOnClickListener(this);
-    }
-
-    private void setupRecycleView() {
-        VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
-
-        final List<Video> listVideos = videoDataManager.getAllVideosList();
-
-        mRecyclerView.setHasFixedSize(true);
+    public void setupRecycleView() {
 
         Display display = ((WindowManager) getActivity().getSystemService(MenuActivity.WINDOW_SERVICE)).getDefaultDisplay();
 
-        if (display.getOrientation() == Surface.ROTATION_90)
+        if (display.getRotation() == Surface.ROTATION_90) {
             mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        else
+        } else {
             mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-
+        }
         mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
 
-        mAdapter = new VideoAdapter(getActivity(), listVideos);
+        mRecyclerView.setHasFixedSize(true);
+        mAdapter = new VideoAdapter(getActivity());
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -207,31 +197,16 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
         search.setOnQueryTextListener(this);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+    @OnClick(R.id.buttonFloat)
+    public void createVideoClick() {
+        Uri fileUri = Uri.fromFile(saveFileInStorage());
 
-        if (id == R.id.action_search) {
-            return true;
-        }
+        Intent intent = new Intent(ACTION_VIDEO_CAPTURE);
 
-        return super.onOptionsItemSelected(item);
-    }
+        intent.putExtra(EXTRA_OUTPUT, fileUri);
+        intent.putExtra(EXTRA_VIDEO_QUALITY, 1);
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.buttonFloat:
-                Uri fileUri = Uri.fromFile(saveFileInStorage());
-
-                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-
-                startActivityForResult(intent, REQUEST_VIDEO_CAPTURE);
-                break;
-        }
+        startActivityForResult(intent, REQUEST_VIDEO_CAPTURE);
     }
 
     private File saveFileInStorage() {
@@ -340,5 +315,24 @@ public class VideoFragment extends BaseFragment implements OnClickListener, Sear
 //        mAdapter.notifyDataSetChanged();
 
         return true;
+    }
+
+    public void showEmptyView(boolean showView) {
+        if (showView) {
+            mIvCameraOff.setVisibility(View.VISIBLE);
+            mTvNoRecords.setVisibility(View.VISIBLE);
+
+            YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.ZoomIn);
+            personalAnim.duration(DURATION);
+            personalAnim.playOn(mIvCameraOff);
+            personalAnim.playOn(mTvNoRecords);
+        } else {
+            mIvCameraOff.setVisibility(View.GONE);
+            mTvNoRecords.setVisibility(View.GONE);
+        }
+    }
+
+    public void loadQueryNotes(List<VideoDomain> list) {
+
     }
 }

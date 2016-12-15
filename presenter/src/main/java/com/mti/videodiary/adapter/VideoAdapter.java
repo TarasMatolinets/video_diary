@@ -31,6 +31,7 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -46,12 +47,11 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
     private static final String FILE_UNIVERSAL_LOADER = "file:///";
     private static final String FILE_PLAY_VIDEO = "file://";
     private Context mContext;
-    private List<Video> mListVideos;
+    private List<Video> mListVideos = new ArrayList<>();
     private View view;
 
-    public VideoAdapter(Context context, List<Video> listVideos) {
+    public VideoAdapter(Context context) {
         mContext = context;
-        mListVideos = listVideos;
     }
 
     @Override

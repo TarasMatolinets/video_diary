@@ -110,7 +110,6 @@ public class NoteFragment extends BaseFragment implements OnQueryTextListener, O
         return view;
     }
 
-    @Subscribe()
     private void configureRecycleView() {
         Display display = ((WindowManager) getActivity().getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 
@@ -182,7 +181,7 @@ public class NoteFragment extends BaseFragment implements OnQueryTextListener, O
     }
 
     @Subscribe
-    public void shownoteAction(NoteText noteText) {
+    public void showNoteAction(NoteText noteText) {
         Snackbar snackbar = Snackbar.make(mCoordinateLayout, noteText.getText(), LENGTH_SHORT);
         snackbar.show();
 
