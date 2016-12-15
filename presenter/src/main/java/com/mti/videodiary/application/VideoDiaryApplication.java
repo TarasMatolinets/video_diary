@@ -10,7 +10,6 @@ import com.crashlytics.android.Crashlytics;
 import com.mti.videodiary.di.component.DaggerVideoDiaryAppComponent;
 import com.mti.videodiary.di.component.VideoDiaryAppComponent;
 import com.mti.videodiary.di.module.VideoDiaryAppModule;
-import com.mti.videodiary.mvp.view.BaseActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -21,7 +20,6 @@ import java.io.File;
 import io.fabric.sdk.android.Fabric;
 import mti.com.videodiary.R;
 
-import static com.mti.videodiary.data.Constants.APPLICATION_DIRECTORY;
 import static com.mti.videodiary.data.Constants.IMAGE_DIR;
 import static com.mti.videodiary.data.Constants.NOTE_DIR;
 import static com.mti.videodiary.data.Constants.VIDEO_DIR;
@@ -51,9 +49,9 @@ public class VideoDiaryApplication extends Application {
     }
 
     private void createFolder() {
-        String videoFolder = File.separator + APPLICATION_DIRECTORY + File.separator + VIDEO_DIR;
-        String noteFolder = File.separator + APPLICATION_DIRECTORY + File.separator + NOTE_DIR;
-        String imageDir = File.separator + APPLICATION_DIRECTORY + File.separator + IMAGE_DIR;
+        String videoFolder = VIDEO_DIR;
+        String noteFolder = NOTE_DIR;
+        String imageDir = IMAGE_DIR;
 
         createFolder(videoFolder);
         createFolder(noteFolder);

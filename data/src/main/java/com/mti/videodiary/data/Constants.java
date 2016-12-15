@@ -10,9 +10,10 @@ public class Constants {
     public static final String TAG = "com.video.diary";
 
     public static final String APPLICATION_DIRECTORY = "videoDairy";
-    public static final String VIDEO_DIR = "video";
-    public static final String NOTE_DIR = "note";
-    public static final String IMAGE_DIR = "image";
+    public static final String SEPARATOR = "/";
+    public static final String VIDEO_DIR = SEPARATOR + APPLICATION_DIRECTORY + SEPARATOR + "video";
+    public static final String NOTE_DIR = SEPARATOR + APPLICATION_DIRECTORY + SEPARATOR + "note";
+    public static final String IMAGE_DIR = SEPARATOR + APPLICATION_DIRECTORY + SEPARATOR + "image";
 
 
     /*splash activity*/
@@ -28,7 +29,7 @@ public class Constants {
     public static final String UPDATE_ADAPTER_INTENT = "com.mti.video.dairy.update.adapter";
     public static final String KEY_POSITION = "com.mti.position.key";
     public static final String FILE_FORMAT = ".mp4";
-    public static String VIDEO_FILE_NAME = File.separator + "video-dairy" + FILE_FORMAT;
+    public static String VIDEO_FILE_NAME = SEPARATOR + "video-dairy" + FILE_FORMAT;
     public static final String KEY_VIDEO_PATH = "com.mti.video-dairy.key-video-file-path";
     public static final String ORIENTATION = "com.mti.video-dairy.orientation";
 

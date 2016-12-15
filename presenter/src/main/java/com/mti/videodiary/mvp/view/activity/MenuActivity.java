@@ -31,6 +31,7 @@ import com.mti.videodiary.mvp.presenter.MenuPresenter;
 import com.mti.videodiary.mvp.view.BaseActivity;
 import com.mti.videodiary.mvp.view.fragment.NoteFragment;
 import com.mti.videodiary.mvp.view.fragment.SupportFragment;
+import com.mti.videodiary.mvp.view.fragment.VideoFragment;
 import com.mti.videodiary.navigator.Navigator;
 
 import javax.inject.Inject;
@@ -91,7 +92,7 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
         mHeaderView.setOnClickListener(this);
 
         mNavigationView.setNavigationItemSelectedListener(this);
-        mNavigationView.getMenu().getItem(DEFAULT_VALUE).setChecked(true);
+        mNavigationView.getMenu().performIdentifierAction(R.id.action_record, DEFAULT_VALUE);
 
         syncActionBarToggle();
         setImageToHeaderView();
@@ -209,7 +210,7 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
 
         switch (item.getItemId()) {
             case R.id.action_record:
-                //      mNavigator.replace(this, VideoFragment.class, R.id.main_container, null, false);
+                mNavigator.replace(this, VideoFragment.class, R.id.main_container, null, false);
                 break;
             case R.id.action_notes:
                 mNavigator.replace(this, NoteFragment.class, R.id.main_container, null, false);

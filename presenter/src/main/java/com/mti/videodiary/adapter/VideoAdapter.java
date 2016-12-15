@@ -37,6 +37,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import model.VideoDomain;
 import mti.com.videodiary.R;
 
 /**
@@ -47,7 +48,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
     private static final String FILE_UNIVERSAL_LOADER = "file:///";
     private static final String FILE_PLAY_VIDEO = "file://";
     private Context mContext;
-    private List<Video> mListVideos = new ArrayList<>();
+    private List<VideoDomain> mListVideos = new ArrayList<>();
     private View view;
 
     public VideoAdapter(Context context) {
@@ -63,7 +64,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        Video video = mListVideos.get(position);
+        VideoDomain video = mListVideos.get(position);
 
         holder.tvDescription.clearFocus();
         holder.tvTitle.clearFocus();
@@ -100,13 +101,18 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         return mListVideos.size();
     }
 
-    public void setListVideos(List<Video> list) {
+    public void setListVideos(List<VideoDomain> list) {
         mListVideos = list;
     }
 
     private void deleteFile(File file) {
         if (file.exists())
             file.delete();
+    }
+
+    public void updateList(List<VideoDomain> list) {
+        mListVideos = list;
+        notifyDataSetChanged();
     }
 //
 //    @Override
@@ -138,7 +144,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         @BindView(R.id.etDescription) TextView tvDescription;
         @BindView(R.id.ivVideoThumbnail) ImageView imIcon;
         @BindView(R.id.cardViewCreateVideo) CardView cardView;
-        @BindView(R.id.flMain) FrameLayout flMain;
         @BindView(R.id.viewDivider) View viewDivider;
 
         public ViewHolder(View itemLayoutView) {

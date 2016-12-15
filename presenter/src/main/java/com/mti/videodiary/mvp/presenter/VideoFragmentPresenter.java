@@ -2,6 +2,7 @@ package com.mti.videodiary.mvp.presenter;
 
 import android.util.Log;
 
+import com.mti.videodiary.data.storage.manager.VideoNoteDataBaseFactory;
 import com.mti.videodiary.di.annotation.PerFragment;
 import com.mti.videodiary.mvp.view.fragment.VideoFragment;
 
@@ -36,7 +37,7 @@ public class VideoFragmentPresenter {
     private VideoFragment mView;
 
     @Inject
-    VideoFragmentPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, VideoDataBase dataBase) {
+    VideoFragmentPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, VideoNoteDataBaseFactory dataBase) {
         mExecutor = executor;
         mPostExecutorThread = postExecutionThread;
         mComposeSubscriptionList = new CompositeSubscription();
@@ -94,7 +95,7 @@ public class VideoFragmentPresenter {
 
         @Override
         public void onNext(List<VideoDomain> list) {
-            mView.setupRecycleView(list);
+            mView.updateRecycleView(list);
 
             if (list.isEmpty()) {
                 mView.showEmptyView(true);

@@ -8,12 +8,8 @@ import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-
-
-import com.mti.videodiary.data.Constants;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,9 +19,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Random;
 
-import static com.mti.videodiary.data.Constants.APPLICATION_DIRECTORY;
+import static android.provider.MediaStore.MediaColumns.DATA;
 import static com.mti.videodiary.data.Constants.IMAGE_DIR;
-import static java.io.File.separator;
 
 /**
  * Created by Taras Matolinets on 15.11.14.
@@ -58,16 +53,20 @@ public class UserHelper {
     public static String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = {MediaStore.Images.Media.DATA};
+            String[] proj = {DATA};
             cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
+
+            if (cursor != null) {
+                int column_index = cursor.getColumnIndexOrThrow(DATA);
+                cursor.moveToFirst();
+                return cursor.getString(column_index);
+            }
         } finally {
             if (cursor != null) {
                 cursor.close();
             }
         }
+        return null;
     }
 
     public static void copyFileUsingFileStreams(File source, File dest)
@@ -93,7 +92,7 @@ public class UserHelper {
     public static String saveBitmapToSD(Bitmap finalBitmap) {
         String root = Environment.getExternalStorageDirectory().toString();
 
-        File imageDir = new File(root + separator + APPLICATION_DIRECTORY + separator + IMAGE_DIR);
+        File imageDir = new File(root + IMAGE_DIR);
 
         boolean isExist = imageDir.mkdirs();
         Random generator = new Random();

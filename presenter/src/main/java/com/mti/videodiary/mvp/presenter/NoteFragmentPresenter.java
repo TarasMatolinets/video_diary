@@ -2,6 +2,7 @@ package com.mti.videodiary.mvp.presenter;
 
 import android.util.Log;
 
+import com.mti.videodiary.data.storage.manager.NoteDataBaseFactory;
 import com.mti.videodiary.di.annotation.PerFragment;
 import com.mti.videodiary.mvp.presenter.CreateNotePresenter.NoteText;
 import com.mti.videodiary.mvp.view.fragment.NoteFragment;
@@ -40,7 +41,7 @@ public class NoteFragmentPresenter {
     private NoteFragment mView;
 
     @Inject
-    NoteFragmentPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, NoteDataBase dataBase) {
+    NoteFragmentPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, NoteDataBaseFactory dataBase) {
         mExecutor = executor;
         mPostExecutorThread = postExecutionThread;
         mComposeSubscriptionList = new CompositeSubscription();
