@@ -1,13 +1,18 @@
 package com.mti.videodiary.data.storage.manager;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.mti.videodiary.data.Constants;
 import com.mti.videodiary.data.storage.DataBaseHelper;
 import com.mti.videodiary.data.storage.dao.Video;
 import com.mti.videodiary.data.transformer.DataToDomainTransformer;
 import com.mti.videodiary.data.transformer.DomainToDataTransformer;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -58,7 +63,7 @@ public class VideoNoteDataBaseFactory implements VideoDataBase {
     }
 
     @Override
-    public Observable<VideoDomain> getVideoByPosition(final int id) {
+    public Observable<VideoDomain> getVideoById(final int id) {
         return Observable.create(new Observable.OnSubscribe<VideoDomain>() {
             @Override
             public void call(Subscriber<? super VideoDomain> subscriber) {
@@ -133,6 +138,28 @@ public class VideoNoteDataBaseFactory implements VideoDataBase {
 
                     int defaultValue = 0;
                     Video video = accountList.get(defaultValue);
+
+                    String imageUrl = video.getImageUrl();
+                    String videoUrl = video.getVideoName();
+
+                    if (TextUtils.isEmpty(imageUrl)) {
+                        File file = new File(imageUrl);
+                        boolean deleted = file.delete();
+
+                        if (deleted) {
+                            Log.i(Constants.TAG,"image file deleted successful");
+                        }
+                    }
+
+                    if (TextUtils.isEmpty(videoUrl)) {
+                        File file = new File(videoUrl);
+                        boolean deleted = file.delete();
+
+                        if (deleted) {
+                            Log.i(Constants.TAG,"video file deleted successful");
+                        }
+                    }
+
                     mHelper.getVideoListDao().delete(video);
 
                     subscriber.onCompleted();

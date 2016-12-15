@@ -11,7 +11,7 @@ import rx.Observable;
 
 public class UseCaseDeleteVideoNoteId extends UseCase {
     private VideoDataBase mDataBase;
-    private int mId;
+    private final int mId;
 
     public UseCaseDeleteVideoNoteId(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, VideoDataBase videoDataBase, int id) {
         super(threadExecutor, postExecutionThread);

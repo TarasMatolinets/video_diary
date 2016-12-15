@@ -2,7 +2,6 @@ package interactor;
 
 import database.DataBase;
 import database.NoteDataBase;
-import database.VideoDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import rx.Observable;

@@ -16,6 +16,7 @@ import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
 import interactor.UseCase;
 import interactor.UseCaseCreateVideoNote;
+import interactor.UseCaseDeleteVideoNoteId;
 import interactor.UseCaseGetVideoNoteByPosition;
 import model.NoteDomain;
 import model.VideoDomain;
@@ -60,6 +61,14 @@ public class CreateVideoPresenter {
         mComposeSubscriptionList.add(subscriber);
     }
 
+    public void deleteVideoNote(int id) {
+        UseCase useCase = new UseCaseDeleteVideoNoteId(mExecutor, mPostExecutorThread, mDataBase, id);
+        DeleteVideoNoteSubscriber subscriber = new DeleteVideoNoteSubscriber();
+
+        useCase.execute(subscriber);
+        mComposeSubscriptionList.add(subscriber);
+    }
+
     //region SUBSCRIBER
     private final class GetVideoNoteSubscriber extends DefaultSubscriber<VideoDomain> {
 
@@ -75,6 +84,25 @@ public class CreateVideoPresenter {
         @Override
         public void onNext(VideoDomain videoDomain) {
             mView.loadVideoNote(videoDomain);
+
+        }
+    }
+
+    private final class DeleteVideoNoteSubscriber extends DefaultSubscriber<Void> {
+
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.e(TAG, e.toString());
+        }
+
+        @Override
+        public void onNext(Void nothing) {
+
 
         }
     }

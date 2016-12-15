@@ -1,48 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:ads="http://schemas.android.com/apk/res-auto"
-                xmlns:fab="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/flMain"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
+    android:id="@+id/coor_layout_create_note"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_menu">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/videoRecycleView"
+        android:id="@+id/note_recycle_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient_menu"
         android:scrollbars="vertical"/>
 
-    <include
-        layout="@layout/empty_video_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adViewVideo"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/buttonFloat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="@dimen/edge_big"
+        android:layout_marginRight="@dimen/edge_big"
+        android:src="@drawable/ic_create_white"
+        app:backgroundTint="@color/blue"
+        app:fabSize="normal"
+        app:layout_anchor="@id/rvToDoList"
+        app:layout_anchorGravity="bottom|right|end"
+        />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
         android:visibility="visible"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id"/>
 
-<!--    <com.software.shell.fab.ActionButton
-        android:id="@+id/buttonFloat"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
-        fab:button_color="@color/blue"
-        fab:button_colorRipple="@color/blue"
-        fab:hide_animation="@anim/fab_roll_to_down"
-        fab:image="@drawable/fab_plus_icon"
-        fab:image_size="@dimen/edge_large"
-        fab:rippleEffect_enabled="true"
-        fab:shadowResponsiveEffect_enabled="true"
-        fab:show_animation="@anim/fab_roll_from_down"/>-->
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/ivCameraOff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:alpha="0.2"
+            android:background="@drawable/ic_videocam_off_white"
+            android:contentDescription=""/>
+
+        <TextView
+            android:id="@+id/tvNoRecords"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/menu_act_no_videos"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_large"
+            android:textStyle="normal"/>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

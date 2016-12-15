@@ -23,6 +23,6 @@ public class UseCaseGetVideoNoteByPosition extends UseCase {
 
     @Override
     public Observable buildUseCaseObservable() {
-        return mDataBase.getVideoByPosition(mId);
+        return mDataBase.getVideoById(mId);
     }
 }

@@ -12,10 +12,9 @@ import rx.Observable;
 public interface VideoDataBase extends DataBase {
     Observable<List<VideoDomain>> getListVideos();
 
-    Observable<VideoDomain> getVideoByPosition(int id);
+    Observable<VideoDomain> getVideoById(int id);
 
     Observable<Void> createVideo(VideoDomain video);
 
     Observable<Void> updateVideoList(VideoDomain video);
-
 }
