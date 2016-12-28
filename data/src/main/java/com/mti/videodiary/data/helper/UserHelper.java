@@ -8,17 +8,22 @@ import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.mti.videodiary.data.Constants;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Random;
 
+import static android.graphics.Bitmap.Config.RGB_565;
 import static android.provider.MediaStore.MediaColumns.DATA;
 import static com.mti.videodiary.data.Constants.IMAGE_DIR;
 
@@ -46,7 +51,7 @@ public class UserHelper {
         try {
             Thread.sleep(time);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e(Constants.TAG, "exception " + e.toString());
         }
     }
 
@@ -69,8 +74,7 @@ public class UserHelper {
         return null;
     }
 
-    public static void copyFileUsingFileStreams(File source, File dest)
-            throws IOException {
+    public static void copyFileUsingFileStreams(File source, File dest) {
         InputStream input = null;
         OutputStream output = null;
         try {
@@ -78,14 +82,24 @@ public class UserHelper {
             output = new FileOutputStream(dest);
             byte[] buf = new byte[1024];
             int bytesRead;
+
             while ((bytesRead = input.read(buf)) > 0) {
                 output.write(buf, 0, bytesRead);
             }
+        } catch (IOException e) {
+            Log.e(Constants.TAG, "exception " + e.toString());
         } finally {
-            if (input != null)
-                input.close();
-            if (output != null)
-                output.close();
+
+            try {
+                if (input != null) {
+                    input.close();
+                }
+                if (output != null) {
+                    output.close();
+                }
+            } catch (IOException e) {
+                Log.e(Constants.TAG, "exception " + e.toString());
+            }
         }
     }
 
@@ -110,7 +124,7 @@ public class UserHelper {
                 out.close();
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(Constants.TAG, "exception " + e.toString());
             }
 
             return file.getAbsolutePath();
@@ -125,14 +139,14 @@ public class UserHelper {
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        options.inPreferredConfig = RGB_565;
 
         BitmapFactory.decodeFile(path, options);
         // Calculate inSampleSize
         options.inSampleSize = calculateInSampleSize(options, width, height);
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        options.inPreferredConfig = RGB_565;
 
         return BitmapFactory.decodeFile(path, options);
     }

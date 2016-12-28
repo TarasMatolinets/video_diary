@@ -87,6 +87,12 @@
     <string name="note_saved_successfully">Note saved successfully</string>
     <string name="note_edited_successfully">Note edited successfully</string>
     <string name="note_deleted_successfully">Note deleted successfully</string>
+
+
+    <string name="video_note_saved_successfully">Video note saved successfully</string>
+    <string name="video_note_edited_successfully">Video edited successfully</string>
+    <string name="video_note_deleted_successfully">Video deleted successfully</string>
+
     <string name="delete_note_description">Are you sure you want to delete this note?</string>
 
 </resources>

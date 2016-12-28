@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -44,8 +46,11 @@ import com.mti.videodiary.navigator.Navigator;
 import com.mti.videodiary.utils.Constants;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -61,9 +66,12 @@ import mti.com.videodiary.R;
 import static android.app.Activity.RESULT_OK;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
+import static android.os.Environment.MEDIA_MOUNTED;
+import static android.os.Environment.MEDIA_MOUNTED_READ_ONLY;
 import static android.provider.MediaStore.ACTION_VIDEO_CAPTURE;
 import static android.provider.MediaStore.EXTRA_OUTPUT;
 import static android.provider.MediaStore.EXTRA_VIDEO_QUALITY;
+import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 import static android.support.v7.widget.StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS;
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static com.mti.videodiary.data.Constants.APPLICATION_DIRECTORY;
@@ -100,7 +108,7 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-//        EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -197,11 +205,11 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
 
     @OnClick(R.id.button_float)
     public void createVideoClick() {
-        Uri fileUri = Uri.fromFile(saveFileInStorage());
+        Uri filePath = Uri.fromFile(saveFileInStorage());
 
         Intent intent = new Intent(ACTION_VIDEO_CAPTURE);
 
-        intent.putExtra(EXTRA_OUTPUT, fileUri);
+        intent.putExtra(EXTRA_OUTPUT, filePath);
         intent.putExtra(EXTRA_VIDEO_QUALITY, 1);
 
         startActivityForResult(intent, REQUEST_VIDEO_CAPTURE);
@@ -211,10 +219,10 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
         String state = Environment.getExternalStorageState();
         File mediaFile = null;
 
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
+        if (MEDIA_MOUNTED.equals(state)) {
             mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + VIDEO_DIR + VIDEO_FILE_NAME);
-        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            mediaFile = new File(getActivity().getFilesDir() + VIDEO_DIR + VIDEO_FILE_NAME);
+        } else if (MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            mediaFile = new File(getActivity().getFilesDir().getAbsolutePath() + VIDEO_DIR + VIDEO_FILE_NAME);
         }
         return mediaFile;
     }
@@ -226,9 +234,12 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
             case REQUEST_VIDEO_CAPTURE:
                 if (resultCode == RESULT_OK && data != null) {
                     startVideoActivity(data);
-                } else if (resultCode == RESULT_OK)
-                    showSnackView();
+                } else if (resultCode == RESULT_OK) {
+                    VideoNoteText videoNoteText = new VideoNoteText();
+                    videoNoteText.setText(getString(R.string.fragment_video_not_recorded_warning));
 
+                    showSnackView(videoNoteText);
+                }
                 break;
 
             case Constants.UPDATE_VIDEO_ADAPTER:
@@ -244,8 +255,10 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
         }
     }
 
-    private void showSnackView() {
-//        Crouton.makeText(getActivity(), getResources().getString(R.string.fragment_video_not_recorded_warning), Style.ALERT).show();
+    @Subscribe
+    public void showSnackView(VideoNoteText videoNoteText) {
+        Snackbar snackbar = Snackbar.make(mCoordinateLayout, videoNoteText.getText(), LENGTH_SHORT);
+        snackbar.show();
     }
 
     private void startVideoActivity(Intent data) {
@@ -260,7 +273,7 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
         Bundle bundle = new Bundle();
         bundle.putString(KEY_VIDEO_PATH, videoFilePath);
 
-        mNavigator.replaceActivityForResult(getActivity(), CreateVideoNoteActivity.class, bundle, UPDATE_VIDEO_ADAPTER);
+        mNavigator.replaceActivity(getActivity(), CreateVideoNoteActivity.class, bundle);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -271,16 +284,12 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
         if (!TextUtils.isEmpty(path)) {
             File videoFile = new File(path);
 
-            if (Environment.MEDIA_MOUNTED.equals(state)) {
-                mediaFile = new File(Environment.getExternalStorageDirectory().getParent() + VIDEO_DIR + VIDEO_FILE_NAME);
-            } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-                mediaFile = new File(getActivity().getFilesDir() + VIDEO_DIR + VIDEO_FILE_NAME);
+            if (MEDIA_MOUNTED.equals(state)) {
+                mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + VIDEO_DIR + VIDEO_FILE_NAME);
+            } else if (MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+                mediaFile = new File(getActivity().getFilesDir().getAbsolutePath() + VIDEO_DIR + VIDEO_FILE_NAME);
             }
-            try {
-                UserHelper.copyFileUsingFileStreams(videoFile, mediaFile);
-            } catch (IOException e) {
-                Log.e(VideoDiaryApplication.TAG, "exception " + e.toString());
-            }
+            UserHelper.copyFileUsingFileStreams(videoFile, mediaFile);
 
             if (videoFile.exists())
                 videoFile.delete();
@@ -336,5 +345,17 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
 
     public void updateRecycleView(List<VideoDomain> list) {
         mAdapter.updateList(list);
+    }
+
+    public static class VideoNoteText {
+        private String text;
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
     }
 }
