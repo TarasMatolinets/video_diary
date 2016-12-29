@@ -24,6 +24,7 @@ import interactor.UseCase;
 import interactor.UseCaseCreateVideoNote;
 import interactor.UseCaseDeleteVideoNoteId;
 import interactor.UseCaseGetVideoNoteByPosition;
+import interactor.UseCaseUpdateVideoNoteList;
 import model.NoteDomain;
 import model.VideoDomain;
 import rx.subscriptions.CompositeSubscription;
@@ -70,49 +71,18 @@ public class CreateVideoPresenter {
         mComposeSubscriptionList.add(subscriber);
     }
 
-    public void updateVideoNote(String videoPath, Bitmap bitmap, String title, String description, int videoId) {
-        File oldFileName = new File(videoPath);
-        File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + VIDEO_DIR + separator + title + FILE_FORMAT);
+    public void updateVideoNote(String videoPath, String imagePath, String title, String description, int videoId) {
+        VideoDomain videoDomain = new VideoDomain();
 
-        boolean success = oldFileName.renameTo(newFileName);
+        videoDomain.setVideoUrl(videoPath);
+        videoDomain.setImageUrl(imagePath);
+        videoDomain.setTitle(title);
+        videoDomain.setId(videoId);
+        videoDomain.setDescription(description);
 
-        if (success) {
-            String tempBitmapPath = UserHelper.saveBitmapToSD(bitmap);
-            Bitmap finalBitmap = UserHelper.decodeSampledBitmapFromResource(tempBitmapPath);
-            String finalPathBitmap = UserHelper.saveBitmapToSD(finalBitmap);
-
-            if (tempBitmapPath != null) {
-                File file = new File(tempBitmapPath);
-
-                if(file.exists()) {
-                    boolean deleted = file.delete();
-                }
-
-//
-//                Video video = videoDataManager.getVideoByPosition(position);
-//                video.setDescription(mEtDescription.getText().toString());
-//                video.setTitle(mEtTitle.getText().toString());
-//
-//                if (!mVideoFilePath.equals(video.getVideoName())) {
-//                    File videoOld = new File(video.getVideoName());
-//
-//                    if (videoOld.exists())
-//                        videoOld.delete();
-//                }
-//
-//                video.setVideoUrl(newFileName.getAbsolutePath());
-//
-//                File imageOld = new File(video.getImageUrl());
-//
-//                if (imageOld.exists())
-//                    imageOld.delete();
-//
-//                video.setImageUrl(finalPathBitmap);
-//
-//
-//                videoDataManager.updateVideoList(video);
-            }
-        }
+        UseCase useCase = new UseCaseUpdateVideoNoteList(mExecutor, mPostExecutorThread, videoDomain, mDataBase);
+        SaveUpdateVideoNoteSubscriber subscriber = new SaveUpdateVideoNoteSubscriber();
+        useCase.execute(subscriber);
     }
 
     public void deleteVideoNote(int id) {
@@ -123,7 +93,33 @@ public class CreateVideoPresenter {
         mComposeSubscriptionList.add(subscriber);
     }
 
+    public void createNewVideoDaily(String videoPath, String imagePath, String title, String description) {
+        VideoDomain videoDomain = new VideoDomain();
+
+        videoDomain.setVideoUrl(videoPath);
+        videoDomain.setImageUrl(imagePath);
+        videoDomain.setTitle(title);
+        videoDomain.setDescription(description);
+
+        UseCase useCase = new UseCaseCreateVideoNote(mExecutor, mPostExecutorThread, mDataBase, videoDomain);
+        SaveUpdateVideoNoteSubscriber subscriber = new SaveUpdateVideoNoteSubscriber();
+        useCase.execute(subscriber);
+    }
+
     //region SUBSCRIBER
+    private final class SaveUpdateVideoNoteSubscriber extends DefaultSubscriber<Void> {
+
+        @Override
+        public void onCompleted() {
+            mView.finish();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.e(TAG, e.toString());
+        }
+    }
+
     private final class GetVideoNoteSubscriber extends DefaultSubscriber<VideoDomain> {
 
         @Override
@@ -146,18 +142,11 @@ public class CreateVideoPresenter {
 
         @Override
         public void onCompleted() {
-
         }
 
         @Override
         public void onError(Throwable e) {
             Log.e(TAG, e.toString());
-        }
-
-        @Override
-        public void onNext(Void nothing) {
-
-
         }
     }
     //endregion

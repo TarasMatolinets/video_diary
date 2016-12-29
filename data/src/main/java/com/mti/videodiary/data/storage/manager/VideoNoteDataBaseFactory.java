@@ -1,5 +1,6 @@
 package com.mti.videodiary.data.storage.manager;
 
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -24,7 +25,11 @@ import model.VideoDomain;
 import rx.Observable;
 import rx.Subscriber;
 
+import static com.mti.videodiary.data.Constants.FILE_FORMAT;
+import static com.mti.videodiary.data.Constants.TAG;
+import static com.mti.videodiary.data.Constants.VIDEO_DIR;
 import static com.mti.videodiary.data.storage.dao.Video.ID;
+import static java.io.File.separator;
 
 
 /**
@@ -94,6 +99,15 @@ public class VideoNoteDataBaseFactory implements VideoDataBase {
             @Override
             public void call(Subscriber<? super Void> subscriber) {
                 try {
+                    File oldFileName = new File(video.getVideoName());
+                    File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + VIDEO_DIR + separator + video.getVideoName() + FILE_FORMAT);
+
+                    boolean success = oldFileName.renameTo(newFileName);
+
+                    if (success) {
+                        Log.i(TAG, "video file renamed good");
+                    }
+
                     DomainToDataTransformer transformer = new DomainToDataTransformer();
                     Video videoData = transformer.transform(video);
                     mHelper.getVideoListDao().create(videoData);
@@ -112,6 +126,15 @@ public class VideoNoteDataBaseFactory implements VideoDataBase {
             @Override
             public void call(Subscriber<? super Void> subscriber) {
                 try {
+                    File oldFileName = new File(video.getVideoName());
+                    File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + VIDEO_DIR + separator + video.getVideoName() + FILE_FORMAT);
+
+                    boolean success = oldFileName.renameTo(newFileName);
+
+                    if (success) {
+                        Log.i(TAG, "video file renamed good");
+                    }
+
                     DomainToDataTransformer transformer = new DomainToDataTransformer();
                     Video videoDomain = transformer.transform(video);
                     mHelper.getVideoListDao().update(videoDomain);
@@ -147,7 +170,7 @@ public class VideoNoteDataBaseFactory implements VideoDataBase {
                         boolean deleted = file.delete();
 
                         if (deleted) {
-                            Log.i(Constants.TAG,"image file deleted successful");
+                            Log.i(Constants.TAG, "image file deleted successful");
                         }
                     }
 
@@ -156,7 +179,7 @@ public class VideoNoteDataBaseFactory implements VideoDataBase {
                         boolean deleted = file.delete();
 
                         if (deleted) {
-                            Log.i(Constants.TAG,"video file deleted successful");
+                            Log.i(Constants.TAG, "video file deleted successful");
                         }
                     }
 

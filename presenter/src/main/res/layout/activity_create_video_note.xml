@@ -77,7 +77,6 @@
             android:inputType="text|textMultiLine"
             android:textSize="@dimen/text_medium"
             android:textStyle="bold"
-
             android:textColor="@color/black"
             android:ellipsize="end"
             android:hint="@string/create_title"

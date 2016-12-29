@@ -6,19 +6,19 @@ import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
@@ -29,7 +29,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.mti.videodiary.application.VideoDiaryApplication;
-import com.mti.videodiary.data.helper.UserHelper;
 import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.mvp.presenter.CreateVideoPresenter;
@@ -41,25 +40,30 @@ import java.io.File;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import model.VideoDomain;
 import mti.com.videodiary.R;
 
 import static android.graphics.Color.TRANSPARENT;
 import static android.graphics.Color.WHITE;
 import static android.provider.MediaStore.Video.Thumbnails.MINI_KIND;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static com.mti.videodiary.data.Constants.VIDEO_DIR;
 import static com.mti.videodiary.utils.Constants.KEY_POSITION;
 import static com.mti.videodiary.utils.Constants.KEY_VIDEO_PATH;
+import static java.io.File.separator;
 
 /**
  * Created by Taras Matolinets on 01.03.15.
  * Video Activity for create or edit video.
  */
-public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher, View.OnClickListener, IHasComponent<ActivityComponent> {
-    private static final String FILE_PLAY_VIDEO = "file://";
-    private static float sAnimatorScale = 1;
-
+public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher, IHasComponent<ActivityComponent> {
     private static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
     private static final TimeInterpolator sAccelerator = new AccelerateInterpolator();
+    private static float sAnimatorScale = 1;
+
     private static final int ANIM_DURATION = 500;
     private static final int DURATION = 1000;
     public static final int DEFAULT_VALUE = -1;
@@ -69,7 +73,8 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
     @BindView(R.id.ivPlay) ImageView mIvPlay;
     @BindView(R.id.et_title) EditText mEtTitle;
-    @BindView(R.id.tvAddVideo) TextView mEtDescription;
+    @BindView(R.id.tvAddVideo) TextView mTvAddVideoNote;
+    @BindView(R.id.etDescription) EditText mEtDescription;
     @BindView(R.id.ivVideoThumbnail) ImageView mIvThumbnail;
     @BindView(R.id.ivCancel) ImageView mIvCancel;
     @BindView(R.id.scrollCard) ScrollView mScrollCard;
@@ -78,23 +83,20 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     @Inject CreateVideoPresenter mPresenter;
 
     private boolean isShowSave;
-    private ActionBar mActionBar;
     private boolean isEditVideoDaily;
     private int mOriginalOrientation;
-    private int mLeftDelta;
-    private int mTopDelta;
     private float mWidthScale;
     private float mHeightScale;
+
     private ColorDrawable mBackground;
-    private TextView mTvAddVideoNote;
-    private String mVideoFilePath;
-    private boolean isDeleteVideo = true;
     private ActivityComponent mComponent;
+    private VideoDomain mVideoNote;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_video_note);
+        ButterKnife.bind(this);
 
         setComponent();
         initListeners();
@@ -110,25 +112,23 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     private void initActionBar() {
-        mActionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
 
         int position = getIntent().getIntExtra(KEY_POSITION, DEFAULT_VALUE);
 
-        if (position == DEFAULT_ITEM_POSITION) {
-            mActionBar.setTitle(R.string.create_video_note);
-        } else {
-            mActionBar.setTitle(R.string.edit_video_note);
+        if (actionBar != null) {
+            if (position == DEFAULT_ITEM_POSITION) {
+                actionBar.setTitle(R.string.create_video_note);
+            } else {
+                actionBar.setTitle(R.string.edit_video_note);
+            }
+            actionBar.show();
         }
-
-        mActionBar.show();
     }
 
     private void initListeners() {
         mEtTitle.addTextChangedListener(this);
         mEtDescription.addTextChangedListener(this);
-        mIvPlay.setOnClickListener(this);
-        mIvCancel.setOnClickListener(this);
-        mTvAddVideoNote.setOnClickListener(this);
     }
 
     private void setDataToView() {
@@ -150,29 +150,15 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
     private void setImageToView(String path) {
         final File file = new File(path);
-        mIvThumbnail.post(new Runnable() {
-            @Override
-            public void run() {
-                int width = mIvThumbnail.getWidth();
-                int height = mIvThumbnail.getHeight();
-
-                if (width > 0 && height > 0) {
-                    Bitmap bMap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MINI_KIND);
-                  //  Bitmap newImage = UserHelper.cropImage(bMap, width, height);
-
-                    mIvThumbnail.setImageBitmap(bMap);
-                }
-            }
-        });
+        Bitmap bMap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MINI_KIND);
+        mIvThumbnail.setImageBitmap(bMap);
     }
 
     public void loadVideoNote(VideoDomain videoDomain) {
-        mVideoFilePath = videoDomain.getVideoName();
-
+        mVideoNote = videoDomain;
         mEtTitle.setText(videoDomain.getTitle());
         mEtDescription.setText(videoDomain.getDescription());
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -205,23 +191,17 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
         switch (id) {
             case R.id.action_save:
+                String videoFilePath = getIntent().getStringExtra(KEY_VIDEO_PATH);
                 if (!isEditVideoDaily) {
-                  //  createNewVideoDaily();
+                    mPresenter.createNewVideoDaily(videoFilePath, videoFilePath, mEtTitle.getText().toString(), mEtDescription.getText().toString());
                 } else {
-                    Bitmap bitmap = ((BitmapDrawable) mIvThumbnail.getDrawable()).getBitmap();
                     int videoId = getIntent().getIntExtra(KEY_POSITION, DEFAULT_ITEM_POSITION);
-
-                    mPresenter.updateVideoNote(mVideoFilePath, bitmap, mEtTitle.getText().toString(), mEtDescription.getText().toString(), videoId);
+                    mPresenter.updateVideoNote(videoFilePath, videoFilePath, mEtTitle.getText().toString(), mEtDescription.getText().toString(), videoId);
                 }
                 setResult(RESULT_OK, null);
                 break;
         }
-
-        runExitAnimation(new Runnable() {
-            public void run() {
-                finish();
-            }
-        });
+        runExitAnimation();
 
         return false;
     }
@@ -234,11 +214,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
     @Override
     public void onBackPressed() {
-        runExitAnimation(new Runnable() {
-            public void run() {
-                finish();
-            }
-        });
+        runExitAnimation();
     }
 
     @Override
@@ -247,47 +223,6 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         overridePendingTransition(0, 0);
     }
 
-
-    private void deleteVideoNote() {
-        int id = getIntent().getIntExtra(KEY_POSITION, DEFAULT_ITEM_POSITION);
-
-        if (id != DEFAULT_ITEM_POSITION) {
-            mPresenter.deleteVideoNote(id);
-        }
-    }
-
-//    private void createNewVideoDaily() {
-//        Bitmap bitmap = ((BitmapDrawable) mIvThumbnail.getDrawable()).getBitmap();
-//
-//        File oldFileName = new File(mVideoFilePath);
-//        File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + separator + APPLICATION_DIRECTORY + separator + VIDEO_DIR + separator + mEtTitle.getText().toString() + FILE_FORMAT);
-//
-//        boolean success = oldFileName.renameTo(newFileName);
-//
-//        if (success) {
-//            Video video = new Video();
-//
-//            video.setVideoUrl(newFileName.getAbsolutePath());
-//            video.setTitle(mEtTitle.getText().toString());
-//            video.setDescription(mEtDescription.getText().toString());
-//
-//            String tempBitmapPath = UserHelper.saveBitmapToSD(bitmap);
-//            //we can use decodeSampledBitmapFromResource when we have stored bitmap in sd otherwise bitmap  will be null
-//            Bitmap finalBitmap = UserHelper.decodeSampledBitmapFromResource(tempBitmapPath);
-//
-//            String finalPathBitmap = UserHelper.saveBitmapToSD(finalBitmap);
-//
-//            File file = new File(tempBitmapPath);
-//
-//            if (file.exists())
-//                file.delete();
-//
-//            video.setImageUrl(finalPathBitmap);
-//            VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
-//            videoDataManager.createVideo(video);
-//        }
-//    }
-
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -295,23 +230,16 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-//        int position = getIntent().getIntExtra(Constants.KEY_POSITION, DEFAULT_ITEM_POSITION);
-//        boolean title = false;
-//        boolean description = false;
-//
-//        if (position != DEFAULT_ITEM_POSITION) {
-//            VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
-//
-//            Video video = videoDataManager.getVideoByPosition(position);
-//
-//            title = mEtTitle.getText().toString().equals(video.getTitle());
-//            description = mEtDescription.getText().toString().equals(video.getDescription());
-//        }
-//        if (mEtTitle.getText().length() > 0 && !title && mVideoFilePath != null || !description && mVideoFilePath != null)
-//            isShowSave = true;
-//        else
-//            isShowSave = false;
+        int position = getIntent().getIntExtra(KEY_POSITION, DEFAULT_VALUE);
+        boolean title = false;
+        boolean description = false;
 
+        if (position != DEFAULT_VALUE) {
+            title = mEtTitle.getText().toString().equals(mVideoNote.getTitle());
+            description = mEtDescription.getText().toString().equals(mVideoNote.getDescription());
+        }
+
+        isShowSave = !TextUtils.isEmpty(mEtTitle.getText()) && !title && !description;
         invalidateOptionsMenu();
     }
 
@@ -325,96 +253,74 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_VIDEO_CAPTURE:
-                    isDeleteVideo = false;
                     final Uri videoUri = data.getData();
-                    mVideoFilePath = videoUri.getPath();
+                    String videoFilePath = videoUri.getPath();
 
-                    final File file = new File(mVideoFilePath);
+                    final File file = new File(videoFilePath);
 
-                    mIvThumbnail.setVisibility(View.VISIBLE);
-                    mTvAddVideoNote.setVisibility(View.GONE);
-                    mIvPlay.setVisibility(View.VISIBLE);
-                    mIvCancel.setVisibility(View.VISIBLE);
+                    mTvAddVideoNote.setVisibility(GONE);
+                    mIvThumbnail.setVisibility(VISIBLE);
+                    mIvPlay.setVisibility(VISIBLE);
+                    mIvCancel.setVisibility(VISIBLE);
 
-                    mIvThumbnail.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            int width = mIvThumbnail.getWidth();
-                            int height = mIvThumbnail.getHeight();
+                    Bitmap bMap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MINI_KIND);
+                    mIvThumbnail.setImageBitmap(bMap);
 
-                            if (width > 0 && height > 0) {
+                    isShowSave = !TextUtils.isEmpty(mEtTitle.getText());
 
-                                Bitmap bMap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MINI_KIND);
-                                Bitmap newImage = UserHelper.cropImage(bMap, width, height);
-
-                                mIvThumbnail.setImageBitmap(newImage);
-
-                                if (mEtTitle.getText().length() > 0)
-                                    isShowSave = true;
-                                else
-                                    isShowSave = false;
-
-                                invalidateOptionsMenu();
-                            }
-                        }
-                    });
+                    invalidateOptionsMenu();
                     break;
             }
         }
+
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ivPlay:
-//                String videoFilePath;
-//                if (!isEditVideoDaily)
-//                    videoFilePath = FILE_PLAY_VIDEO + getIntent().getStringExtra(Constants.KEY_VIDEO_PATH);
-//                else {
-//                    int position = getIntent().getIntExtra(Constants.KEY_POSITION, DEFAULT_ITEM_POSITION);
-//                    VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
-//                    Video video = videoDataManager.getVideoByPosition(position);
-//                    videoFilePath = FILE_PLAY_VIDEO + video.getVideoName();
-//                }
-//
-//                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoFilePath));
-//                intent.setDataAndType(Uri.parse(videoFilePath), "video/mp4");
-//                startActivity(intent);
 
-                break;
-            case R.id.ivCancel:
-                isDeleteVideo = true;
-                mVideoFilePath = null;
+    @OnClick(R.id.ivPlay)
+    public void playVideoNote() {
+        String videoFilePath = getIntent().getStringExtra(KEY_VIDEO_PATH);
 
-                mIvCancel.setVisibility(View.GONE);
-                mIvPlay.setVisibility(View.GONE);
-                mIvThumbnail.setVisibility(View.GONE);
-                mTvAddVideoNote.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoFilePath));
+        intent.setDataAndType(Uri.parse(videoFilePath), "video/mp4");
+        startActivity(intent);
+    }
 
-                isShowSave = false;
-                invalidateOptionsMenu();
-                break;
-            case R.id.tvAddVideo:
-//                final File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + separator + VideoDiaryApplication.APPLICATION_DIRECTORY + separator + BaseActivity.VIDEO_DIR + Constants.VIDEO_FILE_NAME);
-//
-//                Uri fileUri = Uri.fromFile(mediaFile);
-//
-//                Intent intentVideo = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-//
-//                intentVideo.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-//                intentVideo.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-//
-//                startActivityForResult(intentVideo, REQUEST_VIDEO_CAPTURE);
-                break;
+    @OnClick(R.id.ivCancel)
+    public void deleteVideoNote() {
+        int id = getIntent().getIntExtra(KEY_POSITION, DEFAULT_ITEM_POSITION);
+
+        if (id != DEFAULT_ITEM_POSITION) {
+            mPresenter.deleteVideoNote(id);
         }
+
+        isShowSave = false;
+
+        mIvCancel.setVisibility(GONE);
+        mIvPlay.setVisibility(GONE);
+        mIvThumbnail.setVisibility(GONE);
+        mTvAddVideoNote.setVisibility(VISIBLE);
+
+        invalidateOptionsMenu();
+    }
+
+    @OnClick(R.id.tvAddVideo)
+    public void addVideoNote() {
+        final File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + separator + VIDEO_DIR + Constants.VIDEO_FILE_NAME);
+
+        Uri fileUri = Uri.fromFile(mediaFile);
+
+        Intent intentVideo = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+        intentVideo.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        intentVideo.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+
+        startActivityForResult(intentVideo, REQUEST_VIDEO_CAPTURE);
     }
 
     //region ANIMATION
     private void animateImageView(Bundle savedInstanceState) {
         Bundle bundle = getIntent().getExtras();
 
-        final int thumbnailTop = bundle.getInt(VideoDiaryApplication.TAG + ".top");
-        final int thumbnailLeft = bundle.getInt(VideoDiaryApplication.TAG + ".left");
         final int thumbnailWidth = bundle.getInt(VideoDiaryApplication.TAG + ".width");
         final int thumbnailHeight = bundle.getInt(VideoDiaryApplication.TAG + ".height");
         mOriginalOrientation = bundle.getInt(VideoDiaryApplication.TAG + ".orientation");
@@ -432,8 +338,6 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                     // to the screen and each other
                     int[] screenLocation = new int[2];
                     mIvThumbnail.getLocationOnScreen(screenLocation);
-                    mLeftDelta = thumbnailLeft - screenLocation[0];
-                    mTopDelta = thumbnailTop - screenLocation[1];
 
                     // Scale factors to make the large version the same size as the thumbnail
                     mWidthScale = (float) thumbnailWidth / mIvThumbnail.getWidth();
@@ -486,8 +390,8 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                                public void onAnimationEnd(Animator animation) {
                                    super.onAnimationEnd(animation);
                                    mCardView.setCardBackgroundColor(WHITE);
-                                   mIvPlay.setVisibility(View.VISIBLE);
-                                   mIvCancel.setVisibility(View.VISIBLE);
+                                   mIvPlay.setVisibility(VISIBLE);
+                                   mIvCancel.setVisibility(VISIBLE);
                                }
                            }
 
@@ -515,15 +419,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         mEtDescription.animate().setDuration(duration / 2).alpha(1).setInterpolator(sDecelerator);
     }
 
-    /**
-     * The exit animation is basically a reverse of the enter animation, except that if
-     * the orientation has changed we simply scale the picture back into the center of
-     * the screen.
-     *
-     * @param endAction This action gets run after the animation completes (this is
-     *                  when we actually switch activities)
-     */
-    public void runExitAnimation(final Runnable endAction) {
+    public void runExitAnimation() {
         final long duration = (long) (ANIM_DURATION * sAnimatorScale);
 
         // No need to set initial values for the reverse animation; the image is at the
@@ -536,15 +432,13 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         if (getResources().getConfiguration().orientation != mOriginalOrientation) {
             mIvThumbnail.setPivotX(mIvThumbnail.getWidth() / 2);
             mIvThumbnail.setPivotY(mIvThumbnail.getHeight() / 2);
-            mLeftDelta = 0;
-            mTopDelta = 0;
         }
 
         //show transparent effect
         mCardView.setCardBackgroundColor(TRANSPARENT);
-        mIvPlay.setVisibility(View.GONE);
-        mIvCancel.setVisibility(View.GONE);
-        mTvAddVideoNote.setVisibility(View.GONE);
+        mIvPlay.setVisibility(GONE);
+        mIvCancel.setVisibility(GONE);
+        mTvAddVideoNote.setVisibility(GONE);
 
         ViewPropertyAnimator anim = mEtDescription.animate();
 
@@ -576,6 +470,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             @Override
             public void onAnimationEnd(Animator animation) {
                 animateThumbnail();
+                finish();
             }
         });
 

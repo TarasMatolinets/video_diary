@@ -1,7 +1,5 @@
 package com.mti.videodiary.data;
 
-import java.io.File;
-
 /**
  * Created by Terry on 11/5/2016.
  */
