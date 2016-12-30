@@ -16,7 +16,7 @@
 
         <view
             android:id="@+id/tvWelcome"
-            class="com.mti.videodiary.animation.SkewableTextView"
+            class="com.mti.videodiary.mvp.view.customview.SkewableTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -29,7 +29,7 @@
 
         <view
             android:id="@+id/tvTitle"
-            class="com.mti.videodiary.animation.SkewableTextView"
+            class="com.mti.videodiary.mvp.view.customview.SkewableTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

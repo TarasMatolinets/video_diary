@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -25,20 +24,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.mti.videodiary.mvp.view.adapter.VideoAdapter;
-import com.mti.videodiary.data.helper.UserHelper;
+import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.di.component.FragmentComponent;
 import com.mti.videodiary.di.module.FragmentModule;
 import com.mti.videodiary.mvp.presenter.VideoFragmentPresenter;
 import com.mti.videodiary.mvp.view.activity.CreateVideoNoteActivity;
 import com.mti.videodiary.mvp.view.activity.MenuActivity;
+import com.mti.videodiary.mvp.view.adapter.VideoAdapter;
 import com.mti.videodiary.navigator.Navigator;
 
 import org.greenrobot.eventbus.EventBus;
@@ -59,18 +60,15 @@ import mti.com.videodiary.R;
 import static android.app.Activity.RESULT_OK;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
-import static android.os.Environment.MEDIA_MOUNTED;
-import static android.os.Environment.MEDIA_MOUNTED_READ_ONLY;
 import static android.provider.MediaStore.ACTION_VIDEO_CAPTURE;
 import static android.provider.MediaStore.EXTRA_OUTPUT;
 import static android.provider.MediaStore.EXTRA_VIDEO_QUALITY;
 import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 import static android.support.v7.widget.StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS;
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.mti.videodiary.data.Constants.KEY_VIDEO_PATH;
-import static com.mti.videodiary.data.Constants.VIDEO_DIR;
-import static com.mti.videodiary.data.Constants.VIDEO_FILE_NAME;
 
 /**
  * Created by Taras Matolinets on 23.02.15.
@@ -78,14 +76,16 @@ import static com.mti.videodiary.data.Constants.VIDEO_FILE_NAME;
  */
 public class VideoFragment extends BaseFragment implements SearchView.OnQueryTextListener {
     private static final int REQUEST_VIDEO_CAPTURE = 101;
-    public static final String CONTENT_MEDIA = "/external/video";
+    private static final String CONTENT_MEDIA = "/external/video";
     private static final long DURATION = 1500;
 
     @BindView(R.id.coor_layout_create_video_note) CoordinatorLayout mCoordinateLayout;
     @BindView(R.id.video_note_recycle_view) RecyclerView mRecyclerView;
-    @BindView(R.id.ivCameraOff) ImageView mIvCameraOff;
-    @BindView(R.id.tvNoRecords) TextView mTvNoRecords;
-    @BindView(R.id.adViewNote) AdView mAdView;
+    @BindView(R.id.iv_camera_off) ImageView mIvCameraOff;
+    @BindView(R.id.tv_no_records) TextView mTvNoRecords;
+    @BindView(R.id.ll_video_image) LinearLayout mLLImageVideo;
+    @BindView(R.id.progress_load) ProgressBar mProgressLoadVideo;
+    @BindView(R.id.ad_view_note) AdView mAdView;
 
     @Inject VideoFragmentPresenter mPresenter;
     @Inject Navigator mNavigator;
@@ -117,6 +117,7 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
         mAdView.loadAd(adRequest);
 
         setupRecycleView();
+        mProgressLoadVideo.setVisibility(VISIBLE);
         mPresenter.loadVideoNoteList();
 
         return view;
@@ -154,12 +155,7 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
     public void setupRecycleView() {
         Display display = ((WindowManager) getActivity().getSystemService(MenuActivity.WINDOW_SERVICE)).getDefaultDisplay();
 
-        if (display.getRotation() == Surface.ROTATION_90) {
-            mLayoutManager = new StaggeredGridLayoutManager(2, VERTICAL);
-        } else {
-            mLayoutManager = new StaggeredGridLayoutManager(1, VERTICAL);
-        }
-        mLayoutManager.setGapStrategy(GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+        createLayoutManager(display);
 
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new VideoAdapter(getActivity());
@@ -167,6 +163,15 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    private void createLayoutManager(Display display) {
+        if (display.getRotation() == Surface.ROTATION_90) {
+            mLayoutManager = new StaggeredGridLayoutManager(2, VERTICAL);
+        } else {
+            mLayoutManager = new StaggeredGridLayoutManager(1, VERTICAL);
+        }
+        mLayoutManager.setGapStrategy(GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
     }
 
     @Override
@@ -196,7 +201,7 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
 
     @OnClick(R.id.button_float)
     public void createVideoClick() {
-        Uri filePath = Uri.fromFile(saveFileInStorage());
+        Uri filePath = Uri.fromFile(mPresenter.saveFileInStorage());
 
         Intent intent = new Intent(ACTION_VIDEO_CAPTURE);
 
@@ -204,18 +209,6 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
         intent.putExtra(EXTRA_VIDEO_QUALITY, 1);
 
         startActivityForResult(intent, REQUEST_VIDEO_CAPTURE);
-    }
-
-    private File saveFileInStorage() {
-        String state = Environment.getExternalStorageState();
-        File mediaFile = null;
-
-        if (MEDIA_MOUNTED.equals(state)) {
-            mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + VIDEO_DIR + VIDEO_FILE_NAME);
-        } else if (MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            mediaFile = new File(getActivity().getFilesDir().getAbsolutePath() + VIDEO_DIR + VIDEO_FILE_NAME);
-        }
-        return mediaFile;
     }
 
     @Override
@@ -226,10 +219,8 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
                 if (resultCode == RESULT_OK && data != null) {
                     startVideoActivity(data);
                 } else if (resultCode == RESULT_OK) {
-                    VideoNoteText videoNoteText = new VideoNoteText();
-                    videoNoteText.setText(getString(R.string.fragment_video_not_recorded_warning));
-
-                    showNoteAction(videoNoteText);
+                    Snackbar snackbar = Snackbar.make(mCoordinateLayout, getString(R.string.fragment_video_not_recorded_warning), LENGTH_SHORT);
+                    snackbar.show();
                 }
                 break;
         }
@@ -239,6 +230,8 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
     public void showNoteAction(VideoNoteText videoNoteText) {
         Snackbar snackbar = Snackbar.make(mCoordinateLayout, videoNoteText.getText(), LENGTH_SHORT);
         snackbar.show();
+
+        mPresenter.loadVideoNoteList();
     }
 
     private void startVideoActivity(Intent data) {
@@ -246,7 +239,7 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
         String videoFilePath = videoUri.getPath();
 
         if (videoFilePath.contains(CONTENT_MEDIA)) {
-            File file = createFileFromUri(videoUri);
+            File file = mPresenter.createFileFromUri(videoUri);
             videoFilePath = file.getAbsolutePath();
         }
 
@@ -254,29 +247,6 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
         bundle.putString(KEY_VIDEO_PATH, videoFilePath);
 
         mNavigator.replaceActivity(getActivity(), CreateVideoNoteActivity.class, bundle);
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    private File createFileFromUri(Uri uri) {
-        String state = Environment.getExternalStorageState();
-        File mediaFile = null;
-        String path = UserHelper.getRealPathFromURI(getActivity(), uri);
-        if (!TextUtils.isEmpty(path)) {
-            File videoFile = new File(path);
-
-            if (MEDIA_MOUNTED.equals(state)) {
-                mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + VIDEO_DIR + VIDEO_FILE_NAME);
-            } else if (MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-                mediaFile = new File(getActivity().getFilesDir().getAbsolutePath() + VIDEO_DIR + VIDEO_FILE_NAME);
-            }
-            UserHelper.copyFileUsingFileStreams(videoFile, mediaFile);
-
-            if (videoFile.exists()) {
-                videoFile.delete();
-            }
-        }
-
-        return mediaFile;
     }
 
     @Subscribe
@@ -325,17 +295,16 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
     }
 
     public void showEmptyView(boolean showView) {
-        if (showView) {
-            mIvCameraOff.setVisibility(VISIBLE);
-            mTvNoRecords.setVisibility(VISIBLE);
+        mProgressLoadVideo.setVisibility(GONE);
 
+        if (showView) {
+            mLLImageVideo.setVisibility(VISIBLE);
             YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.ZoomIn);
             personalAnim.duration(DURATION);
             personalAnim.playOn(mIvCameraOff);
             personalAnim.playOn(mTvNoRecords);
         } else {
-            mIvCameraOff.setVisibility(View.GONE);
-            mTvNoRecords.setVisibility(View.GONE);
+            mLLImageVideo.setVisibility(GONE);
         }
     }
 
@@ -385,6 +354,18 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
 
         public void setShareIntent(Intent shareIntent) {
             this.shareIntent = shareIntent;
+        }
+    }
+
+    public static class VideoImageHeight {
+        private int imageHeight;
+
+        public int getImageHeight() {
+            return imageHeight;
+        }
+
+        public void setImageHeight(int imageHeight) {
+            this.imageHeight = imageHeight;
         }
     }
 

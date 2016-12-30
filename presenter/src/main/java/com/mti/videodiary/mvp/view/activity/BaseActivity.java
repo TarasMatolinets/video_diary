@@ -1,4 +1,4 @@
-package com.mti.videodiary.mvp.view;
+package com.mti.videodiary.mvp.view.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

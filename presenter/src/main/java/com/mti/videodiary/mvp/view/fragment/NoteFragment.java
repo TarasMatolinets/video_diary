@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
@@ -36,7 +37,6 @@ import com.mti.videodiary.di.module.FragmentModule;
 import com.mti.videodiary.mvp.presenter.CreateNotePresenter.NoteText;
 import com.mti.videodiary.mvp.presenter.NoteFragmentPresenter;
 import com.mti.videodiary.mvp.view.activity.CreateNoteActivity;
-import com.mti.videodiary.utils.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -60,7 +60,7 @@ import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 import static android.support.v7.widget.StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS;
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static android.view.Surface.ROTATION_90;
-import static com.mti.videodiary.utils.Constants.UPDATE_NOTE_ADAPTER;
+import static com.mti.videodiary.data.Constants.KEY_POSITION;
 
 /**
  * Created by Taras Matolinets on 23.02.15.
@@ -74,9 +74,10 @@ public class NoteFragment extends BaseFragment implements OnQueryTextListener, O
 
     @BindView(R.id.coor_layout_create_note) CoordinatorLayout mCoordinateLayout;
     @BindView(R.id.note_recycle_view) RecyclerView mRecyclerView;
-    @BindView(R.id.ivCameraOff) ImageView mIvNote;
-    @BindView(R.id.tvNoRecords) TextView mTvNoNotes;
-    @BindView(R.id.adViewNote) AdView mAdView;
+    @BindView(R.id.iv_camera_off) ImageView mIvNote;
+    @BindView(R.id.tv_no_records) TextView mTvNoNotes;
+    @BindView(R.id.ll_camera_image) LinearLayout mLLCameraImage;
+    @BindView(R.id.ad_view_note) AdView mAdView;
 
     private NoteAdapter mAdapter;
     private StaggeredGridLayoutManager mLayoutManager;
@@ -174,9 +175,9 @@ public class NoteFragment extends BaseFragment implements OnQueryTextListener, O
     }
 
     @Subscribe
-    public void uodateNote(UpdateNote item) {
+    public void updateNote(UpdateNote item) {
         Intent intent = new Intent(getActivity(), CreateNoteActivity.class);
-        intent.putExtra(Constants.KEY_POSITION, item.getNoteId());
+        intent.putExtra(KEY_POSITION, item.getNoteId());
         startActivity(intent);
     }
 
@@ -190,16 +191,14 @@ public class NoteFragment extends BaseFragment implements OnQueryTextListener, O
 
     public void showEmptyView(boolean isEmpty) {
         if (isEmpty) {
-            mIvNote.setVisibility(View.VISIBLE);
-            mTvNoNotes.setVisibility(View.VISIBLE);
+            mLLCameraImage.setVisibility(View.VISIBLE);
 
             YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.ZoomIn);
             personalAnim.duration(DURATION);
             personalAnim.playOn(mIvNote);
             personalAnim.playOn(mTvNoNotes);
         } else {
-            mIvNote.setVisibility(View.GONE);
-            mTvNoNotes.setVisibility(View.GONE);
+            mLLCameraImage.setVisibility(View.GONE);
         }
     }
 
@@ -221,7 +220,7 @@ public class NoteFragment extends BaseFragment implements OnQueryTextListener, O
     @OnClick(R.id.buttonFloat)
     public void addNoteClick() {
         Intent intent = new Intent(getActivity(), CreateNoteActivity.class);
-        startActivityForResult(intent, UPDATE_NOTE_ADAPTER);
+        startActivity(intent);
     }
 
     @Override

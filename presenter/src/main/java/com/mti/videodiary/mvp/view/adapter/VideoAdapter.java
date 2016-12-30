@@ -13,7 +13,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mti.videodiary.mvp.view.activity.CreateVideoNoteActivity;
@@ -45,10 +47,12 @@ import static android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
 import static android.provider.MediaStore.Video.Thumbnails.MINI_KIND;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static com.mti.videodiary.data.Constants.HEIGHT;
 import static com.mti.videodiary.data.Constants.KEY_POSITION;
 import static com.mti.videodiary.data.Constants.ORIENTATION;
 import static com.mti.videodiary.data.Constants.WIDTH;
+import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.INTEGER;
 import static com.mti.videodiary.mvp.view.activity.CreateVideoNoteActivity.VIDEO_MP4;
 
 /**
@@ -144,7 +148,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
             Intent intent = new Intent(mContext, CreateVideoNoteActivity.class);
 
-            intent.putExtra(KEY_POSITION, getAdapterPosition());
+            VideoDomain video = mListVideos.get(getAdapterPosition());
+            intent.putExtra(KEY_POSITION, video.getId());
             intent.putExtra(ORIENTATION, orientation);
             intent.putExtra(WIDTH, cardView.getWidth());
             intent.putExtra(HEIGHT, cardView.getHeight());

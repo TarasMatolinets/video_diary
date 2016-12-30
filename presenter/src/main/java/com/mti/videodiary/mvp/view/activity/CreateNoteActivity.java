@@ -10,7 +10,6 @@ import android.widget.EditText;
 import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.mvp.presenter.CreateNotePresenter;
-import com.mti.videodiary.mvp.view.BaseActivity;
 
 import javax.inject.Inject;
 
@@ -19,7 +18,7 @@ import butterknife.ButterKnife;
 import model.NoteDomain;
 import mti.com.videodiary.R;
 
-import static com.mti.videodiary.utils.Constants.KEY_POSITION;
+import static com.mti.videodiary.data.Constants.KEY_POSITION;
 
 /**
  * Created by Taras Matolinets on 29.03.15.

@@ -23,8 +23,7 @@ import android.widget.RelativeLayout;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.mti.videodiary.animation.SkewableTextView;
-import com.mti.videodiary.mvp.view.BaseActivity;
+import com.mti.videodiary.mvp.view.customview.SkewableTextView;
 import com.mti.videodiary.navigator.Navigator;
 import com.mti.videodiary.data.helper.UserHelper;
 import com.mti.videodiary.data.storage.VideoDairySharePreferences;
@@ -42,7 +41,8 @@ import static android.view.View.GONE;
 import static android.view.View.TRANSLATION_X;
 import static android.view.View.TRANSLATION_Y;
 import static android.view.View.VISIBLE;
-import static com.mti.videodiary.utils.Constants.KEY_PERSON_NAME;
+
+import static com.mti.videodiary.data.Constants.KEY_PERSON_NAME;
 import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING;
 
 /**
@@ -234,7 +234,7 @@ public class SplashActivity extends BaseActivity implements OnPreDrawListener, T
 
     private void splashClickNext() {
         mClickNext.setVisibility(GONE);
-        UserHelper.hideKeyboard(this, mClickNext);
+        UserHelper.hideKeyboard(this);
 
         YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.RollOut);
         personalAnim.duration(DURATION);

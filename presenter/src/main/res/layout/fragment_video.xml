@@ -29,7 +29,7 @@
         />
 
     <com.google.android.gms.ads.AdView
-        android:id="@+id/adViewNote"
+        android:id="@+id/ad_view_note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
@@ -37,14 +37,23 @@
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id"/>
 
+    <ProgressBar
+        android:id="@+id/progress_load"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:visibility="gone"
+        android:id="@+id/ll_video_image"
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/ivCameraOff"
+            android:id="@+id/iv_camera_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -53,7 +62,7 @@
             android:contentDescription=""/>
 
         <TextView
-            android:id="@+id/tvNoRecords"
+            android:id="@+id/tv_no_records"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

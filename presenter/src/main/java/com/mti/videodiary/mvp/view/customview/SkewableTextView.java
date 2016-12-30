@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mti.videodiary.animation;
+package com.mti.videodiary.mvp.view.customview;
 
 import android.content.Context;
 import android.graphics.Canvas;

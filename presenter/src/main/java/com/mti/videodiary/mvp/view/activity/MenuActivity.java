@@ -23,12 +23,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mti.videodiary.data.Constants;
 import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.mvp.presenter.MenuPresenter;
-import com.mti.videodiary.mvp.view.BaseActivity;
 import com.mti.videodiary.mvp.view.fragment.NoteFragment;
 import com.mti.videodiary.mvp.view.fragment.SupportFragment;
 import com.mti.videodiary.mvp.view.fragment.VideoFragment;
@@ -38,7 +36,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 import mti.com.videodiary.R;
 
 import static android.content.Intent.ACTION_PICK;
@@ -47,10 +44,9 @@ import static android.provider.MediaStore.MediaColumns.DATA;
 import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.mti.videodiary.data.Constants.IMAGE_HEADER_MENU;
+import static com.mti.videodiary.data.Constants.RESULT_LOAD_IMAGE;
 import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING;
-import static com.mti.videodiary.utils.Constants.IMAGE_HEADER_MENU;
-import static com.mti.videodiary.utils.Constants.RESULT_LOAD_IMAGE;
-import static com.mti.videodiary.utils.Constants.UPDATE_VIDEO_ADAPTER;
 
 /**
  * Created by Taras Matolinets on 23.02.15.
@@ -70,7 +66,6 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
 
     private TextView mChoiceImage;
     private ActivityComponent mActivityComponent;
-    private View mHeaderView;
     private ImageView mImageBackground;
     private ProgressBar mProgressLoadImage;
 
@@ -85,11 +80,11 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
 
         mPresenter.setView(this);
 
-        mHeaderView = mNavigationView.getHeaderView(DEFAULT_VALUE);
-        mChoiceImage = (TextView) mHeaderView.findViewById(R.id.tv_choice_image);
-        mImageBackground = (ImageView) mHeaderView.findViewById(R.id.image_background);
-        mProgressLoadImage = (ProgressBar) mHeaderView.findViewById(R.id.progress_load_image);
-        mHeaderView.setOnClickListener(this);
+        View headerView = mNavigationView.getHeaderView(DEFAULT_VALUE);
+        mChoiceImage = (TextView) headerView.findViewById(R.id.tv_choice_image);
+        mImageBackground = (ImageView) headerView.findViewById(R.id.image_background);
+        mProgressLoadImage = (ProgressBar) headerView.findViewById(R.id.progress_load_image);
+        headerView.setOnClickListener(this);
 
         mNavigationView.setNavigationItemSelectedListener(this);
         mNavigationView.getMenu().performIdentifierAction(R.id.action_record, DEFAULT_VALUE);
@@ -128,13 +123,6 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
                     } else {
                         getImageFromStorage(selectedImage);
                     }
-                    break;
-                case UPDATE_VIDEO_ADAPTER:
-//                    Fragment fragment = (Fragment) getCurrentSection().getTargetFragment();
-//
-//                    // update current note card data
-//                    if (fragment instanceof VideoFragment)
-//                        fragment.onActivityResult(requestCode, resultCode, data);
                     break;
             }
         }
@@ -234,7 +222,7 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent i = new Intent(ACTION_PICK, EXTERNAL_CONTENT_URI);
-                                startActivityForResult(i, Constants.RESULT_LOAD_IMAGE);
+                                startActivityForResult(i, RESULT_LOAD_IMAGE);
                                 setProgressImageVisibility(VISIBLE);
                             }
                         })

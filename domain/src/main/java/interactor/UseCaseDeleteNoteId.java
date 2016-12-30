@@ -2,6 +2,7 @@ package interactor;
 
 import database.DataBase;
 import database.NoteDataBase;
+import database.VideoDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import rx.Observable;
@@ -12,11 +13,11 @@ import rx.Observable;
 
 public class UseCaseDeleteNoteId extends UseCase {
     private final int mId;
-    private NoteDataBase mDataBase;
+    private DataBase mDataBase;
 
     public UseCaseDeleteNoteId(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, DataBase dataBase, int id) {
         super(threadExecutor, postExecutionThread);
-        mDataBase = (NoteDataBase) dataBase;
+        mDataBase =  dataBase;
         mId = id;
     }
 

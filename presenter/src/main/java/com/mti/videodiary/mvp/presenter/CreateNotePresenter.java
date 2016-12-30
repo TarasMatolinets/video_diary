@@ -22,7 +22,7 @@ import model.NoteDomain;
 import mti.com.videodiary.R;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.mti.videodiary.application.VideoDiaryApplication.TAG;
+import static com.mti.videodiary.data.Constants.TAG;
 
 /**
  * Created by Terry on 11/5/2016.

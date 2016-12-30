@@ -1,27 +1,22 @@
 package com.mti.videodiary.application;
 
 import android.app.Application;
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.mti.videodiary.data.Constants;
 import com.mti.videodiary.di.component.DaggerVideoDiaryAppComponent;
 import com.mti.videodiary.di.component.VideoDiaryAppComponent;
 import com.mti.videodiary.di.module.VideoDiaryAppModule;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.io.File;
 
 import io.fabric.sdk.android.Fabric;
-import mti.com.videodiary.R;
 
 import static com.mti.videodiary.data.Constants.IMAGE_DIR;
 import static com.mti.videodiary.data.Constants.NOTE_DIR;
+import static com.mti.videodiary.data.Constants.TAG;
 import static com.mti.videodiary.data.Constants.VIDEO_DIR;
 
 /**
@@ -29,7 +24,6 @@ import static com.mti.videodiary.data.Constants.VIDEO_DIR;
  * Android main application
  */
 public class VideoDiaryApplication extends Application {
-    public static final String TAG = "com.mti.video_diary";
 
     private VideoDiaryAppComponent mVideoDiaryAppComponent;
 

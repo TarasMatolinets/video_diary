@@ -11,7 +11,6 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
@@ -28,11 +27,10 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.mvp.presenter.CreateVideoPresenter;
-import com.mti.videodiary.mvp.view.BaseActivity;
-import com.mti.videodiary.utils.Constants;
 
 import java.io.File;
 
@@ -46,15 +44,20 @@ import mti.com.videodiary.R;
 
 import static android.graphics.Color.TRANSPARENT;
 import static android.graphics.Color.WHITE;
+import static android.provider.MediaStore.ACTION_VIDEO_CAPTURE;
+import static android.provider.MediaStore.EXTRA_OUTPUT;
+import static android.provider.MediaStore.EXTRA_VIDEO_QUALITY;
 import static android.provider.MediaStore.Video.Thumbnails.MINI_KIND;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.mti.videodiary.data.Constants.HEIGHT;
+import static com.mti.videodiary.data.Constants.KEY_POSITION;
+import static com.mti.videodiary.data.Constants.KEY_VIDEO_PATH;
 import static com.mti.videodiary.data.Constants.ORIENTATION;
 import static com.mti.videodiary.data.Constants.VIDEO_DIR;
+import static com.mti.videodiary.data.Constants.VIDEO_FILE_NAME;
 import static com.mti.videodiary.data.Constants.WIDTH;
-import static com.mti.videodiary.utils.Constants.KEY_POSITION;
-import static com.mti.videodiary.utils.Constants.KEY_VIDEO_PATH;
+import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.INTEGER;
 import static java.io.File.separator;
 
 /**
@@ -103,6 +106,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         ButterKnife.bind(this);
 
         setComponent();
+        mPresenter.setView(this);
         initListeners();
         initActionBar();
         setDataToView();
@@ -162,6 +166,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         mVideoNote = videoDomain;
         mEtTitle.setText(videoDomain.getTitle());
         mEtDescription.setText(videoDomain.getDescription());
+        setImageToView(videoDomain.getImageUrl());
     }
 
     @Override
@@ -194,11 +199,11 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         switch (item.getItemId()) {
             case R.id.action_save:
                 String videoFilePath = getIntent().getStringExtra(KEY_VIDEO_PATH);
+
                 if (!isEditVideoDaily) {
-                    mPresenter.createNewVideoDaily(videoFilePath, videoFilePath, mEtTitle.getText().toString(), mEtDescription.getText().toString());
+                    mPresenter.createNewVideoDaily(videoFilePath, mEtTitle.getText().toString(), mEtDescription.getText().toString());
                 } else {
-                    int videoId = getIntent().getIntExtra(KEY_POSITION, DEFAULT_ITEM_POSITION);
-                    mPresenter.updateVideoNote(videoFilePath, videoFilePath, mEtTitle.getText().toString(), mEtDescription.getText().toString(), videoId);
+                    mPresenter.updateVideoNote(mVideoNote.getVideoName(), mEtTitle.getText().toString(), mEtDescription.getText().toString(), mVideoNote.getId());
                 }
                 break;
             case android.R.id.home:
@@ -305,14 +310,14 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
     @OnClick(R.id.tvAddVideo)
     public void addVideoNote() {
-        final File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + separator + VIDEO_DIR + Constants.VIDEO_FILE_NAME);
+        final File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + separator + VIDEO_DIR + VIDEO_FILE_NAME);
 
         Uri fileUri = Uri.fromFile(mediaFile);
 
-        Intent intentVideo = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        Intent intentVideo = new Intent(ACTION_VIDEO_CAPTURE);
 
-        intentVideo.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-        intentVideo.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        intentVideo.putExtra(EXTRA_OUTPUT, fileUri);
+        intentVideo.putExtra(EXTRA_VIDEO_QUALITY, 1);
 
         startActivityForResult(intentVideo, REQUEST_VIDEO_CAPTURE);
     }

@@ -1,6 +1,5 @@
 package com.mti.videodiary.data.storage.manager;
 
-import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -25,11 +24,8 @@ import model.VideoDomain;
 import rx.Observable;
 import rx.Subscriber;
 
-import static com.mti.videodiary.data.Constants.FILE_FORMAT;
-import static com.mti.videodiary.data.Constants.TAG;
-import static com.mti.videodiary.data.Constants.VIDEO_DIR;
+import static com.mti.videodiary.data.storage.dao.Note.TITLE;
 import static com.mti.videodiary.data.storage.dao.Video.ID;
-import static java.io.File.separator;
 
 
 /**
@@ -80,11 +76,37 @@ public class VideoNoteDataBaseFactory implements VideoDataBase {
                     List<Video> accountList = mHelper.getVideoListDao().query(preparedQuery);
 
                     int defaultValue = 0;
-                    Video video = accountList.get(defaultValue);
-                    DataToDomainTransformer transformer = new DataToDomainTransformer();
-                    VideoDomain videoDomain = transformer.transform(video);
+                    if(!accountList.isEmpty()) {
+                        Video video = accountList.get(defaultValue);
+                        DataToDomainTransformer transformer = new DataToDomainTransformer();
+                        VideoDomain videoDomain = transformer.transform(video);
 
-                    subscriber.onNext(videoDomain);
+                        subscriber.onNext(videoDomain);
+                    }
+                    subscriber.onCompleted();
+                } catch (SQLException e) {
+                    subscriber.onError(e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public Observable<List<VideoDomain>> getVideoNotesByTitle(final String title) {
+        return Observable.create(new Observable.OnSubscribe<List<VideoDomain>>() {
+            @Override
+            public void call(Subscriber<? super List<VideoDomain>> subscriber) {
+                try {
+                    QueryBuilder<Video, Integer> queryBuilder = mHelper.getVideoListDao().queryBuilder();
+                    queryBuilder.where().like(TITLE, "%" + title + "%");
+
+                    List<Video> listNotes = queryBuilder.query();
+
+                    DataToDomainTransformer transformer = new DataToDomainTransformer();
+                    List<VideoDomain> noteDomainList = transformer.transformVideoList(listNotes);
+
+                    subscriber.onNext(noteDomainList);
+
                     subscriber.onCompleted();
                 } catch (SQLException e) {
                     subscriber.onError(e);
@@ -99,15 +121,6 @@ public class VideoNoteDataBaseFactory implements VideoDataBase {
             @Override
             public void call(Subscriber<? super Void> subscriber) {
                 try {
-                    File oldFileName = new File(video.getVideoName());
-                    File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + VIDEO_DIR + separator + video.getVideoName() + FILE_FORMAT);
-
-                    boolean success = oldFileName.renameTo(newFileName);
-
-                    if (success) {
-                        Log.i(TAG, "video file renamed good");
-                    }
-
                     DomainToDataTransformer transformer = new DomainToDataTransformer();
                     Video videoData = transformer.transform(video);
                     mHelper.getVideoListDao().create(videoData);
@@ -126,15 +139,6 @@ public class VideoNoteDataBaseFactory implements VideoDataBase {
             @Override
             public void call(Subscriber<? super Void> subscriber) {
                 try {
-                    File oldFileName = new File(video.getVideoName());
-                    File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + VIDEO_DIR + separator + video.getVideoName() + FILE_FORMAT);
-
-                    boolean success = oldFileName.renameTo(newFileName);
-
-                    if (success) {
-                        Log.i(TAG, "video file renamed good");
-                    }
-
                     DomainToDataTransformer transformer = new DomainToDataTransformer();
                     Video videoDomain = transformer.transform(video);
                     mHelper.getVideoListDao().update(videoDomain);

@@ -28,9 +28,9 @@ import rx.subscriptions.CompositeSubscription;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static com.mti.videodiary.application.VideoDiaryApplication.TAG;
+import static com.mti.videodiary.data.Constants.IMAGE_HEADER_MENU;
+import static com.mti.videodiary.data.Constants.TAG;
 import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.STRING;
-import static com.mti.videodiary.utils.Constants.IMAGE_HEADER_MENU;
 
 /**
  * Created by Terry on 11/20/2016.

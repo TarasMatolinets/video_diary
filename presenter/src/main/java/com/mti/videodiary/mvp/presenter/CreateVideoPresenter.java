@@ -1,5 +1,6 @@
 package com.mti.videodiary.mvp.presenter;
 
+import android.os.Environment;
 import android.util.Log;
 
 import com.mti.videodiary.data.storage.manager.VideoNoteDataBaseFactory;
@@ -7,6 +8,8 @@ import com.mti.videodiary.mvp.view.activity.CreateVideoNoteActivity;
 import com.mti.videodiary.mvp.view.fragment.VideoFragment.VideoNoteText;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.io.File;
 
 import javax.inject.Inject;
 
@@ -23,7 +26,10 @@ import model.VideoDomain;
 import mti.com.videodiary.R;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.mti.videodiary.application.VideoDiaryApplication.TAG;
+import static com.mti.videodiary.data.Constants.FILE_FORMAT;
+import static com.mti.videodiary.data.Constants.TAG;
+import static com.mti.videodiary.data.Constants.VIDEO_DIR;
+import static java.io.File.separator;
 
 /**
  * Created by Terry on 12/14/2016.
@@ -62,11 +68,20 @@ public class CreateVideoPresenter {
         mComposeSubscriptionList.add(subscriber);
     }
 
-    public void updateVideoNote(String videoPath, String imagePath, String title, String description, int videoId) {
+    public void updateVideoNote(String videoPath, String title, String description, int videoId) {
         VideoDomain videoDomain = new VideoDomain();
 
-        videoDomain.setVideoUrl(videoPath);
-        videoDomain.setImageUrl(imagePath);
+        File oldFileName = new File(videoPath);
+        File newFileName = new File(Environment.getExternalStorageDirectory() + VIDEO_DIR + separator + title + FILE_FORMAT);
+
+        boolean success = oldFileName.renameTo(newFileName);
+
+        if (success) {
+            Log.i(TAG, "video file renamed");
+        }
+
+        videoDomain.setVideoUrl(newFileName.getAbsolutePath());
+        videoDomain.setImageUrl(newFileName.getAbsolutePath());
         videoDomain.setTitle(title);
         videoDomain.setId(videoId);
         videoDomain.setDescription(description);
@@ -84,11 +99,20 @@ public class CreateVideoPresenter {
         mComposeSubscriptionList.add(subscriber);
     }
 
-    public void createNewVideoDaily(String videoPath, String imagePath, String title, String description) {
+    public void createNewVideoDaily(String videoPath, String title, String description) {
         VideoDomain videoDomain = new VideoDomain();
 
-        videoDomain.setVideoUrl(videoPath);
-        videoDomain.setImageUrl(imagePath);
+        File oldFileName = new File(videoPath);
+        File newFileName = new File(Environment.getExternalStorageDirectory() + VIDEO_DIR + separator + title + FILE_FORMAT);
+
+        boolean success = oldFileName.renameTo(newFileName);
+
+        if (success) {
+            Log.i(TAG, "video file renamed");
+        }
+
+        videoDomain.setVideoUrl(newFileName.getAbsolutePath());
+        videoDomain.setImageUrl(newFileName.getAbsolutePath());
         videoDomain.setTitle(title);
         videoDomain.setDescription(description);
 
@@ -134,7 +158,6 @@ public class CreateVideoPresenter {
         @Override
         public void onNext(VideoDomain videoDomain) {
             mView.loadVideoNote(videoDomain);
-
         }
     }
 

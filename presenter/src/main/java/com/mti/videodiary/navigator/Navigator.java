@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import com.mti.videodiary.mvp.view.BaseActivity;
+import com.mti.videodiary.mvp.view.activity.BaseActivity;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

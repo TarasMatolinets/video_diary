@@ -58,7 +58,6 @@ dependencies {
     compile presentationDependencies.androidAnimations
     compile presentationDependencies.recyclerviewAnimations
     compile presentationDependencies.googlePlayServices
-    compile presentationDependencies.universalImageLoader
     compile presentationDependencies.recyclerView
     compile presentationDependencies.cardViewVersion
     compile presentationDependencies.rxJava

@@ -25,7 +25,6 @@ ext {
     daimajiaAndroidanimationsVersion = '1.1.2@aar'
     recyclerViewAnimatorsVersion = '1.1.0@aar'
     shellSoftwareVersion = '1.1.1'
-    universalImageLoaderVersion = '1.9.3'
     googlePlayServiceVersion = '9.8.0'
     eventBusVersion = '3.0.0'
 
@@ -52,7 +51,6 @@ ext {
             androidAnimations     : "com.daimajia.androidanimations:library:${daimajiaAndroidanimationsVersion}",
             recyclerviewAnimations: "jp.wasabeef:recyclerview-animators:${recyclerViewAnimatorsVersion}",
             googlePlayServices    : "com.google.android.gms:play-services:${googlePlayServiceVersion}",
-            universalImageLoader  : "com.nostra13.universalimageloader:universal-image-loader:${universalImageLoaderVersion}",
             daggerCompiler        : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger                : "com.google.dagger:dagger:${daggerVersion}",
             butterKnife           : "com.jakewharton:butterknife:${butterKnifeVersion}",

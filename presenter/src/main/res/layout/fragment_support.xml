@@ -5,44 +5,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_menu">
 
-    <!--   <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:textAppearance="?android:attr/textAppearanceLarge"
-           android:text="@string/support_project"
-           android:id="@+id/tvSupportProject"
-           android:textColor="@color/white"
-           android:textStyle="bold"
-           android:textSize="@dimen/text_normal"
-           android:layout_centerHorizontal="true"
-           android:layout_marginTop="@dimen/edge_large" />
-
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:textAppearance="?android:attr/textAppearanceLarge"
-           android:id="@+id/tvFirstCard"
-           android:layout_below="@+id/tvSupportProject"
-           android:text="@string/first_number_card"
-           android:textStyle="normal"
-           android:textColor="@color/white"
-           android:textSize="@dimen/text_mini_normal"
-           android:layout_centerHorizontal="true"
-           android:layout_marginTop="@dimen/edge_above" />
-
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:textAppearance="?android:attr/textAppearanceLarge"
-           android:text="@string/second_number_card"
-           android:id="@+id/tvSecondCard"
-           android:textStyle="normal"
-           android:textColor="@color/white"
-           android:textSize="@dimen/text_mini_normal"
-           android:layout_below="@+id/tvFirstCard"
-           android:layout_centerHorizontal="true"
-           android:layout_marginTop="@dimen/edge_above" />-->
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
