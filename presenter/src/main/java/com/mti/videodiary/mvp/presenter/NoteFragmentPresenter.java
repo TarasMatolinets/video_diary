@@ -30,7 +30,6 @@ import static com.mti.videodiary.application.VideoDiaryApplication.TAG;
  * Presenter for collaborate between view and model
  */
 
-
 @PerFragment
 public class NoteFragmentPresenter {
 
@@ -88,10 +87,6 @@ public class NoteFragmentPresenter {
     private final class GetListNotesSubscriber extends DefaultSubscriber<List<NoteDomain>> {
 
         @Override
-        public void onCompleted() {
-        }
-
-        @Override
         public void onError(Throwable e) {
             Log.e(TAG, e.toString());
         }
@@ -109,11 +104,6 @@ public class NoteFragmentPresenter {
     }
 
     private final class GetListNotesSearchSubscriber extends DefaultSubscriber<List<NoteDomain>> {
-
-        @Override
-        public void onCompleted() {
-        }
-
         @Override
         public void onError(Throwable e) {
             Log.e(TAG, e.toString());
@@ -148,7 +138,6 @@ public class NoteFragmentPresenter {
             NoteText noteText = new NoteText();
             noteText.setText(mView.getResources().getString(R.string.note_deleted_successfully));
             mView.showNoteAction(noteText);
-
             mView.removeNoteFromList(position);
         }
     }

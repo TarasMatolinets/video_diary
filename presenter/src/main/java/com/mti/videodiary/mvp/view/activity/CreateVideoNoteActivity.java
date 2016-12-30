@@ -28,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.mti.videodiary.application.VideoDiaryApplication;
 import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.mvp.presenter.CreateVideoPresenter;
@@ -50,7 +49,10 @@ import static android.graphics.Color.WHITE;
 import static android.provider.MediaStore.Video.Thumbnails.MINI_KIND;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.mti.videodiary.data.Constants.HEIGHT;
+import static com.mti.videodiary.data.Constants.ORIENTATION;
 import static com.mti.videodiary.data.Constants.VIDEO_DIR;
+import static com.mti.videodiary.data.Constants.WIDTH;
 import static com.mti.videodiary.utils.Constants.KEY_POSITION;
 import static com.mti.videodiary.utils.Constants.KEY_VIDEO_PATH;
 import static java.io.File.separator;
@@ -62,6 +64,8 @@ import static java.io.File.separator;
 public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher, IHasComponent<ActivityComponent> {
     private static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
     private static final TimeInterpolator sAccelerator = new AccelerateInterpolator();
+    public static final String ALPHA = "alpha";
+    public static final String VIDEO_MP4 = "video/mp4";
     private static float sAnimatorScale = 1;
 
     private static final int ANIM_DURATION = 500;
@@ -187,9 +191,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
+        switch (item.getItemId()) {
             case R.id.action_save:
                 String videoFilePath = getIntent().getStringExtra(KEY_VIDEO_PATH);
                 if (!isEditVideoDaily) {
@@ -198,11 +200,11 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                     int videoId = getIntent().getIntExtra(KEY_POSITION, DEFAULT_ITEM_POSITION);
                     mPresenter.updateVideoNote(videoFilePath, videoFilePath, mEtTitle.getText().toString(), mEtDescription.getText().toString(), videoId);
                 }
-                setResult(RESULT_OK, null);
+                break;
+            case android.R.id.home:
+                runExitAnimation();
                 break;
         }
-        runExitAnimation();
-
         return false;
     }
 
@@ -272,16 +274,14 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                     break;
             }
         }
-
     }
-
 
     @OnClick(R.id.ivPlay)
     public void playVideoNote() {
         String videoFilePath = getIntent().getStringExtra(KEY_VIDEO_PATH);
 
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoFilePath));
-        intent.setDataAndType(Uri.parse(videoFilePath), "video/mp4");
+        intent.setDataAndType(Uri.parse(videoFilePath), VIDEO_MP4);
         startActivity(intent);
     }
 
@@ -317,13 +317,18 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         startActivityForResult(intentVideo, REQUEST_VIDEO_CAPTURE);
     }
 
+    @Override
+    public ActivityComponent getComponent() {
+        return mComponent;
+    }
+
     //region ANIMATION
     private void animateImageView(Bundle savedInstanceState) {
         Bundle bundle = getIntent().getExtras();
 
-        final int thumbnailWidth = bundle.getInt(VideoDiaryApplication.TAG + ".width");
-        final int thumbnailHeight = bundle.getInt(VideoDiaryApplication.TAG + ".height");
-        mOriginalOrientation = bundle.getInt(VideoDiaryApplication.TAG + ".orientation");
+        final int thumbnailWidth = bundle.getInt(WIDTH);
+        final int thumbnailHeight = bundle.getInt(HEIGHT);
+        mOriginalOrientation = bundle.getInt(ORIENTATION);
 
         // Only run the animation if we're coming from the parent activity, not if
         // we're recreated automatically by the window manager (e.g., device rotation)
@@ -383,7 +388,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             }
         });
 
-        ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0, 255);
+        ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, ALPHA, 0, 255);
         bgAnim.setDuration(DURATION_FADE_IN);
         bgAnim.addListener(new AnimatorListenerAdapter() {
                                @Override
@@ -475,14 +480,10 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         });
 
         // Fade out background
-        ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
+        ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, ALPHA, 0);
         bgAnim.setDuration(DURATION);
         bgAnim.start();
     }
     //endregion
 
-    @Override
-    public ActivityComponent getComponent() {
-        return mComponent;
-    }
 }

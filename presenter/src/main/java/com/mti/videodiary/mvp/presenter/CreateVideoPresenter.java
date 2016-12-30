@@ -1,18 +1,12 @@
 package com.mti.videodiary.mvp.presenter;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Environment;
 import android.util.Log;
 
-import com.mti.videodiary.data.helper.UserHelper;
-import com.mti.videodiary.data.storage.manager.NoteDataBaseFactory;
 import com.mti.videodiary.data.storage.manager.VideoNoteDataBaseFactory;
 import com.mti.videodiary.mvp.view.activity.CreateVideoNoteActivity;
-import com.mti.videodiary.utils.Constants;
+import com.mti.videodiary.mvp.view.fragment.VideoFragment.VideoNoteText;
 
-import java.io.File;
-import java.util.List;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -25,14 +19,11 @@ import interactor.UseCaseCreateVideoNote;
 import interactor.UseCaseDeleteVideoNoteId;
 import interactor.UseCaseGetVideoNoteByPosition;
 import interactor.UseCaseUpdateVideoNoteList;
-import model.NoteDomain;
 import model.VideoDomain;
+import mti.com.videodiary.R;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.mti.videodiary.application.VideoDiaryApplication.TAG;
-import static com.mti.videodiary.data.Constants.FILE_FORMAT;
-import static com.mti.videodiary.data.Constants.VIDEO_DIR;
-import static java.io.File.separator;
 
 /**
  * Created by Terry on 12/14/2016.
@@ -81,14 +72,14 @@ public class CreateVideoPresenter {
         videoDomain.setDescription(description);
 
         UseCase useCase = new UseCaseUpdateVideoNoteList(mExecutor, mPostExecutorThread, videoDomain, mDataBase);
-        SaveUpdateVideoNoteSubscriber subscriber = new SaveUpdateVideoNoteSubscriber();
+        SaveUpdateVideoNoteSubscriber subscriber = new SaveUpdateVideoNoteSubscriber(mView.getString(R.string.video_note_edited_successfully));
         useCase.execute(subscriber);
     }
 
     public void deleteVideoNote(int id) {
         UseCase useCase = new UseCaseDeleteVideoNoteId(mExecutor, mPostExecutorThread, mDataBase, id);
-        DeleteVideoNoteSubscriber subscriber = new DeleteVideoNoteSubscriber();
 
+        DeleteVideoNoteSubscriber subscriber = new DeleteVideoNoteSubscriber();
         useCase.execute(subscriber);
         mComposeSubscriptionList.add(subscriber);
     }
@@ -102,15 +93,24 @@ public class CreateVideoPresenter {
         videoDomain.setDescription(description);
 
         UseCase useCase = new UseCaseCreateVideoNote(mExecutor, mPostExecutorThread, mDataBase, videoDomain);
-        SaveUpdateVideoNoteSubscriber subscriber = new SaveUpdateVideoNoteSubscriber();
+        SaveUpdateVideoNoteSubscriber subscriber = new SaveUpdateVideoNoteSubscriber(mView.getString(R.string.video_note_saved_successfully));
         useCase.execute(subscriber);
     }
 
     //region SUBSCRIBER
     private final class SaveUpdateVideoNoteSubscriber extends DefaultSubscriber<Void> {
+        private String message;
+
+        public SaveUpdateVideoNoteSubscriber(String text) {
+            message = text;
+        }
 
         @Override
         public void onCompleted() {
+            VideoNoteText videoNoteText = new VideoNoteText();
+            videoNoteText.setText(message);
+
+            EventBus.getDefault().post(videoNoteText);
             mView.finish();
         }
 

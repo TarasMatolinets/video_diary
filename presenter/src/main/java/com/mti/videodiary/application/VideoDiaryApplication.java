@@ -31,8 +31,6 @@ import static com.mti.videodiary.data.Constants.VIDEO_DIR;
 public class VideoDiaryApplication extends Application {
     public static final String TAG = "com.mti.video_diary";
 
-
-    public static final int MAX_CACHE_SIZE = 50 * 1024 * 1024;
     private VideoDiaryAppComponent mVideoDiaryAppComponent;
 
     @Override
@@ -44,8 +42,6 @@ public class VideoDiaryApplication extends Application {
         createFolder();
 
         Fabric.with(this, new Crashlytics());
-        initImageLoader(getApplicationContext());
-
     }
 
     private void createFolder() {
@@ -62,23 +58,6 @@ public class VideoDiaryApplication extends Application {
         mVideoDiaryAppComponent = DaggerVideoDiaryAppComponent.builder()
                 .videoDiaryAppModule(new VideoDiaryAppModule(this))
                 .build();
-    }
-
-    private void initImageLoader(Context context) {
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.ic_videocam_white)
-                .showImageOnFail(R.drawable.ic_videocam_white)
-                .cacheOnDisk(true)
-                .imageScaleType(ImageScaleType.EXACTLY)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .build();
-
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-                .defaultDisplayImageOptions(defaultOptions)
-                .diskCacheSize(MAX_CACHE_SIZE) // 50 Mb
-                .build();
-
-        ImageLoader.getInstance().init(config);
     }
 
     public VideoDiaryAppComponent getVideoDiaryAppComponent() {

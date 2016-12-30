@@ -1,22 +1,21 @@
 package com.mti.videodiary.mvp.view.fragment;
 
-import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,26 +31,20 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.mti.videodiary.adapter.VideoAdapter;
-import com.mti.videodiary.application.VideoDiaryApplication;
+import com.mti.videodiary.mvp.view.adapter.VideoAdapter;
 import com.mti.videodiary.data.helper.UserHelper;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.di.component.FragmentComponent;
 import com.mti.videodiary.di.module.FragmentModule;
 import com.mti.videodiary.mvp.presenter.VideoFragmentPresenter;
-import com.mti.videodiary.mvp.view.BaseActivity;
 import com.mti.videodiary.mvp.view.activity.CreateVideoNoteActivity;
 import com.mti.videodiary.mvp.view.activity.MenuActivity;
 import com.mti.videodiary.navigator.Navigator;
-import com.mti.videodiary.utils.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -74,15 +67,14 @@ import static android.provider.MediaStore.EXTRA_VIDEO_QUALITY;
 import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 import static android.support.v7.widget.StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS;
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
-import static com.mti.videodiary.data.Constants.APPLICATION_DIRECTORY;
+import static android.view.View.VISIBLE;
 import static com.mti.videodiary.data.Constants.KEY_VIDEO_PATH;
-import static com.mti.videodiary.data.Constants.UPDATE_VIDEO_ADAPTER;
 import static com.mti.videodiary.data.Constants.VIDEO_DIR;
 import static com.mti.videodiary.data.Constants.VIDEO_FILE_NAME;
-import static java.io.File.separator;
 
 /**
  * Created by Taras Matolinets on 23.02.15.
+ * View for present to user video notes
  */
 public class VideoFragment extends BaseFragment implements SearchView.OnQueryTextListener {
     private static final int REQUEST_VIDEO_CAPTURE = 101;
@@ -101,7 +93,6 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
     private VideoAdapter mAdapter;
     private StaggeredGridLayoutManager mLayoutManager;
     private Unbinder mBinder;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -238,25 +229,14 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
                     VideoNoteText videoNoteText = new VideoNoteText();
                     videoNoteText.setText(getString(R.string.fragment_video_not_recorded_warning));
 
-                    showSnackView(videoNoteText);
+                    showNoteAction(videoNoteText);
                 }
-                break;
-
-            case Constants.UPDATE_VIDEO_ADAPTER:
-//                VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
-//
-//                final List<Video> listVideos = videoDataManager.getAllVideosList();
-//
-//                mAdapter.setListVideos(listVideos);
-//                mAdapter.notifyDataSetChanged();
-//
-//                loadNoteList();
                 break;
         }
     }
 
     @Subscribe
-    public void showSnackView(VideoNoteText videoNoteText) {
+    public void showNoteAction(VideoNoteText videoNoteText) {
         Snackbar snackbar = Snackbar.make(mCoordinateLayout, videoNoteText.getText(), LENGTH_SHORT);
         snackbar.show();
     }
@@ -291,13 +271,42 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
             }
             UserHelper.copyFileUsingFileStreams(videoFile, mediaFile);
 
-            if (videoFile.exists())
+            if (videoFile.exists()) {
                 videoFile.delete();
+            }
         }
 
         return mediaFile;
     }
 
+    @Subscribe
+    public void editVideoNote(EditVideoNote videoNote) {
+        startActivity(videoNote.getIntentRequest());
+        getActivity().overridePendingTransition(0, 0);
+    }
+
+    @Subscribe
+    public void shareVideoNote(ShareVideoNote videoNote) {
+        startActivity(Intent.createChooser(videoNote.getShareIntent(), getString(R.string.share_text_video)));
+    }
+
+    @Subscribe
+    public void deleteItem(final DeleteVideoNote videoNote) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.delete_item)
+                .setMessage(R.string.delete_note_description)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.deleteVideoNoteItem(videoNote.getId(), videoNote.getNotePosition());
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
 
     @Override
     public boolean onQueryTextSubmit(String s) {
@@ -306,28 +315,19 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
 
     @Override
     public boolean onQueryTextChange(String s) {
-//        VideoDataManager videoDataManager = (VideoDataManager) DataBaseManager.getInstanceDataManager().getCurrentManager(DataBaseManager.DataManager.VIDEO_MANAGER);
-//
-//        final List<Video> listVideos = videoDataManager.getAllVideosList();
-//
-//        ArrayList<Video> searchVideoList = new ArrayList<Video>();
-//        for (Video v : listVideos) {
-//            if (v.getTitle().contains(s))
-//                searchVideoList.add(v);
-//        }
-//
-//        if (!searchVideoList.isEmpty())
-//            mAdapter.setListVideos(searchVideoList);
-//
-//        mAdapter.notifyDataSetChanged();
+        if (!TextUtils.isEmpty(s)) {
+            mPresenter.loadSearchedVideoNotes(s);
+        } else {
+            mPresenter.loadVideoNoteList();
+        }
 
         return true;
     }
 
     public void showEmptyView(boolean showView) {
         if (showView) {
-            mIvCameraOff.setVisibility(View.VISIBLE);
-            mTvNoRecords.setVisibility(View.VISIBLE);
+            mIvCameraOff.setVisibility(VISIBLE);
+            mTvNoRecords.setVisibility(VISIBLE);
 
             YoYo.AnimationComposer personalAnim = YoYo.with(Techniques.ZoomIn);
             personalAnim.duration(DURATION);
@@ -340,13 +340,18 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
     }
 
     public void loadQueryNotes(List<VideoDomain> list) {
-
+        mAdapter.updateList(list);
     }
 
     public void updateRecycleView(List<VideoDomain> list) {
         mAdapter.updateList(list);
     }
 
+    public void removeNoteFromList(int id) {
+        mAdapter.removeNote(id);
+    }
+
+    //region INNER CLASS
     public static class VideoNoteText {
         private String text;
 
@@ -358,4 +363,51 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
             this.text = text;
         }
     }
+
+    public static class EditVideoNote {
+        private Intent intentRequest;
+
+        public Intent getIntentRequest() {
+            return intentRequest;
+        }
+
+        public void setIntentRequest(Intent intentRequest) {
+            this.intentRequest = intentRequest;
+        }
+    }
+
+    public static class ShareVideoNote {
+        private Intent shareIntent;
+
+        public Intent getShareIntent() {
+            return shareIntent;
+        }
+
+        public void setShareIntent(Intent shareIntent) {
+            this.shareIntent = shareIntent;
+        }
+    }
+
+    public static class DeleteVideoNote {
+
+        private int id;
+        private int notePosition;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public int getNotePosition() {
+            return notePosition;
+        }
+
+        public void setNotePosition(int notePosition) {
+            this.notePosition = notePosition;
+        }
+    }
+    // endregion
 }

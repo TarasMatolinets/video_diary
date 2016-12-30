@@ -46,7 +46,7 @@
             android:textColor="@color/black"
             android:ellipsize="end"
             android:hint="@string/create_title"
-            android:singleLine="true" />
+            android:lines="1" />
 
         <include
             layout="@layout/view_divider"

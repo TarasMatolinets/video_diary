@@ -5,6 +5,7 @@ import android.util.Log;
 import com.mti.videodiary.data.storage.manager.VideoNoteDataBaseFactory;
 import com.mti.videodiary.di.annotation.PerFragment;
 import com.mti.videodiary.mvp.view.fragment.VideoFragment;
+import com.mti.videodiary.mvp.view.fragment.VideoFragment.VideoNoteText;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ import interactor.UseCaseDeleteNoteId;
 import interactor.UseCaseGetNotesByTitle;
 import interactor.UseCaseGetVideoNoteList;
 import model.VideoDomain;
+import mti.com.videodiary.R;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.mti.videodiary.application.VideoDiaryApplication.TAG;
@@ -80,13 +82,8 @@ public class VideoFragmentPresenter {
         mComposeSubscriptionList.add(subscriber);
     }
 
-
     //region SUBSCRIBER
     private final class GetListVideoNotesSubscriber extends DefaultSubscriber<List<VideoDomain>> {
-
-        @Override
-        public void onCompleted() {
-        }
 
         @Override
         public void onError(Throwable e) {
@@ -106,10 +103,6 @@ public class VideoFragmentPresenter {
     }
 
     private final class GetListNotesSearchSubscriber extends DefaultSubscriber<List<VideoDomain>> {
-
-        @Override
-        public void onCompleted() {
-        }
 
         @Override
         public void onError(Throwable e) {
@@ -142,11 +135,10 @@ public class VideoFragmentPresenter {
 
         @Override
         public void onNext(Void nothing) {
-//            CreateNotePresenter.NoteText noteText = new CreateNotePresenter.NoteText();
-//            noteText.setText(mView.getResources().getString(R.string.note_deleted_successfully));
-//            mView.showNoteAction(noteText);
-//
-//            mView.removeNoteFromList(position);
+           VideoNoteText noteText = new VideoNoteText();
+            noteText.setText(mView.getResources().getString(R.string.note_deleted_successfully));
+            mView.showNoteAction(noteText);
+            mView.removeNoteFromList(position);
         }
     }
     //endregion

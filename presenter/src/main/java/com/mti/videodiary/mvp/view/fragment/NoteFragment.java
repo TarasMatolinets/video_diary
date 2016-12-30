@@ -29,7 +29,7 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.mti.videodiary.adapter.NoteAdapter;
+import com.mti.videodiary.mvp.view.adapter.NoteAdapter;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.di.component.FragmentComponent;
 import com.mti.videodiary.di.module.FragmentModule;
@@ -267,6 +267,7 @@ public class NoteFragment extends BaseFragment implements OnQueryTextListener, O
         return false;
     }
 
+    // region INNER CLASS
     public static class UpdateNote {
         private int noteId;
 
@@ -300,4 +301,5 @@ public class NoteFragment extends BaseFragment implements OnQueryTextListener, O
             this.notePosition = notePosition;
         }
     }
+    //endregion
 }

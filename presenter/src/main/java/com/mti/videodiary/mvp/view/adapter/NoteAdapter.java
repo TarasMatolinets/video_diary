@@ -1,4 +1,4 @@
-package com.mti.videodiary.adapter;
+package com.mti.videodiary.mvp.view.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.mti.videodiary.mvp.view.fragment.NoteFragment;
 import com.mti.videodiary.mvp.view.fragment.NoteFragment.DeleteItem;
 import com.mti.videodiary.mvp.view.fragment.NoteFragment.UpdateNote;
 
