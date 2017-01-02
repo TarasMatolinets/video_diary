@@ -20,6 +20,7 @@ import static com.mti.videodiary.data.Constants.TAG;
 
 /**
  * Created by Taras Matolinets on 26.02.15.
+ * IDataBase helper where you can get list of stored objects
  */
 @Singleton
 public class DataBaseHelper extends OrmLiteSqliteOpenHelper {

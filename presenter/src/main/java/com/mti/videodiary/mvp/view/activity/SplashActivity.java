@@ -47,7 +47,7 @@ import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_P
 
 /**
  * Created by Taras  Matolinets on 04.11.14.
- * Splash screen for user.
+ * Splash screen.
  */
 public class SplashActivity extends BaseActivity implements OnPreDrawListener, TextWatcher {
 
@@ -66,8 +66,8 @@ public class SplashActivity extends BaseActivity implements OnPreDrawListener, T
     public static final String SKEW_X = "skewX";
     public static final float VALUE = -.5f;
 
-    @BindView(R.id.tvTitle) SkewableTextView mName;
-    @BindView(R.id.tvWelcome) SkewableTextView mWelcome;
+    @BindView(R.id.tv_title) SkewableTextView mName;
+    @BindView(R.id.tv_welcome) SkewableTextView mWelcome;
     @BindView(R.id.rl_splash) RelativeLayout mContainer;
     @BindView(R.id.et_title) EditText mPersonalName;
     @BindView(R.id.tv_splash_click_next) ImageButton mClickNext;

@@ -28,7 +28,7 @@ public class CreateNoteActivity extends BaseActivity implements TextWatcher, IHa
     public static final int DEFAULT_VALUE = -1;
 
     @BindView(R.id.et_title) EditText mEtTitle;
-    @BindView(R.id.etDescription) EditText mEtDescription;
+    @BindView(R.id.et_description) EditText mEtDescription;
 
     @Inject CreateNotePresenter mPresenter;
 

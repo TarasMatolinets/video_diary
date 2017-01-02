@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/scrollCard"
+            android:id="@+id/scroll_card"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
 
     <LinearLayout
-        android:id="@+id/llScroll"
+        android:id="@+id/ll_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/gradient_menu"
@@ -15,7 +15,7 @@
         android:weightSum="1">
 
         <android.support.v7.widget.CardView
-            android:id="@+id/cardViewTitle"
+            android:id="@+id/card_view_title"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="@dimen/edge_medium"
@@ -45,7 +45,7 @@
             android:layout_height="1dp"/>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/cardViewCreateNote"
+            android:id="@+id/card_view_create_note"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="@dimen/edge_medium"
@@ -54,7 +54,7 @@
             card_view:cardCornerRadius="@dimen/edge_normal">
 
             <EditText
-                android:id="@+id/etDescription"
+                android:id="@+id/et_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"

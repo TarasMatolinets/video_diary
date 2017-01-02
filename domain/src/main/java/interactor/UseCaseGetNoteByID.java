@@ -1,22 +1,23 @@
 package interactor;
 
-import database.DataBase;
-import database.NoteDataBase;
+import database.IDataBase;
+import database.NoteIDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import rx.Observable;
 
 /**
  * Created by Terry on 11/6/2016.
+ * Use case for get note by id
  */
 
-public class UseCaseGetNoteByPosition extends UseCase {
+public class UseCaseGetNoteById extends UseCase {
     private final int mId;
-    private final NoteDataBase mDataBase;
+    private final NoteIDataBase mDataBase;
 
-    public UseCaseGetNoteByPosition(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, DataBase dataBase, int id) {
+    public UseCaseGetNoteById(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, IDataBase IDataBase, int id) {
         super(threadExecutor, postExecutionThread);
-        mDataBase = (NoteDataBase) dataBase;
+        mDataBase = (NoteIDataBase) IDataBase;
         mId = id;
     }
 

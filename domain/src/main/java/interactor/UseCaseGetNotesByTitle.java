@@ -1,7 +1,7 @@
 package interactor;
 
-import database.DataBase;
-import database.NoteDataBase;
+import database.IDataBase;
+import database.NoteIDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import rx.Observable;
@@ -11,12 +11,12 @@ import rx.Observable;
  */
 
 public class UseCaseGetNotesByTitle extends UseCase {
-    private final NoteDataBase mDataBase;
+    private final NoteIDataBase mDataBase;
     private String title;
 
-    public UseCaseGetNotesByTitle(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, DataBase dataBase, String title) {
+    public UseCaseGetNotesByTitle(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, IDataBase IDataBase, String title) {
         super(threadExecutor, postExecutionThread);
-        mDataBase = (NoteDataBase) dataBase;
+        mDataBase = (NoteIDataBase) IDataBase;
         this.title = title;
     }
 

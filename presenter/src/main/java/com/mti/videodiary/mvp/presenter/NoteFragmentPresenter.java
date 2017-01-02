@@ -2,7 +2,7 @@ package com.mti.videodiary.mvp.presenter;
 
 import android.util.Log;
 
-import com.mti.videodiary.data.storage.manager.NoteDataBaseFactory;
+import com.mti.videodiary.data.storage.manager.NoteIDataBaseFactory;
 import com.mti.videodiary.di.annotation.PerFragment;
 import com.mti.videodiary.mvp.presenter.CreateNotePresenter.NoteText;
 import com.mti.videodiary.mvp.view.fragment.NoteFragment;
@@ -11,7 +11,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import database.NoteDataBase;
+import database.NoteIDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
@@ -27,7 +27,7 @@ import static com.mti.videodiary.data.Constants.TAG;
 
 /**
  * Created by Terry on 11/6/2016.
- * Presenter for collaborate between view and model
+ * Presenter for communicate with note data model
  */
 
 @PerFragment
@@ -36,11 +36,11 @@ public class NoteFragmentPresenter {
     private final ThreadExecutor mExecutor;
     private final PostExecutionThread mPostExecutorThread;
     private final CompositeSubscription mComposeSubscriptionList;
-    private final NoteDataBase mDataBase;
+    private final NoteIDataBase mDataBase;
     private NoteFragment mView;
 
     @Inject
-    NoteFragmentPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, NoteDataBaseFactory dataBase) {
+    NoteFragmentPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, NoteIDataBaseFactory dataBase) {
         mExecutor = executor;
         mPostExecutorThread = postExecutionThread;
         mComposeSubscriptionList = new CompositeSubscription();

@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.mti.videodiary.data.helper.UserHelper;
-import com.mti.videodiary.data.storage.manager.VideoNoteDataBaseFactory;
+import com.mti.videodiary.data.storage.manager.VideoNoteIDataBaseFactory;
 import com.mti.videodiary.di.annotation.PerFragment;
 import com.mti.videodiary.mvp.view.fragment.VideoFragment;
 import com.mti.videodiary.mvp.view.fragment.VideoFragment.VideoNoteText;
@@ -16,13 +16,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import database.VideoDataBase;
+import database.VideoIDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
 import interactor.UseCase;
 import interactor.UseCaseDeleteNoteId;
-import interactor.UseCaseGetNotesByTitle;
 import interactor.UseCaseGetVideoNoteList;
 import interactor.UseCaseGetVideoNotesByTitle;
 import model.VideoDomain;
@@ -37,7 +36,7 @@ import static com.mti.videodiary.data.Constants.VIDEO_FILE_NAME;
 
 /**
  * Created by Terry on 12/15/2016.
- * VideoFragment presenter for communicate with data layer
+ * Presenter for communicate with video data model
  */
 @PerFragment
 public class VideoFragmentPresenter {
@@ -45,11 +44,11 @@ public class VideoFragmentPresenter {
     private final ThreadExecutor mExecutor;
     private final PostExecutionThread mPostExecutorThread;
     private final CompositeSubscription mComposeSubscriptionList;
-    private final VideoDataBase mDataBase;
+    private final VideoIDataBase mDataBase;
     private VideoFragment mView;
 
     @Inject
-    VideoFragmentPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, VideoNoteDataBaseFactory dataBase) {
+    VideoFragmentPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, VideoNoteIDataBaseFactory dataBase) {
         mExecutor = executor;
         mPostExecutorThread = postExecutionThread;
         mComposeSubscriptionList = new CompositeSubscription();

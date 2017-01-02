@@ -3,18 +3,18 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/scrollCard"
+    android:id="@+id/scroll_card"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/llCard"
+        android:id="@+id/ll_Card"
         android:weightSum="1">
 
         <android.support.v7.widget.CardView
-            android:id="@+id/cardViewCreateVideo"
+            android:id="@+id/cv_create_video"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             card_view:cardCornerRadius="@dimen/edge_normal"
@@ -28,7 +28,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/ivVideoThumbnail"
+                    android:id="@+id/iv_video_thumbnail"
                     android:scaleType="centerCrop"
                     android:layout_margin="@dimen/edge_medium" />
 
@@ -39,14 +39,14 @@
                     android:layout_alignParentTop="true"
                     android:background="@drawable/ic_cancel_grey"
                     android:visibility="gone"
-                    android:id="@+id/ivCancel"
+                    android:id="@+id/iv_cancel"
                     android:layout_margin="@dimen/edge_medium" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/ic_play_arrow_white"
-                    android:id="@+id/ivPlay"
+                    android:id="@+id/iv_play"
                     android:visibility="gone"
                     android:layout_centerInParent="true" />
 
@@ -56,7 +56,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/tap_to_add_video_note"
                     android:drawableLeft="@drawable/ic_videocam_grey"
-                    android:id="@+id/tvAddVideo"
+                    android:id="@+id/tv_add_video"
                     android:textStyle="normal"
                     android:visibility="gone"
                     android:gravity="center"
@@ -84,7 +84,7 @@
 
 
         <EditText
-            android:id="@+id/etDescription"
+            android:id="@+id/et_description"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="@dimen/edge_medium"

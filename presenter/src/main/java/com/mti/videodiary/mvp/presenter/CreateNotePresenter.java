@@ -2,7 +2,7 @@ package com.mti.videodiary.mvp.presenter;
 
 import android.util.Log;
 
-import com.mti.videodiary.data.storage.manager.NoteDataBaseFactory;
+import com.mti.videodiary.data.storage.manager.NoteIDataBaseFactory;
 import com.mti.videodiary.di.annotation.PerActivity;
 import com.mti.videodiary.mvp.view.activity.CreateNoteActivity;
 
@@ -10,13 +10,13 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
-import database.NoteDataBase;
+import database.NoteIDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
 import interactor.UseCase;
 import interactor.UseCaseCreateNote;
-import interactor.UseCaseGetNoteByPosition;
+import interactor.UseCaseGetNoteById;
 import interactor.UseCaseUpdateNotesList;
 import model.NoteDomain;
 import mti.com.videodiary.R;
@@ -26,7 +26,7 @@ import static com.mti.videodiary.data.Constants.TAG;
 
 /**
  * Created by Terry on 11/5/2016.
- * Presenter for communicate with data model
+ * Presenter for communicate with note data model
  */
 
 @PerActivity
@@ -35,11 +35,11 @@ public class CreateNotePresenter {
     private final ThreadExecutor mExecutor;
     private final PostExecutionThread mPostExecutorThread;
     private final CompositeSubscription mComposeSubscriptionList;
-    private final NoteDataBase mDataBase;
+    private final NoteIDataBase mDataBase;
     private CreateNoteActivity mView;
 
     @Inject
-    public CreateNotePresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, NoteDataBaseFactory dataBase) {
+    public CreateNotePresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, NoteIDataBaseFactory dataBase) {
         mExecutor = executor;
         mPostExecutorThread = postExecutionThread;
         mComposeSubscriptionList = new CompositeSubscription();
@@ -56,7 +56,7 @@ public class CreateNotePresenter {
     }
 
     public void getNoteByPosition(int position) {
-        UseCase getNoteByPosition = new UseCaseGetNoteByPosition(mExecutor, mPostExecutorThread, mDataBase, position);
+        UseCase getNoteByPosition = new UseCaseGetNoteById(mExecutor, mPostExecutorThread, mDataBase, position);
 
         GetNoteByPositionSubscriber subscriber = new GetNoteByPositionSubscriber();
         getNoteByPosition.execute(subscriber);

@@ -2,15 +2,15 @@ package database;
 
 import java.util.List;
 
-import model.NoteDomain;
 import model.VideoDomain;
 import rx.Observable;
 
 /**
  * Created by Terry on 11/6/2016.
+ * Interface for communicate with database
  */
 
-public interface VideoDataBase extends DataBase {
+public interface VideoIDataBase extends IDataBase {
     Observable<List<VideoDomain>> getListVideos();
 
     Observable<VideoDomain> getVideoById(int id);

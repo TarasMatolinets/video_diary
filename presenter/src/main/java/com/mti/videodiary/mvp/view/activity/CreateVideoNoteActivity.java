@@ -27,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.mvp.presenter.CreateVideoPresenter;
@@ -50,6 +49,7 @@ import static android.provider.MediaStore.EXTRA_VIDEO_QUALITY;
 import static android.provider.MediaStore.Video.Thumbnails.MINI_KIND;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.mti.videodiary.data.Constants.FILE_FORMAT;
 import static com.mti.videodiary.data.Constants.HEIGHT;
 import static com.mti.videodiary.data.Constants.KEY_POSITION;
 import static com.mti.videodiary.data.Constants.KEY_VIDEO_PATH;
@@ -57,12 +57,11 @@ import static com.mti.videodiary.data.Constants.ORIENTATION;
 import static com.mti.videodiary.data.Constants.VIDEO_DIR;
 import static com.mti.videodiary.data.Constants.VIDEO_FILE_NAME;
 import static com.mti.videodiary.data.Constants.WIDTH;
-import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.INTEGER;
 import static java.io.File.separator;
 
 /**
  * Created by Taras Matolinets on 01.03.15.
- * Video Activity for create or edit video.
+ * Activity for create or edit video note.
  */
 public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher, IHasComponent<ActivityComponent> {
     private static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
@@ -78,14 +77,14 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     private static final int DURATION_FADE_IN = 600;
     private static final int REQUEST_VIDEO_CAPTURE = 433;
 
-    @BindView(R.id.ivPlay) ImageView mIvPlay;
+    @BindView(R.id.iv_play) ImageView mIvPlay;
     @BindView(R.id.et_title) EditText mEtTitle;
-    @BindView(R.id.tvAddVideo) TextView mTvAddVideoNote;
-    @BindView(R.id.etDescription) EditText mEtDescription;
-    @BindView(R.id.ivVideoThumbnail) ImageView mIvThumbnail;
-    @BindView(R.id.ivCancel) ImageView mIvCancel;
-    @BindView(R.id.scrollCard) ScrollView mScrollCard;
-    @BindView(R.id.cardViewCreateVideo) CardView mCardView;
+    @BindView(R.id.tv_add_video) TextView mTvAddVideoNote;
+    @BindView(R.id.et_description) EditText mEtDescription;
+    @BindView(R.id.iv_video_thumbnail) ImageView mIvThumbnail;
+    @BindView(R.id.iv_cancel) ImageView mIvCancel;
+    @BindView(R.id.scroll_card) ScrollView mScrollCard;
+    @BindView(R.id.cv_create_video) CardView mCardView;
 
     @Inject CreateVideoPresenter mPresenter;
 
@@ -198,9 +197,8 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                String videoFilePath = getIntent().getStringExtra(KEY_VIDEO_PATH);
-
                 if (!isEditVideoDaily) {
+                    String videoFilePath = getIntent().getStringExtra(KEY_VIDEO_PATH);
                     mPresenter.createNewVideoDaily(videoFilePath, mEtTitle.getText().toString(), mEtDescription.getText().toString());
                 } else {
                     mPresenter.updateVideoNote(mVideoNote.getVideoName(), mEtTitle.getText().toString(), mEtDescription.getText().toString(), mVideoNote.getId());
@@ -281,7 +279,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         }
     }
 
-    @OnClick(R.id.ivPlay)
+    @OnClick(R.id.iv_play)
     public void playVideoNote() {
         String videoFilePath = getIntent().getStringExtra(KEY_VIDEO_PATH);
 
@@ -290,14 +288,9 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         startActivity(intent);
     }
 
-    @OnClick(R.id.ivCancel)
+    @OnClick(R.id.iv_cancel)
     public void deleteVideoNote() {
-        int id = getIntent().getIntExtra(KEY_POSITION, DEFAULT_ITEM_POSITION);
-
-        if (id != DEFAULT_ITEM_POSITION) {
-            mPresenter.deleteVideoNote(id);
-        }
-
+        mIvThumbnail.setImageBitmap(null);
         isShowSave = false;
 
         mIvCancel.setVisibility(GONE);
@@ -308,8 +301,12 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         invalidateOptionsMenu();
     }
 
-    @OnClick(R.id.tvAddVideo)
+    @OnClick(R.id.tv_add_video)
     public void addVideoNote() {
+        if (isEditVideoDaily) {
+            VIDEO_FILE_NAME = separator + mEtTitle.getText().toString() + FILE_FORMAT;
+        }
+
         final File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + separator + VIDEO_DIR + VIDEO_FILE_NAME);
 
         Uri fileUri = Uri.fromFile(mediaFile);

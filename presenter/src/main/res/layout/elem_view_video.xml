@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_margin="@dimen/edge_medium"
-    android:id="@+id/cardViewCreateVideo"
+    android:id="@+id/cv_create_video"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardBackgroundColor="@color/white"
@@ -21,7 +21,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/ivVideoThumbnail"
+                android:id="@+id/iv_video_thumbnail"
                 android:scaleType="fitXY"
                 android:adjustViewBounds="true"
                 android:layout_margin="@dimen/edge_medium" />
@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_play_arrow_white"
-                android:id="@+id/ivPlay"
+                android:id="@+id/iv_play"
                 android:layout_gravity="center" />
         </FrameLayout>
 
@@ -55,7 +55,7 @@
             android:layout_alignBottom="@+id/et_title" />
 
         <TextView
-            android:id="@+id/etDescription"
+            android:id="@+id/et_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/et_title"
@@ -71,13 +71,13 @@
             layout="@layout/view_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_alignBottom="@+id/etDescription" />
+            android:layout_alignBottom="@+id/et_description" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@+id/etDescription"
+            android:layout_below="@+id/et_description"
             android:layout_centerHorizontal="true"
             android:id="@+id/llElements">
 
@@ -94,7 +94,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/ivShare"
+                android:id="@+id/iv_share"
                 android:layout_marginRight="@dimen/edge_big"
                 android:layout_marginBottom="@dimen/edge_medium"
                 android:layout_marginTop="@dimen/edge_medium"

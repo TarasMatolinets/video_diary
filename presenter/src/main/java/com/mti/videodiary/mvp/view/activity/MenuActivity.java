@@ -28,7 +28,7 @@ import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.mvp.presenter.MenuPresenter;
 import com.mti.videodiary.mvp.view.fragment.NoteFragment;
-import com.mti.videodiary.mvp.view.fragment.SupportFragment;
+import com.mti.videodiary.mvp.view.fragment.InfoFragment;
 import com.mti.videodiary.mvp.view.fragment.VideoFragment;
 import com.mti.videodiary.navigator.Navigator;
 
@@ -50,7 +50,7 @@ import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_P
 
 /**
  * Created by Taras Matolinets on 23.02.15.
- * Main activity
+ * Main activity for navigate through the screens
  */
 public class MenuActivity extends BaseActivity implements IHasComponent<ActivityComponent>, OnNavigationItemSelectedListener, OnClickListener {
 
@@ -204,7 +204,7 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
                 mNavigator.replace(this, NoteFragment.class, R.id.main_container, null, false);
                 break;
             case R.id.action_contact:
-                mNavigator.replace(this, SupportFragment.class, R.id.main_container, null, false);
+                mNavigator.replace(this, InfoFragment.class, R.id.main_container, null, false);
                 break;
         }
         mDrawerLayout.closeDrawers();

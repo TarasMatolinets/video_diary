@@ -6,9 +6,9 @@ import model.NoteDomain;
 import rx.Observable;
 
 /**
- * Interface for transfer object from presenter to DB in data layer
+ * Interface for communicate with note database
  */
-public interface NoteDataBase extends DataBase {
+public interface NoteIDataBase extends IDataBase {
 
     Observable<List<NoteDomain>> getListNotes();
 

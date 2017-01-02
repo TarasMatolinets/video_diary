@@ -1,25 +1,25 @@
 package interactor;
 
-import database.DataBase;
-import database.NoteDataBase;
+import database.IDataBase;
+import database.NoteIDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
-import model.NoteDomain;
 import rx.Observable;
 
 /**
  * Created by Terry on 11/6/2016.
+ * Use case for update video note
  */
 
 public class UseCaseUpdateNotesList extends UseCase {
     private final String mDescription;
     private final String mTitle;
     private final int mPosition;
-    private NoteDataBase mDataBase;
+    private NoteIDataBase mDataBase;
 
-    public UseCaseUpdateNotesList(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, DataBase dataBase, String description, String title, int position) {
+    public UseCaseUpdateNotesList(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, IDataBase IDataBase, String description, String title, int position) {
         super(threadExecutor, postExecutionThread);
-        mDataBase = (NoteDataBase) dataBase;
+        mDataBase = (NoteIDataBase) IDataBase;
         mDescription = description;
         mTitle = title;
         mPosition = position;

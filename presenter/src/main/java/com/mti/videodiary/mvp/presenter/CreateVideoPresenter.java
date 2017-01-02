@@ -3,7 +3,7 @@ package com.mti.videodiary.mvp.presenter;
 import android.os.Environment;
 import android.util.Log;
 
-import com.mti.videodiary.data.storage.manager.VideoNoteDataBaseFactory;
+import com.mti.videodiary.data.storage.manager.VideoNoteIDataBaseFactory;
 import com.mti.videodiary.mvp.view.activity.CreateVideoNoteActivity;
 import com.mti.videodiary.mvp.view.fragment.VideoFragment.VideoNoteText;
 
@@ -13,14 +13,13 @@ import java.io.File;
 
 import javax.inject.Inject;
 
-import database.VideoDataBase;
+import database.VideoIDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
 import interactor.UseCase;
 import interactor.UseCaseCreateVideoNote;
-import interactor.UseCaseDeleteVideoNoteId;
-import interactor.UseCaseGetVideoNoteByPosition;
+import interactor.UseCaseGetVideoNoteById;
 import interactor.UseCaseUpdateVideoNoteList;
 import model.VideoDomain;
 import mti.com.videodiary.R;
@@ -40,11 +39,11 @@ public class CreateVideoPresenter {
     private final ThreadExecutor mExecutor;
     private final PostExecutionThread mPostExecutorThread;
     private final CompositeSubscription mComposeSubscriptionList;
-    private final VideoDataBase mDataBase;
+    private final VideoIDataBase mDataBase;
     private CreateVideoNoteActivity mView;
 
     @Inject
-    public CreateVideoPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, VideoNoteDataBaseFactory dataBase) {
+    public CreateVideoPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, VideoNoteIDataBaseFactory dataBase) {
         mExecutor = executor;
         mPostExecutorThread = postExecutionThread;
         mComposeSubscriptionList = new CompositeSubscription();
@@ -61,7 +60,7 @@ public class CreateVideoPresenter {
     }
 
     public void getVideoNote(int id) {
-        UseCase useCase = new UseCaseGetVideoNoteByPosition(mExecutor, mPostExecutorThread, mDataBase, id);
+        UseCase useCase = new UseCaseGetVideoNoteById(mExecutor, mPostExecutorThread, mDataBase, id);
         GetVideoNoteSubscriber subscriber = new GetVideoNoteSubscriber();
 
         useCase.execute(subscriber);
@@ -89,14 +88,6 @@ public class CreateVideoPresenter {
         UseCase useCase = new UseCaseUpdateVideoNoteList(mExecutor, mPostExecutorThread, videoDomain, mDataBase);
         SaveUpdateVideoNoteSubscriber subscriber = new SaveUpdateVideoNoteSubscriber(mView.getString(R.string.video_note_edited_successfully));
         useCase.execute(subscriber);
-    }
-
-    public void deleteVideoNote(int id) {
-        UseCase useCase = new UseCaseDeleteVideoNoteId(mExecutor, mPostExecutorThread, mDataBase, id);
-
-        DeleteVideoNoteSubscriber subscriber = new DeleteVideoNoteSubscriber();
-        useCase.execute(subscriber);
-        mComposeSubscriptionList.add(subscriber);
     }
 
     public void createNewVideoDaily(String videoPath, String title, String description) {
@@ -158,18 +149,6 @@ public class CreateVideoPresenter {
         @Override
         public void onNext(VideoDomain videoDomain) {
             mView.loadVideoNote(videoDomain);
-        }
-    }
-
-    private final class DeleteVideoNoteSubscriber extends DefaultSubscriber<Void> {
-
-        @Override
-        public void onCompleted() {
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            Log.e(TAG, e.toString());
         }
     }
     //endregion

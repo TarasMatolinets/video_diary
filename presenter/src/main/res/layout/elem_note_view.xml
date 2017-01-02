@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/cardViewCreateNote"
+    android:id="@+id/card_view_create_note"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/edge_medium"
@@ -27,11 +27,11 @@
         <include
             layout="@layout/view_divider"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/edge_tiny"
             android:layout_alignBottom="@+id/et_title" />
 
         <TextView
-            android:id="@+id/etDescription"
+            android:id="@+id/et_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/et_title"
@@ -45,28 +45,27 @@
         <include
             layout="@layout/view_divider"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignBottom="@+id/etDescription" />
+            android:layout_height="@dimen/edge_tiny"
+            android:layout_alignBottom="@+id/et_description" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ivDelete"
+            android:id="@+id/iv_delete"
             android:layout_margin="@dimen/edge_medium"
             android:background="@drawable/ic_delete_grey"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="false"
-            android:layout_below="@+id/etDescription" />
+            android:layout_below="@+id/et_description" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ivShare"
+            android:id="@+id/iv_share"
             android:layout_margin="@dimen/edge_medium"
             android:background="@drawable/ic_share_grey"
             android:layout_alignParentLeft="true"
-
-            android:layout_below="@+id/etDescription" />
+            android:layout_below="@+id/et_description" />
 
     </RelativeLayout>
 

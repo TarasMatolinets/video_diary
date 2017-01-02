@@ -217,7 +217,7 @@ public class NoteFragment extends BaseFragment implements OnQueryTextListener, O
         }
     }
 
-    @OnClick(R.id.buttonFloat)
+    @OnClick(R.id.button_float)
     public void addNoteClick() {
         Intent intent = new Intent(getActivity(), CreateNoteActivity.class);
         startActivity(intent);

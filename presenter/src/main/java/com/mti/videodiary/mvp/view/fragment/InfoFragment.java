@@ -15,21 +15,22 @@ import mti.com.videodiary.R;
 
 /**
  * Created by Taras Matolinets on 24.02.15.
+ * Support screen
  */
 
-public class SupportFragment extends BaseFragment {
+public class InfoFragment extends BaseFragment {
     private AdView mAdView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_support, container, false);
 
-        mAdView = (AdView) view.findViewById(R.id.adViewSupport);
+        mAdView = (AdView) view.findViewById(R.id.ad_view_support);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        TextView tvEmail = (TextView) view.findViewById(R.id.tvEmail);
-        TextView tvLinkenIn = (TextView) view.findViewById(R.id.tvLinkenIn);
+        TextView tvEmail = (TextView) view.findViewById(R.id.tv_email);
+        TextView tvLinkenIn = (TextView) view.findViewById(R.id.tv_linken_in);
 
         setLinkToEmail(tvEmail);
         setLinkLinkenIn(tvLinkenIn);

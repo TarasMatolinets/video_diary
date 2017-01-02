@@ -6,6 +6,7 @@ import com.mti.videodiary.di.IHasComponent;
 
 /**
  * Created by taras on 23.02.15.
+ * Base fragment
  */
 public class BaseFragment extends Fragment {
 

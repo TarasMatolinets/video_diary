@@ -5,6 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Created by Taras Matolinets on 29.03.15.
+ * Note model in data layer
  */
 @DatabaseTable
 public class Note {

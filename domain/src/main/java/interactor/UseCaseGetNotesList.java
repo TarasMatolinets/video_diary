@@ -1,22 +1,23 @@
 package interactor;
 
-import database.DataBase;
-import database.NoteDataBase;
+import database.IDataBase;
+import database.NoteIDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import rx.Observable;
 
 /**
  * Created by Terry on 11/6/2016.
+ * Use case for get note list
  */
 
 public class UseCaseGetNotesList extends UseCase {
 
-    private final NoteDataBase mDataBase;
+    private final NoteIDataBase mDataBase;
 
-    public UseCaseGetNotesList(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, DataBase dataBase) {
+    public UseCaseGetNotesList(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, IDataBase IDataBase) {
         super(threadExecutor, postExecutionThread);
-        mDataBase = (NoteDataBase) dataBase;
+        mDataBase = (NoteIDataBase) IDataBase;
     }
 
     @Override

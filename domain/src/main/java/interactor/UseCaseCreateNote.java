@@ -1,25 +1,25 @@
 package interactor;
 
-import database.DataBase;
-import database.NoteDataBase;
+import database.IDataBase;
+import database.NoteIDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
-import model.NoteDomain;
 import rx.Observable;
 
 /**
  * Created by Terry on 11/6/2016.
+ * UseCase for create note
  */
 
 public class UseCaseCreateNote extends UseCase {
     private final String mDescription;
     private final String mTitle;
 
-    private NoteDataBase mDataBase;
+    private NoteIDataBase mDataBase;
 
-    public UseCaseCreateNote(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, DataBase dataBase, String description, String title) {
+    public UseCaseCreateNote(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, IDataBase IDataBase, String description, String title) {
         super(threadExecutor, postExecutionThread);
-        mDataBase = (NoteDataBase) dataBase;
+        mDataBase = (NoteIDataBase) IDataBase;
         mDescription = description;
         mTitle = title;
     }

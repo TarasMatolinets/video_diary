@@ -1,7 +1,7 @@
 package interactor;
 
-import database.DataBase;
-import database.VideoDataBase;
+import database.IDataBase;
+import database.VideoIDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
 import rx.Observable;
@@ -11,11 +11,11 @@ import rx.Observable;
  */
 
 public class UseCaseGetVideoNoteList extends UseCase {
-    private VideoDataBase mDataBase;
+    private VideoIDataBase mDataBase;
 
-    public UseCaseGetVideoNoteList(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, DataBase dataBase) {
+    public UseCaseGetVideoNoteList(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, IDataBase IDataBase) {
         super(threadExecutor, postExecutionThread);
-        mDataBase = (VideoDataBase) dataBase;
+        mDataBase = (VideoIDataBase) IDataBase;
     }
 
     @Override

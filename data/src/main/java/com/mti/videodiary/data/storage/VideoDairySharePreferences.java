@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 
 /**
  * Created by Taras Matolinets on 21.03.15.
+ * Share Preferences for store data
  */
 @Singleton
 public class VideoDairySharePreferences {

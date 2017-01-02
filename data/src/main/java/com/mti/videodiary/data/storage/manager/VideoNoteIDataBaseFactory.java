@@ -19,7 +19,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import database.VideoDataBase;
+import database.VideoIDataBase;
 import model.VideoDomain;
 import rx.Observable;
 import rx.Subscriber;
@@ -30,15 +30,15 @@ import static com.mti.videodiary.data.storage.dao.Video.ID;
 
 /**
  * Created by Terry on 11/6/2016.
- * Implements {@link VideoDataBase} for communicate with database
+ * Implements {@link VideoIDataBase} for communicate with database
  */
 
-public class VideoNoteDataBaseFactory implements VideoDataBase {
+public class VideoNoteIDataBaseFactory implements VideoIDataBase {
 
     private final DataBaseHelper mHelper;
 
     @Inject
-    public VideoNoteDataBaseFactory(DataBaseHelper helper) {
+    public VideoNoteIDataBaseFactory(DataBaseHelper helper) {
         mHelper = helper;
     }
 
@@ -169,7 +169,7 @@ public class VideoNoteDataBaseFactory implements VideoDataBase {
                     String imageUrl = video.getImageUrl();
                     String videoUrl = video.getVideoName();
 
-                    if (TextUtils.isEmpty(imageUrl)) {
+                    if (!TextUtils.isEmpty(imageUrl)) {
                         File file = new File(imageUrl);
                         boolean deleted = file.delete();
 
@@ -178,7 +178,7 @@ public class VideoNoteDataBaseFactory implements VideoDataBase {
                         }
                     }
 
-                    if (TextUtils.isEmpty(videoUrl)) {
+                    if (!TextUtils.isEmpty(videoUrl)) {
                         File file = new File(videoUrl);
                         boolean deleted = file.delete();
 

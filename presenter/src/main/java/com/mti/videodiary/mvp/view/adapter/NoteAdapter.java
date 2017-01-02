@@ -27,6 +27,7 @@ import static android.content.Intent.EXTRA_TEXT;
 
 /**
  * Created by Taras Matolinets on 29.03.15.
+ * Adapter for handle note data model and present it to user
  */
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     private Context mContext;
@@ -67,18 +68,18 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.etDescription) TextView tvDescription;
+        @BindView(R.id.et_description) TextView tvDescription;
         @BindView(R.id.et_title) TextView tvTitle;
 
         ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
-            tvDescription = (TextView) itemLayoutView.findViewById(R.id.etDescription);
+            tvDescription = (TextView) itemLayoutView.findViewById(R.id.et_description);
             tvTitle = (TextView) itemLayoutView.findViewById(R.id.et_title);
 
             ButterKnife.bind(this, itemLayoutView);
         }
 
-        @OnClick(R.id.cardViewCreateNote)
+        @OnClick(R.id.card_view_create_note)
         public void createNote() {
             NoteDomain noteDomain = mListNotes.get(getAdapterPosition());
 
@@ -88,7 +89,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
             EventBus.getDefault().post(note);
         }
 
-        @OnClick(R.id.ivDelete)
+        @OnClick(R.id.iv_delete)
         public void deleteNote() {
             NoteDomain noteDomain = mListNotes.get(getAdapterPosition());
             DeleteItem deleteItem = new DeleteItem();
@@ -98,7 +99,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
             EventBus.getDefault().post(deleteItem);
         }
 
-        @OnClick(R.id.ivShare)
+        @OnClick(R.id.iv_share)
         public void shareNote() {
             NoteDomain noteForShare = mListNotes.get(getAdapterPosition());
 

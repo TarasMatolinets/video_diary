@@ -2,6 +2,7 @@ package model;
 
 /**
  * Created by Terry on 11/6/2016.
+ * Video model in domain layer
  */
 
 public class VideoDomain {

@@ -4,27 +4,26 @@ import database.IDataBase;
 import database.VideoIDataBase;
 import executor.PostExecutionThread;
 import executor.ThreadExecutor;
-import model.VideoDomain;
 import rx.Observable;
 
 /**
  * Created by Terry on 11/6/2016.
- * Use case for update video note
+ * Use case for get video note by id
  */
 
-public class UseCaseUpdateVideoNoteList extends UseCase {
+public class UseCaseGetVideoNoteById extends UseCase {
 
     private final VideoIDataBase mDataBase;
-    private final VideoDomain mVideoDomain;
+    private final int mId;
 
-    public UseCaseUpdateVideoNoteList(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, VideoDomain videoDomain, IDataBase IDataBase) {
+    public UseCaseGetVideoNoteById(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, IDataBase IDataBase, int id) {
         super(threadExecutor, postExecutionThread);
         mDataBase = (VideoIDataBase) IDataBase;
-        mVideoDomain = videoDomain;
+        mId = id;
     }
 
     @Override
     public Observable buildUseCaseObservable() {
-        return mDataBase.updateVideoList(mVideoDomain);
+        return mDataBase.getVideoById(mId);
     }
 }

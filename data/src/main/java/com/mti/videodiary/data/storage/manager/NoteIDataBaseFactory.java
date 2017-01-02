@@ -1,7 +1,5 @@
 package com.mti.videodiary.data.storage.manager;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.mti.videodiary.data.storage.DataBaseHelper;
 import com.mti.videodiary.data.storage.dao.Note;
@@ -13,7 +11,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import database.NoteDataBase;
+import database.NoteIDataBase;
 import model.NoteDomain;
 import rx.Observable;
 import rx.Subscriber;
@@ -23,15 +21,15 @@ import static com.mti.videodiary.data.storage.dao.Note.TITLE;
 
 /**
  * Created by Terry on 11/6/2016.
- * Implements {@link NoteDataBase} for communicate with database
+ * Implements {@link NoteIDataBase} for communicate with database
  */
 
-public class NoteDataBaseFactory implements NoteDataBase {
+public class NoteIDataBaseFactory implements NoteIDataBase {
 
     private final DataBaseHelper mHelper;
 
     @Inject
-    public NoteDataBaseFactory(DataBaseHelper helper) {
+    public NoteIDataBaseFactory(DataBaseHelper helper) {
         mHelper = helper;
     }
 

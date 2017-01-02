@@ -5,6 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Created by Taras Matolinets on 27.02.15.
+ * Video Note model in data layer
  */
 
 @DatabaseTable

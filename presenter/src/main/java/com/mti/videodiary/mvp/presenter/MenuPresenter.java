@@ -16,8 +16,6 @@ import java.io.InputStream;
 
 import javax.inject.Inject;
 
-import executor.PostExecutionThread;
-import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
 import mti.com.videodiary.R;
 import rx.Observable;
@@ -34,21 +32,18 @@ import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_P
 
 /**
  * Created by Terry on 11/20/2016.
+ * Menu Presenter for load image to menu header
  */
 
 @PerActivity
 public class MenuPresenter {
-    private final ThreadExecutor mExecutor;
-    private final PostExecutionThread mPostExecutorThread;
     private final CompositeSubscription mComposeSubscriptionList;
     private MenuActivity mView;
 
     private VideoDairySharePreferences mPreferences;
 
     @Inject
-    public MenuPresenter(ThreadExecutor executor, PostExecutionThread postExecutionThread, VideoDairySharePreferences sharePreferences) {
-        mExecutor = executor;
-        mPostExecutorThread = postExecutionThread;
+    public MenuPresenter(VideoDairySharePreferences sharePreferences) {
         mComposeSubscriptionList = new CompositeSubscription();
         mPreferences = sharePreferences;
     }

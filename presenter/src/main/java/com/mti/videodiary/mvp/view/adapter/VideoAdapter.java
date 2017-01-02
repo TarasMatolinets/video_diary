@@ -13,9 +13,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mti.videodiary.mvp.view.activity.CreateVideoNoteActivity;
@@ -47,17 +45,15 @@ import static android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
 import static android.provider.MediaStore.Video.Thumbnails.MINI_KIND;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static com.mti.videodiary.data.Constants.HEIGHT;
 import static com.mti.videodiary.data.Constants.KEY_POSITION;
 import static com.mti.videodiary.data.Constants.ORIENTATION;
 import static com.mti.videodiary.data.Constants.WIDTH;
-import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.INTEGER;
 import static com.mti.videodiary.mvp.view.activity.CreateVideoNoteActivity.VIDEO_MP4;
 
 /**
  * Created by Taras Matolinets on 24.02.15.
- * Adapter for mapping video model and set data to list
+ * Adapter for Adapter for handle video note data model and present it to user
  */
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> {
 
@@ -121,9 +117,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         private static final String TITLE = "Title";
 
         @BindView(R.id.et_title) TextView tvTitle;
-        @BindView(R.id.etDescription) TextView tvDescription;
-        @BindView(R.id.ivVideoThumbnail) ImageView imIcon;
-        @BindView(R.id.cardViewCreateVideo) CardView cardView;
+        @BindView(R.id.et_description) TextView tvDescription;
+        @BindView(R.id.iv_video_thumbnail) ImageView imIcon;
+        @BindView(R.id.cv_create_video) CardView cardView;
         @BindView(R.id.viewDivider) View viewDivider;
 
         public ViewHolder(View itemLayoutView) {
@@ -131,7 +127,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             ButterKnife.bind(this, itemLayoutView);
         }
 
-        @OnClick(R.id.ivPlay)
+        @OnClick(R.id.iv_play)
         public void playClick() {
             VideoDomain video = mListVideos.get(getAdapterPosition());
 
@@ -170,7 +166,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             EventBus.getDefault().post(deleteItem);
         }
 
-        @OnClick(R.id.ivShare)
+        @OnClick(R.id.iv_share)
         public void shareClick() {
             VideoDomain videoForShare = mListVideos.get(getAdapterPosition());
 

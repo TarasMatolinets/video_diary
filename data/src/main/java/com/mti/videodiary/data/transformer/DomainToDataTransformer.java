@@ -8,6 +8,7 @@ import model.VideoDomain;
 
 /**
  * Created by Terry on 11/6/2016.
+ * Transform objects from domain to data layer
  */
 
 public class DomainToDataTransformer {

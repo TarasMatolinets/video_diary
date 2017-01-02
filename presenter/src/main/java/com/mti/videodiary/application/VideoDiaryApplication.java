@@ -5,7 +5,6 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.mti.videodiary.data.Constants;
 import com.mti.videodiary.di.component.DaggerVideoDiaryAppComponent;
 import com.mti.videodiary.di.component.VideoDiaryAppComponent;
 import com.mti.videodiary.di.module.VideoDiaryAppModule;
@@ -32,7 +31,6 @@ public class VideoDiaryApplication extends Application {
         super.onCreate();
 
         buildGraph();
-
         createFolder();
 
         Fabric.with(this, new Crashlytics());
