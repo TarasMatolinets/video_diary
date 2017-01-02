@@ -35,7 +35,7 @@
 -keepattributes Signature
 -keepattributes *Annotation*
 ##########RX_JAVA#########################
--dontwarn sun.misc.Unsafe
+-dontwarn sun.misc.**
 
 -keep class rx.schedulers.Schedulers {
     public static <methods>;
@@ -53,14 +53,11 @@
    long producerIndex;
    long consumerIndex;
 }
-
 -keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode producerNode;
+   long producerNode;
+   long consumerNode;
 }
 
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode consumerNode;
-}
 ############################END RXJAVA########
 ###################EVENT BUS##################
 
