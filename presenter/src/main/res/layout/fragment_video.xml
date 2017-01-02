@@ -2,7 +2,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coor_layout_create_video_note"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,7 +24,6 @@
         android:src="@drawable/ic_create_white"
         app:backgroundTint="@color/blue"
         app:fabSize="normal"
-        app:layout_anchor="@id/rvToDoList"
         app:layout_anchorGravity="bottom|right|end"
         />
 
@@ -32,7 +31,7 @@
         android:id="@+id/ad_view_note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
+        android:layout_gravity="top|center"
         android:visibility="visible"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id"/>

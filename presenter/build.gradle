@@ -14,6 +14,8 @@ android {
     buildToolsVersion globalConfiguration.getAt("androidBuildToolsVersion")
 
     defaultConfig {
+        multiDexEnabled true
+
         minSdkVersion globalConfiguration.getAt("androidMinSdkVersion")
         targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
 
@@ -22,22 +24,23 @@ android {
         versionName globalConfiguration.getAt("androidVersionName")
     }
 
-    signingConfigs {
-        releaseConfig
-                {
-                    storeFile file("video_dairy_release.jks");
-                    storePassword("4759112aA");
-                    keyAlias "videodailyalias";
-                    keyPassword "videodaily321aA";
-                }
-    }
-
     buildTypes {
+
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            signingConfig signingConfigs.releaseConfig
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+
+                    def newName = output.outputFile.name
+                    newName = newName.replace("presentation-", "video-dairy-")
+                    newName = newName.replace("-release", "-release-" + defaultConfig.versionName)
+
+                    output.outputFile = new File(output.outputFile.parent, newName)
+                }
+            }
         }
     }
     return void
@@ -67,9 +70,10 @@ dependencies {
     compile presentationDependencies.dagger
     compile presentationDependencies.designAndroid
     compile presentationDependencies.eventBus
+    compile presentationDependencies.multidex
 
-    annotationProcessor  presentationDependencies.daggerCompiler
-    annotationProcessor  presentationDependencies.butterKnifeCompiler
+    annotationProcessor presentationDependencies.daggerCompiler
+    annotationProcessor presentationDependencies.butterKnifeCompiler
 
     compile('com.crashlytics.sdk.android:crashlytics:2.2.2@aar') {
         transitive = true;

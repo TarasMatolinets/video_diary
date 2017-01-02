@@ -244,7 +244,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             description = mEtDescription.getText().toString().equals(mVideoNote.getDescription());
         }
 
-        isShowSave = !TextUtils.isEmpty(mEtTitle.getText()) && !title && !description;
+        isShowSave = !title || !description;
         invalidateOptionsMenu();
     }
 

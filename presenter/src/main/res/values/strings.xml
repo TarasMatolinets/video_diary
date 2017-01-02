@@ -8,10 +8,7 @@
     <!--splash-screen-->
     <string name="splash_welcome">WELCOME!</string>
     <string name="splash_app_name">TO VIDEO DIARY</string>
-    <!--<string name="splash_name">Sign your name</string>
-    <string name="splash_personal_name">Your Personal Name</string>
-    <string name="splash_next">Next</string>
--->
+
     <!--menu activity-->
     <string name="menu_act_no_videos">No video records</string>
     <string name="menu_act_no_notes">No notes</string>
@@ -74,8 +71,6 @@
     <string name="linken_in" translatable="false">https://www.linkedin.com/in/tarasmatolinets</string>
 
     <string name="error_play_video">Can\'t open current video file</string>
-
-    <!--warnings-->
     <string name="fragment_video_not_recorded_warning">Video has not been recorded</string>
     <string name="error_picture">Please choose another picture</string>
     <string name="error" translatable="false">error message</string>
@@ -87,7 +82,6 @@
     <string name="note_saved_successfully">Note saved successfully</string>
     <string name="note_edited_successfully">Note edited successfully</string>
     <string name="note_deleted_successfully">Note deleted successfully</string>
-
 
     <string name="video_note_saved_successfully">Video note saved successfully</string>
     <string name="video_note_edited_successfully">Video edited successfully</string>

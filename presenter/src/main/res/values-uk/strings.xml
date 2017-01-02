@@ -42,4 +42,15 @@
 
     <string name="banner_ad_unit_id">ca-app-pub-6807003067438136/7737012204</string>
     <string name="test_device_id">3E1CF5AAC99D5581DB7383FBBC97682F</string>
+
+    <string name="note_saved_successfully">Закладка збережена успішно</string>
+    <string name="note_edited_successfully">Закладка оновлена успішно</string>
+    <string name="note_deleted_successfully">Закладка видалена успішно</string>
+
+    <string name="video_note_saved_successfully">Відео закладка збережена успішно</string>
+    <string name="video_note_edited_successfully">Відео закладка оновлена успішно</string>
+    <string name="video_note_deleted_successfully">Відео закладка видалена успішно</string>
+
+    <string name="delete_note_description">Ви дійсно впевнені що ви хочете видалити цю закладку?</string>
+    <string name="video_notes">@string/menu_notes</string>
 </resources>

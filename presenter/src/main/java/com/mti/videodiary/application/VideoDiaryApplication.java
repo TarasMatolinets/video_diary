@@ -2,6 +2,7 @@ package com.mti.videodiary.application;
 
 import android.app.Application;
 import android.os.Environment;
+import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -22,7 +23,7 @@ import static com.mti.videodiary.data.Constants.VIDEO_DIR;
  * Created by Taras Matolinets on 09.11.14.
  * Android main application
  */
-public class VideoDiaryApplication extends Application {
+public class VideoDiaryApplication extends MultiDexApplication {
 
     private VideoDiaryAppComponent mVideoDiaryAppComponent;
 
