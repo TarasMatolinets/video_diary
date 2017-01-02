@@ -17,6 +17,7 @@
 #}
 
 ##########RX_JAVA#########################
+-dontwarn sun.misc.Unsafe
 -keep class rx.schedulers.Schedulers {
     public static <methods>;
 }
@@ -30,12 +31,16 @@
     public static ** test();
 }
 -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
-    long producerIndex;
-    long consumerIndex;
+   long producerIndex;
+   long consumerIndex;
 }
+
 -keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
-    long producerNode;
-    long consumerNode;
+    rx.internal.util.atomic.LinkedQueueNode producerNode;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
 ############################END RXJAVA########
 ###############DAGGER##########################
@@ -52,11 +57,4 @@
 -keep class * extends dagger.internal.ModuleAdapter
 -keep class * extends dagger.internal.StaticInjection
 #################################################
-###############ORM LITE##########################
--keep class com.j256.**
--keepclassmembers class com.j256.** { *; }
--keep enum com.j256.**
--keepclassmembers enum com.j256.** { *; }
--keep interface com.j256.**
--keepclassmembers interface com.j256.** { *; }
-#############END ORM LITE########################
+

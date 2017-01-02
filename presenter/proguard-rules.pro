@@ -15,8 +15,28 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-
+################# support-v4####################
+-dontwarn android.support.v4.**
+-keep class android.support.v4.app.** { *; }
+-keep interface android.support.v4.app.** { *; }
+-keep class android.support.v4.** { *; }
+##############end support-v4##############################
+################# support-v7######################################
+-dontwarn android.support.v7.**
+-keep class android.support.v7.internal.** { *; }
+-keep interface android.support.v7.internal.** { *; }
+-keep class android.support.v7.** { *; }
+##############end support-v7##############################
+########################support design###########
+-dontwarn android.support.design.**
+-keep class android.support.design.** { *; }
+-keep interface android.support.design.** { *; }
+##############end support design####################
+-keepattributes Signature
+-keepattributes *Annotation*
 ##########RX_JAVA#########################
+-dontwarn sun.misc.Unsafe
+
 -keep class rx.schedulers.Schedulers {
     public static <methods>;
 }
@@ -30,16 +50,20 @@
     public static ** test();
 }
 -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
-    long producerIndex;
-    long consumerIndex;
+   long producerIndex;
+   long consumerIndex;
 }
+
 -keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
-    long producerNode;
-    long consumerNode;
+    rx.internal.util.atomic.LinkedQueueNode producerNode;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
 ############################END RXJAVA########
 ###################EVENT BUS##################
--keepattributes *Annotation*
+
 -keepclassmembers class ** {
     @org.greenrobot.eventbus.Subscribe <methods>;
 }
@@ -69,4 +93,8 @@
 -keep class * extends dagger.internal.ModuleAdapter
 -keep class * extends dagger.internal.StaticInjection
 #################################################
-
+###############ORM LITE##########################
+-dontwarn com.j256.ormlite.android.**
+-dontwarn com.j256.ormlite.logger.**
+-dontwarn com.j256.ormlite.misc.*
+#############END ORM LITE########################

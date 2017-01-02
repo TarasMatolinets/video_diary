@@ -357,18 +357,6 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
         }
     }
 
-    public static class VideoImageHeight {
-        private int imageHeight;
-
-        public int getImageHeight() {
-            return imageHeight;
-        }
-
-        public void setImageHeight(int imageHeight) {
-            this.imageHeight = imageHeight;
-        }
-    }
-
     public static class DeleteVideoNote {
 
         private int id;

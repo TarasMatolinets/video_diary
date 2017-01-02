@@ -24,18 +24,29 @@ android {
         versionName globalConfiguration.getAt("androidVersionName")
     }
 
+    signingConfigs {
+
+    }
+
     buildTypes {
+        debug {
+            minifyEnabled false
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
 
         release {
-            minifyEnabled true
+            minifyEnabled false
             shrinkResources true
+
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.releaseConfig
 
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
 
                     def newName = output.outputFile.name
-                    newName = newName.replace("presentation-", "video-dairy-")
+                    newName = newName.replace("presenter-", "video-dairy-")
                     newName = newName.replace("-release", "-release-" + defaultConfig.versionName)
 
                     output.outputFile = new File(output.outputFile.parent, newName)
@@ -59,7 +70,6 @@ dependencies {
     compile presentationDependencies.nineOldAndroidsVersion
     compile presentationDependencies.easing
     compile presentationDependencies.androidAnimations
-    compile presentationDependencies.recyclerviewAnimations
     compile presentationDependencies.googlePlayServices
     compile presentationDependencies.recyclerView
     compile presentationDependencies.cardViewVersion

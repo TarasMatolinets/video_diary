@@ -55,7 +55,6 @@ public class VideoNoteIDataBaseFactory implements VideoIDataBase {
                     List<VideoDomain> listDomain = transformer.transformVideoList(noteList);
 
                     subscriber.onNext(listDomain);
-                    subscriber.onCompleted();
                 } catch (SQLException e) {
                     subscriber.onError(e);
                 }

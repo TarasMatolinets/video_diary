@@ -128,7 +128,7 @@ public class VideoFragmentPresenter {
     }
 
     //region SUBSCRIBER
-    private final class GetListVideoNotesSubscriber extends DefaultSubscriber<List<VideoDomain>> {
+    private class GetListVideoNotesSubscriber extends DefaultSubscriber<List<VideoDomain>> {
 
         @Override
         public void onError(Throwable e) {

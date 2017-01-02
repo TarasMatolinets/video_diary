@@ -91,8 +91,7 @@ ext {
             rxAndroid         : "io.reactivex:rxandroid:${rxAndroidVersion}",
             javaxAnnotation   : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             androidAnnotations: "com.android.support:support-annotations:${androidAnnotationsVersion}",
-            ormLiteCore           : "com.j256.ormlite:ormlite-core:${ormliteVersion}",
-            ormLiteAndroid        : "com.j256.ormlite:ormlite-android:${ormliteVersion}"
+            ormLiteAndroid    : "com.j256.ormlite:ormlite-android:${ormliteVersion}"
     ]
 
     dataTestDependencies = [
