@@ -13,7 +13,7 @@ In Video Dairy we use simple dagger graph for dependency injection. Basically we
 ![mvp](https://cloud.githubusercontent.com/assets/2522157/21604105/003c339a-d1aa-11e6-9173-d5f4567e25b4.jpg)
 
 In the diagram below there is general schema how app is works. We will take as example load saved notes.
-![all app shema](https://cloud.githubusercontent.com/assets/2522157/21603618/52236384-d1a7-11e6-8057-b43b4235d211.jpg)
+![new all sheme](https://cloud.githubusercontent.com/assets/2522157/21605715/99437112-d1b3-11e6-9751-c7f3af812a72.jpg)
 
 When you will follow this patterns your code will be more clear and easy for understanding!
 
