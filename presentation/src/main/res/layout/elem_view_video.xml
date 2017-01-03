@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/edge_medium"
+    android:id="@+id/cv_create_video"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardBackgroundColor="@color/white"
+    card_view:cardCornerRadius="@dimen/edge_normal">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/rlVideoCreate">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/flVideoCreate">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/iv_video_thumbnail"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                android:layout_margin="@dimen/edge_medium" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_play_arrow_white"
+                android:id="@+id/iv_play"
+                android:layout_gravity="center" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/et_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/flVideoCreate"
+            android:layout_margin="@dimen/edge_medium"
+            android:maxLines="2"
+            android:textSize="@dimen/text_medium"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:ellipsize="end"
+            android:hint="@string/create_title"
+            android:lines="1" />
+
+        <include
+            layout="@layout/view_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignBottom="@+id/et_title" />
+
+        <TextView
+            android:id="@+id/et_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_title"
+            android:layout_margin="@dimen/edge_medium"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:textSize="@dimen/text_mini_normal"
+            android:textStyle="normal"
+            android:gravity="top"
+            android:textColor="@color/black" />
+
+        <include
+            layout="@layout/view_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignBottom="@+id/et_description" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/et_description"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/llElements">
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivEdit"
+                android:layout_marginRight="@dimen/edge_big"
+                android:layout_marginBottom="@dimen/edge_medium"
+                android:layout_marginTop="@dimen/edge_medium"
+                android:background="@drawable/ic_edit_grey" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/iv_share"
+                android:layout_marginRight="@dimen/edge_big"
+                android:layout_marginBottom="@dimen/edge_medium"
+                android:layout_marginTop="@dimen/edge_medium"
+                android:background="@drawable/ic_share_grey" />
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/trash"
+                android:layout_margin="@dimen/edge_medium"
+                android:background="@drawable/ic_delete_grey" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

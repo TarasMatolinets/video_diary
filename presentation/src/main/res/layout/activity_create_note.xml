@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/scroll_card"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+    <LinearLayout
+        android:id="@+id/ll_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient_menu"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view_title"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/edge_medium"
+            android:layout_weight="0.2"
+            card_view:cardBackgroundColor="@color/white"
+            card_view:cardCornerRadius="@dimen/edge_normal">
+
+            <EditText
+                android:id="@+id/et_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:ellipsize="end"
+                android:gravity="top"
+                android:hint="@string/create_title_note"
+                android:inputType="text|textMultiLine"
+                android:padding="@dimen/edge_medium"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@drawable/keyboard_cursor_color"
+                android:textSize="@dimen/text_medium"
+                android:textStyle="bold"/>
+        </android.support.v7.widget.CardView>
+
+        <include
+            layout="@layout/view_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view_create_note"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/edge_medium"
+            android:layout_weight="0.8"
+            card_view:cardBackgroundColor="@color/white"
+            card_view:cardCornerRadius="@dimen/edge_normal">
+
+            <EditText
+                android:id="@+id/et_description"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="top"
+                android:hint="@string/description_note"
+                android:inputType="text|textMultiLine"
+                android:padding="@dimen/edge_medium"
+                android:scrollbars="vertical"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@drawable/keyboard_cursor_color"
+                android:textSize="@dimen/text_mini_normal"
+                android:textStyle="normal"/>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+
+</ScrollView>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_menu">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/tv_contact_me"
+        android:text="@string/contact_me"
+        android:textSize="@dimen/text_normal"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/edge_large" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_email"
+        android:textSize="@dimen/text_mini_normal"
+        android:textColor="@color/white"
+        android:layout_alignParentLeft="true"
+        android:textStyle="bold"
+        android:autoLink="email"
+        android:layout_marginLeft="@dimen/edge_medium"
+        android:layout_below="@+id/tv_contact_me"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/edge_medium" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_mini_normal"
+        android:id="@+id/tv_linken_in"
+        android:autoLink="web"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/white"
+        android:textStyle="normal"
+        android:visibility="visible"
+        android:layout_below="@+id/tv_email"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/edge_medium"
+        android:layout_marginTop="@dimen/edge_above" />
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/ad_view_support"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/tv_count"
+        android:layout_marginRight="55dp"
+        android:layout_marginEnd="55dp"
+        android:textColor="@color/white"
+        android:layout_centerInParent="true" />
+</RelativeLayout>
