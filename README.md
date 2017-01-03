@@ -9,9 +9,12 @@ In Video Dairy we use simple dagger graph for dependency injection. Basically we
 
 ![dagge2](https://cloud.githubusercontent.com/assets/2522157/21602575/fde3761e-d19d-11e6-88f6-b2eaeefff877.jpg)
 
+**Presentation** layer work through MVP patter. For View we understand Fragments,Activitiews and CustomViews. Presenter it's object for communicate with model in our case Model it's **Domain** layer. Then **Domain** layer call **Data** layer for featch information from data base and back it to Presenter and show it to view. 
+![mvp](https://cloud.githubusercontent.com/assets/2522157/21604105/003c339a-d1aa-11e6-9173-d5f4567e25b4.jpg)
+
 In the diagram below there is general schema how app is works. We will take as example load saved notes.
 ![all app shema](https://cloud.githubusercontent.com/assets/2522157/21603618/52236384-d1a7-11e6-8057-b43b4235d211.jpg)
 
-When you will follow this patterns your code will be more clear and easy for understanding,
+When you will follow this patterns your code will be more clear and easy for understanding!
 
 
