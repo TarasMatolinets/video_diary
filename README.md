@@ -7,7 +7,7 @@ All this layers communicate through interface for being max independent for othe
 
 In Video Dairy we use simple dagger graph for dependency injection. Basically we have 3 scopes @Singltone, @PerActivity, @PerFragment.In diagram below you can see a more about objects lifecicle in video dairy application.
 
-
+https://cloud.githubusercontent.com/assets/2522157/21602575/fde3761e-d19d-11e6-88f6-b2eaeefff877.jpg
 
 Let's take use case that user want to load list of saved notes. In video
 
