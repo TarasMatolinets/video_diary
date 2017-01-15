@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -105,17 +106,18 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        ActivityComponent component = getComponent(ActivityComponent.class);
-        FragmentComponent fragmentComponent = component.plus(new FragmentModule(getActivity()));
-        fragmentComponent.inject(this);
-
         EventBus.getDefault().register(this);
-        mPresenter.setView(this);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_video, container, false);
+
+        ActivityComponent component = getComponent(ActivityComponent.class);
+        FragmentComponent fragmentComponent = component.plus(new FragmentModule(getActivity()));
+        fragmentComponent.inject(this);
+        mPresenter.setView(this);
 
         mBinder = ButterKnife.bind(this, view);
 

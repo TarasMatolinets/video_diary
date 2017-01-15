@@ -22,9 +22,13 @@ import interactor.UseCaseGetVideoNoteById;
 import interactor.UseCaseUpdateVideoNoteList;
 import model.VideoDomain;
 import mti.com.videodiary.R;
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.mti.videodiary.data.Constants.FILE_FORMAT;
+import static com.mti.videodiary.data.Constants.KEY_VIDEO_PATH;
 import static com.mti.videodiary.data.Constants.TAG;
 
 /**
@@ -113,6 +117,22 @@ public class CreateVideoPresenter {
         UseCase useCase = new UseCaseCreateVideoNote(mExecutor, mPostExecutorThread, mDataBase, videoDomain);
         SaveUpdateVideoNoteSubscriber subscriber = new SaveUpdateVideoNoteSubscriber(mView.getString(R.string.video_note_saved_successfully));
         useCase.execute(subscriber);
+    }
+
+    public void deleteFile(final String videoFilePath) {
+        Observable.from(new String[]{videoFilePath}).subscribe(new Action1<String>() {
+            @Override
+            public void call(String s) {
+                File fileToDelete = new File(videoFilePath);
+                if (fileToDelete.exists()) {
+                    boolean isDeleted = fileToDelete.delete();
+
+                    if (isDeleted) {
+                        Log.i(TAG, "file deleted successfully");
+                    }
+                }
+            }
+        });
     }
 
     //region SUBSCRIBER

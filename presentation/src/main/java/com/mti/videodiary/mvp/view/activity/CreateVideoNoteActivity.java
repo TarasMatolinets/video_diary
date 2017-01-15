@@ -10,7 +10,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
@@ -48,15 +47,11 @@ import static android.provider.MediaStore.EXTRA_VIDEO_QUALITY;
 import static android.provider.MediaStore.Video.Thumbnails.MINI_KIND;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static com.mti.videodiary.data.Constants.FILE_FORMAT;
 import static com.mti.videodiary.data.Constants.HEIGHT;
 import static com.mti.videodiary.data.Constants.KEY_POSITION;
 import static com.mti.videodiary.data.Constants.KEY_VIDEO_PATH;
 import static com.mti.videodiary.data.Constants.ORIENTATION;
-import static com.mti.videodiary.data.Constants.VIDEO_DIR;
-import static com.mti.videodiary.data.Constants.VIDEO_FILE_NAME;
 import static com.mti.videodiary.data.Constants.WIDTH;
-import static java.io.File.separator;
 
 /**
  * Created by Taras Matolinets on 01.03.15.
@@ -96,6 +91,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     private ColorDrawable mBackground;
     private ActivityComponent mComponent;
     private VideoDomain mVideoNote;
+    private String mRecordedVideoFilePath;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,8 +145,8 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             isEditVideoDaily = true;
             mPresenter.getVideoNote(position);
         } else {
-            String videoFilePath = getIntent().getStringExtra(KEY_VIDEO_PATH);
-            setImageToView(videoFilePath);
+            mRecordedVideoFilePath = getIntent().getStringExtra(KEY_VIDEO_PATH);
+            setImageToView(mRecordedVideoFilePath);
         }
     }
 
@@ -197,13 +193,18 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         switch (item.getItemId()) {
             case R.id.action_save:
                 if (!isEditVideoDaily) {
-                    String videoFilePath = getIntent().getStringExtra(KEY_VIDEO_PATH);
-                    mPresenter.createNewVideoDaily(videoFilePath, mEtTitle.getText().toString(), mEtDescription.getText().toString());
+                    mPresenter.createNewVideoDaily(mRecordedVideoFilePath, mEtTitle.getText().toString(), mEtDescription.getText().toString());
                 } else {
                     mPresenter.updateVideoNote(mVideoNote.getVideoName(), mEtTitle.getText().toString(), mEtDescription.getText().toString(), mVideoNote.getId());
                 }
                 break;
             case android.R.id.home:
+                int position = getIntent().getIntExtra(KEY_POSITION, DEFAULT_VALUE);
+
+                if (position == DEFAULT_VALUE) {
+                    mPresenter.deleteFile(mRecordedVideoFilePath);
+                }
+
                 runExitAnimation();
                 break;
         }
@@ -218,6 +219,12 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
     @Override
     public void onBackPressed() {
+        int position = getIntent().getIntExtra(KEY_POSITION, DEFAULT_VALUE);
+
+        if (position == DEFAULT_VALUE) {
+           mPresenter.deleteFile(mRecordedVideoFilePath);
+        }
+
         runExitAnimation();
     }
 
@@ -258,9 +265,9 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             switch (requestCode) {
                 case REQUEST_VIDEO_CAPTURE:
                     final Uri videoUri = data.getData();
-                    String videoFilePath = videoUri.getPath();
+                    mRecordedVideoFilePath = videoUri.getPath();
 
-                    final File file = new File(videoFilePath);
+                    final File file = new File(mRecordedVideoFilePath);
 
                     mTvAddVideoNote.setVisibility(GONE);
                     mIvThumbnail.setVisibility(VISIBLE);
@@ -280,10 +287,8 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
     @OnClick(R.id.iv_play)
     public void playVideoNote() {
-        String videoFilePath = getIntent().getStringExtra(KEY_VIDEO_PATH);
-
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoFilePath));
-        intent.setDataAndType(Uri.parse(videoFilePath), VIDEO_MP4);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mRecordedVideoFilePath));
+        intent.setDataAndType(Uri.parse(mRecordedVideoFilePath), VIDEO_MP4);
         startActivity(intent);
     }
 
@@ -297,13 +302,16 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         mIvThumbnail.setVisibility(GONE);
         mTvAddVideoNote.setVisibility(VISIBLE);
 
+        if (!TextUtils.isEmpty(mRecordedVideoFilePath)) {
+            mPresenter.deleteFile(mRecordedVideoFilePath);
+        }
+
         invalidateOptionsMenu();
     }
 
     @OnClick(R.id.tv_add_video)
     public void addVideoNote() {
         Intent intentVideo = new Intent(ACTION_VIDEO_CAPTURE);
-
         intentVideo.putExtra(EXTRA_VIDEO_QUALITY, 1);
 
         startActivityForResult(intentVideo, REQUEST_VIDEO_CAPTURE);
