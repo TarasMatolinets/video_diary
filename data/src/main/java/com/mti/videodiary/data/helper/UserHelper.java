@@ -72,7 +72,7 @@ public class UserHelper {
                 cursor.close();
             }
         }
-        return null;
+        return contentUri.getPath();
     }
 
     public static void copyFileUsingFileStreams(File source, File dest) {

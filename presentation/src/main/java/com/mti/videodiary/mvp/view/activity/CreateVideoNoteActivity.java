@@ -44,7 +44,6 @@ import mti.com.videodiary.R;
 import static android.graphics.Color.TRANSPARENT;
 import static android.graphics.Color.WHITE;
 import static android.provider.MediaStore.ACTION_VIDEO_CAPTURE;
-import static android.provider.MediaStore.EXTRA_OUTPUT;
 import static android.provider.MediaStore.EXTRA_VIDEO_QUALITY;
 import static android.provider.MediaStore.Video.Thumbnails.MINI_KIND;
 import static android.view.View.GONE;
@@ -303,17 +302,8 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
     @OnClick(R.id.tv_add_video)
     public void addVideoNote() {
-        if (isEditVideoDaily) {
-            VIDEO_FILE_NAME = separator + mEtTitle.getText().toString() + FILE_FORMAT;
-        }
-
-        final File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + separator + VIDEO_DIR + VIDEO_FILE_NAME);
-
-        Uri fileUri = Uri.fromFile(mediaFile);
-
         Intent intentVideo = new Intent(ACTION_VIDEO_CAPTURE);
 
-        intentVideo.putExtra(EXTRA_OUTPUT, fileUri);
         intentVideo.putExtra(EXTRA_VIDEO_QUALITY, 1);
 
         startActivityForResult(intentVideo, REQUEST_VIDEO_CAPTURE);

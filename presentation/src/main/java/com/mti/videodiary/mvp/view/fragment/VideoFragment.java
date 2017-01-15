@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -32,6 +33,7 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.mti.videodiary.data.helper.UserHelper;
 import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.di.component.FragmentComponent;
@@ -60,6 +62,8 @@ import mti.com.videodiary.R;
 import static android.app.Activity.RESULT_OK;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
+import static android.os.Environment.MEDIA_MOUNTED;
+import static android.os.Environment.MEDIA_MOUNTED_READ_ONLY;
 import static android.provider.MediaStore.ACTION_VIDEO_CAPTURE;
 import static android.provider.MediaStore.EXTRA_OUTPUT;
 import static android.provider.MediaStore.EXTRA_VIDEO_QUALITY;
@@ -69,6 +73,8 @@ import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.mti.videodiary.data.Constants.KEY_VIDEO_PATH;
+import static com.mti.videodiary.data.Constants.VIDEO_DIR;
+import static com.mti.videodiary.data.Constants.VIDEO_FILE_NAME;
 
 /**
  * Created by Taras Matolinets on 23.02.15.
@@ -201,11 +207,7 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
 
     @OnClick(R.id.button_float)
     public void createVideoClick() {
-        Uri filePath = Uri.fromFile(mPresenter.saveFileInStorage());
-
         Intent intent = new Intent(ACTION_VIDEO_CAPTURE);
-
-        intent.putExtra(EXTRA_OUTPUT, filePath);
         intent.putExtra(EXTRA_VIDEO_QUALITY, 1);
 
         startActivityForResult(intent, REQUEST_VIDEO_CAPTURE);
@@ -236,12 +238,7 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
 
     private void startVideoActivity(Intent data) {
         final Uri videoUri = data.getData();
-        String videoFilePath = videoUri.getPath();
-
-        if (videoFilePath.contains(CONTENT_MEDIA)) {
-            File file = mPresenter.createFileFromUri(videoUri);
-            videoFilePath = file.getAbsolutePath();
-        }
+        String videoFilePath = UserHelper.getRealPathFromURI(getActivity(), videoUri);
 
         Bundle bundle = new Bundle();
         bundle.putString(KEY_VIDEO_PATH, videoFilePath);

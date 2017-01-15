@@ -1,6 +1,5 @@
 package com.mti.videodiary.mvp.presenter;
 
-import android.os.Environment;
 import android.util.Log;
 
 import com.mti.videodiary.data.storage.manager.VideoNoteIDataBaseFactory;
@@ -27,8 +26,6 @@ import rx.subscriptions.CompositeSubscription;
 
 import static com.mti.videodiary.data.Constants.FILE_FORMAT;
 import static com.mti.videodiary.data.Constants.TAG;
-import static com.mti.videodiary.data.Constants.VIDEO_DIR;
-import static java.io.File.separator;
 
 /**
  * Created by Terry on 12/14/2016.
@@ -70,17 +67,10 @@ public class CreateVideoPresenter {
     public void updateVideoNote(String videoPath, String title, String description, int videoId) {
         VideoDomain videoDomain = new VideoDomain();
 
-        File oldFileName = new File(videoPath);
-        File newFileName = new File(Environment.getExternalStorageDirectory() + VIDEO_DIR + separator + title + FILE_FORMAT);
+        videoPath = renameFile(videoPath, title);
 
-        boolean success = oldFileName.renameTo(newFileName);
-
-        if (success) {
-            Log.i(TAG, "video file renamed");
-        }
-
-        videoDomain.setVideoUrl(newFileName.getAbsolutePath());
-        videoDomain.setImageUrl(newFileName.getAbsolutePath());
+        videoDomain.setVideoUrl(videoPath);
+        videoDomain.setImageUrl(videoPath);
         videoDomain.setTitle(title);
         videoDomain.setId(videoId);
         videoDomain.setDescription(description);
@@ -90,20 +80,33 @@ public class CreateVideoPresenter {
         useCase.execute(subscriber);
     }
 
-    public void createNewVideoDaily(String videoPath, String title, String description) {
-        VideoDomain videoDomain = new VideoDomain();
+    private String renameFile(String videoPath, String title) {
+        String[] splitArray = videoPath.split("/");
+        splitArray[splitArray.length - 1] = title + FILE_FORMAT;
+
+        StringBuilder builder = new StringBuilder();
+
+        for (String s : splitArray) {
+            builder.append(s).append("/");
+        }
 
         File oldFileName = new File(videoPath);
-        File newFileName = new File(Environment.getExternalStorageDirectory() + VIDEO_DIR + separator + title + FILE_FORMAT);
+        File newFileName = new File(builder.toString());
 
         boolean success = oldFileName.renameTo(newFileName);
 
         if (success) {
-            Log.i(TAG, "video file renamed");
+            Log.i(TAG, "video file renamed successfully");
         }
+        return newFileName.getAbsolutePath();
+    }
 
-        videoDomain.setVideoUrl(newFileName.getAbsolutePath());
-        videoDomain.setImageUrl(newFileName.getAbsolutePath());
+    public void createNewVideoDaily(String videoPath, String title, String description) {
+        VideoDomain videoDomain = new VideoDomain();
+
+        videoPath = renameFile(videoPath, title);
+        videoDomain.setVideoUrl(videoPath);
+        videoDomain.setImageUrl(videoPath);
         videoDomain.setTitle(title);
         videoDomain.setDescription(description);
 

@@ -1,17 +1,12 @@
 package com.mti.videodiary.mvp.presenter;
 
-import android.net.Uri;
-import android.os.Environment;
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.mti.videodiary.data.helper.UserHelper;
 import com.mti.videodiary.data.storage.manager.VideoNoteIDataBaseFactory;
 import com.mti.videodiary.di.annotation.PerFragment;
 import com.mti.videodiary.mvp.view.fragment.VideoFragment;
 import com.mti.videodiary.mvp.view.fragment.VideoFragment.VideoNoteText;
 
-import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -28,11 +23,7 @@ import model.VideoDomain;
 import mti.com.videodiary.R;
 import rx.subscriptions.CompositeSubscription;
 
-import static android.os.Environment.MEDIA_MOUNTED;
-import static android.os.Environment.MEDIA_MOUNTED_READ_ONLY;
 import static com.mti.videodiary.data.Constants.TAG;
-import static com.mti.videodiary.data.Constants.VIDEO_DIR;
-import static com.mti.videodiary.data.Constants.VIDEO_FILE_NAME;
 
 /**
  * Created by Terry on 12/15/2016.
@@ -89,42 +80,6 @@ public class VideoFragmentPresenter {
         useCaseDeleteList.execute(subscriber);
 
         mComposeSubscriptionList.add(subscriber);
-    }
-
-    public File saveFileInStorage() {
-        String state = Environment.getExternalStorageState();
-        File mediaFile = null;
-
-        if (MEDIA_MOUNTED.equals(state)) {
-            mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + VIDEO_DIR + VIDEO_FILE_NAME);
-        } else if (MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            mediaFile = new File(mView.getActivity().getFilesDir().getAbsolutePath() + VIDEO_DIR + VIDEO_FILE_NAME);
-        }
-        return mediaFile;
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public File createFileFromUri(Uri uri) {
-        String state = Environment.getExternalStorageState();
-        File mediaFile = null;
-        String path = UserHelper.getRealPathFromURI(mView.getActivity(), uri);
-        if (!TextUtils.isEmpty(path)) {
-            File videoFile = new File(path);
-
-            if (MEDIA_MOUNTED.equals(state)) {
-                mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + VIDEO_DIR + VIDEO_FILE_NAME);
-            } else if (MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-                mediaFile = new File(mView.getActivity().getFilesDir().getAbsolutePath() + VIDEO_DIR + VIDEO_FILE_NAME)
-                ;
-            }
-            UserHelper.copyFileUsingFileStreams(videoFile, mediaFile);
-
-            if (videoFile.exists()) {
-                videoFile.delete();
-            }
-        }
-
-        return mediaFile;
     }
 
     //region SUBSCRIBER

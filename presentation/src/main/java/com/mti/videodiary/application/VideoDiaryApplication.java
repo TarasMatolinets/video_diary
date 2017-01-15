@@ -42,7 +42,7 @@ public class VideoDiaryApplication extends MultiDexApplication {
         String noteFolder = NOTE_DIR;
         String imageDir = IMAGE_DIR;
 
-        createFolder(videoFolder);
+      //  createFolder(videoFolder);
         createFolder(noteFolder);
         createFolder(imageDir);
     }
