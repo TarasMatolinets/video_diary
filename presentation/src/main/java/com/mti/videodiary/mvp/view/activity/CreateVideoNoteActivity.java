@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.mti.videodiary.data.helper.UserHelper;
 import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.mvp.presenter.CreateVideoPresenter;
@@ -265,7 +266,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             switch (requestCode) {
                 case REQUEST_VIDEO_CAPTURE:
                     final Uri videoUri = data.getData();
-                    mRecordedVideoFilePath = videoUri.getPath();
+                    mRecordedVideoFilePath = UserHelper.getRealPathFromURI(this, videoUri);
 
                     final File file = new File(mRecordedVideoFilePath);
 
