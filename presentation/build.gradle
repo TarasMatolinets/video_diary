@@ -24,6 +24,19 @@ android {
         versionName globalConfiguration.getAt("androidVersionName")
     }
 
+    signingConfigs {
+        releaseConfig
+                {
+                    storeFile file('E:/оплата будинок/квитанціі/video_dairy_release.jks')
+                    storePassword("4759112aA");
+                    keyAlias "videodailyalias";
+                    keyPassword "videodaily321aA";
+                }
+    }
+
+    dexOptions {
+        javaMaxHeapSize = "4g"
+    }
 
     buildTypes {
         debug {
@@ -37,6 +50,7 @@ android {
             shrinkResources true
 
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
 
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->

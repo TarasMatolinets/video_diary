@@ -76,8 +76,8 @@
     <string name="error" translatable="false">error message</string>
     <string name="error_format" translatable="false">error format</string>
 
-    <string name="banner_ad_unit_id">ca-app-pub-6807003067438136/7737012204</string>
-    <string name="test_device_id">3E1CF5AAC99D5581DB7383FBBC97682F</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-6807003067438136/7737012204</string>
+    <string name="test_device_id" translatable="false">3E1CF5AAC99D5581DB7383FBBC97682F</string>
 
     <string name="note_saved_successfully">Note saved successfully</string>
     <string name="note_edited_successfully">Note edited successfully</string>

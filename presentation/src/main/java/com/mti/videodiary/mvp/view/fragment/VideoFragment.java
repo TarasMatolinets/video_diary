@@ -99,19 +99,19 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+        ActivityComponent component = getComponent(ActivityComponent.class);
+        FragmentComponent fragmentComponent = component.plus(new FragmentModule(getActivity()));
+        fragmentComponent.inject(this);
+
         EventBus.getDefault().register(this);
+        mPresenter.setView(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_video, container, false);
 
-        ActivityComponent component = getComponent(ActivityComponent.class);
-        FragmentComponent fragmentComponent = component.plus(new FragmentModule(getActivity()));
-        fragmentComponent.inject(this);
-
         mBinder = ButterKnife.bind(this, view);
-        mPresenter.setView(this);
 
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
