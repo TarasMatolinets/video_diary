@@ -158,6 +158,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     public void loadVideoNote(VideoDomain videoDomain) {
+        mRecordedVideoFilePath = videoDomain.getVideoName();
         mVideoNote = videoDomain;
         mEtTitle.setText(videoDomain.getTitle());
         mEtDescription.setText(videoDomain.getDescription());
@@ -223,7 +224,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         int position = getIntent().getIntExtra(KEY_POSITION, DEFAULT_VALUE);
 
         if (position == DEFAULT_VALUE) {
-           mPresenter.deleteFile(mRecordedVideoFilePath);
+            mPresenter.deleteFile(mRecordedVideoFilePath);
         }
 
         runExitAnimation();
