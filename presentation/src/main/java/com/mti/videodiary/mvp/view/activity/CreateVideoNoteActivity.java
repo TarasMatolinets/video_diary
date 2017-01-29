@@ -267,9 +267,14 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             switch (requestCode) {
                 case REQUEST_VIDEO_CAPTURE:
                     final Uri videoUri = data.getData();
-                    mRecordedVideoFilePath = UserHelper.getRealPathFromURI(this, videoUri);
+                    String path = UserHelper.getRealPathFromURI(this, videoUri);
 
-                    final File file = new File(mRecordedVideoFilePath);
+                    final File file = new File(path);
+                    mRecordedVideoFilePath = file.getAbsolutePath();
+
+                    if(isEditVideoDaily) {
+                        mVideoNote.setVideoUrl(mRecordedVideoFilePath);
+                    }
 
                     mTvAddVideoNote.setVisibility(GONE);
                     mIvThumbnail.setVisibility(VISIBLE);

@@ -56,7 +56,7 @@ android {
                 variant.outputs.each { output ->
 
                     def newName = output.outputFile.name
-                    newName = newName.replace("presenter-", "video-dairy-")
+                    newName = newName.replace("presentation-", "video-dairy-")
                     newName = newName.replace("-release", "-release-" + defaultConfig.versionName)
 
                     output.outputFile = new File(output.outputFile.parent, newName)

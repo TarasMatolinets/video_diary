@@ -75,7 +75,7 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        setComponent();
         setSupportActionBar(mToolBar);
 
         mPresenter.setView(this);
@@ -148,6 +148,7 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
 
             if (!TextUtils.isEmpty(picturePath)) {
                 Bitmap image = BitmapFactory.decodeFile(picturePath);
+                setProgressImageVisibility(GONE);
                 setImageInBackground(image);
                 mPreferences.setDataToSharePreferences(IMAGE_HEADER_MENU, picturePath, STRING);
             } else {

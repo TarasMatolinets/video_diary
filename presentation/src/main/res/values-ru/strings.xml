@@ -21,6 +21,7 @@
 
     <string name="share_text_video">Поделись своим записю  с помощью:</string>
     <string name="share_text_note">Поделись свиомы мыслями с помощью:</string>
+    <string name="no_video_note">Нет видеозаписи</string>
 
     <string name="menu_act_no_videos">Нет видео записей</string>
     <string name="menu_cancel">Отменить</string>

@@ -46,6 +46,7 @@
 
     <string name="menu_no_record">No Video Records</string>
     <string name="menu_no_notes">No Notes</string>
+    <string name="no_video_note">No Video record</string>
 
     <string name="delete_item">Delete current note</string>
 

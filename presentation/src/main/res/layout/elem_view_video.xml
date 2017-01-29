@@ -32,6 +32,15 @@
                 android:background="@drawable/ic_play_arrow_white"
                 android:id="@+id/iv_play"
                 android:layout_gravity="center" />
+
+            <TextView
+                android:text="@string/no_video_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/edge_big"
+                android:textSize="@dimen/text_medium"
+                android:id="@+id/tv_no_video_note"/>
         </FrameLayout>
 
         <TextView

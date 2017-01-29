@@ -35,6 +35,7 @@
     <string name="splash_welcome">ЛАСКАВО ПРОСИМО!</string>
     <string name="support_project">Підтримка проекту:</string>
     <string name="tap_to_add_video_note">Натисніть щоб добавити відео запис</string>
+    <string name="no_video_note">Немає відеозапису</string>
 
     <string name="error_play_video">Не вдалося відкрити поточний відео файл</string>
     <string name="share_text_video">Поділись своім відео за допомогою:</string>

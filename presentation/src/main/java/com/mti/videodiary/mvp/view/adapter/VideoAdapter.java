@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -16,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mti.videodiary.data.storage.dao.Video;
+import com.mti.videodiary.data.transformer.DataToDomainTransformer;
 import com.mti.videodiary.mvp.view.activity.CreateVideoNoteActivity;
 import com.mti.videodiary.mvp.view.fragment.VideoFragment.DeleteVideoNote;
 import com.mti.videodiary.mvp.view.fragment.VideoFragment.EditVideoNote;
@@ -23,7 +26,9 @@ import com.mti.videodiary.mvp.view.fragment.VideoFragment.ShareVideoNote;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,7 +37,10 @@ import butterknife.OnClick;
 import model.VideoDomain;
 import mti.com.videodiary.R;
 import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import static android.content.Intent.ACTION_SEND;
 import static android.content.Intent.ACTION_VIEW;
@@ -72,7 +80,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        VideoDomain video = mListVideos.get(position);
+        final VideoDomain video = mListVideos.get(position);
 
         holder.tvDescription.clearFocus();
         holder.tvTitle.clearFocus();
@@ -87,11 +95,34 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             holder.viewDivider.setVisibility(VISIBLE);
         }
 
-        Observable.from(new String[]{video.getImageUrl()}).subscribe(new Action1<String>() {
+        getBitmapObservable(video)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Bitmap>() {
             @Override
-            public void call(String url) {
-                Bitmap bMap = ThumbnailUtils.createVideoThumbnail(url, MINI_KIND);
-                holder.imIcon.setImageBitmap(bMap);
+            public void call(Bitmap bitmap) {
+                if (bitmap != null) {
+                    holder.imIcon.setImageBitmap(bitmap);
+                    holder.tvNoVideoRecord.setVisibility(GONE);
+                    holder.ivPlay.setVisibility(VISIBLE);
+                    holder.cardView.setVisibility(VISIBLE);
+                } else {
+                    holder.imIcon.setVisibility(GONE);
+                    holder.tvNoVideoRecord.setVisibility(VISIBLE);
+                    holder.ivPlay.setVisibility(GONE);
+                    holder.cardView.setVisibility(VISIBLE);
+                }
+            }
+        });
+    }
+
+    @NonNull
+    private Observable<Bitmap> getBitmapObservable(final VideoDomain video) {
+        return Observable.create(new Observable.OnSubscribe<Bitmap>() {
+            @Override
+            public void call(Subscriber<? super Bitmap> subscriber) {
+                Bitmap imageBitmap = ThumbnailUtils.createVideoThumbnail(video.getImageUrl(), MINI_KIND);
+                subscriber.onNext(imageBitmap);
             }
         });
     }
@@ -118,9 +149,11 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
         @BindView(R.id.et_title) TextView tvTitle;
         @BindView(R.id.et_description) TextView tvDescription;
+        @BindView(R.id.tv_no_video_note) TextView tvNoVideoRecord;
         @BindView(R.id.iv_video_thumbnail) ImageView imIcon;
         @BindView(R.id.cv_create_video) CardView cardView;
         @BindView(R.id.viewDivider) View viewDivider;
+        @BindView(R.id.iv_play) ImageView ivPlay;
 
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
