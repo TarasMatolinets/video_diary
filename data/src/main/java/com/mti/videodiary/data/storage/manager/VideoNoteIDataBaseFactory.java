@@ -24,6 +24,7 @@ import model.VideoDomain;
 import rx.Observable;
 import rx.Subscriber;
 
+import static com.mti.videodiary.data.Constants.TAG;
 import static com.mti.videodiary.data.storage.dao.Note.TITLE;
 import static com.mti.videodiary.data.storage.dao.Video.ID;
 
@@ -35,6 +36,7 @@ import static com.mti.videodiary.data.storage.dao.Video.ID;
 
 public class VideoNoteIDataBaseFactory implements VideoIDataBase {
 
+    private static final String EMPTY = "";
     private final DataBaseHelper mHelper;
 
     @Inject
@@ -75,7 +77,7 @@ public class VideoNoteIDataBaseFactory implements VideoIDataBase {
                     List<Video> accountList = mHelper.getVideoListDao().query(preparedQuery);
 
                     int defaultValue = 0;
-                    if(!accountList.isEmpty()) {
+                    if (!accountList.isEmpty()) {
                         Video video = accountList.get(defaultValue);
                         DataToDomainTransformer transformer = new DataToDomainTransformer();
                         VideoDomain videoDomain = transformer.transform(video);
@@ -138,6 +140,8 @@ public class VideoNoteIDataBaseFactory implements VideoIDataBase {
             @Override
             public void call(Subscriber<? super Void> subscriber) {
                 try {
+                    deleteVideoLocally();
+
                     DomainToDataTransformer transformer = new DomainToDataTransformer();
                     Video videoDomain = transformer.transform(video);
                     mHelper.getVideoListDao().update(videoDomain);
@@ -145,6 +149,22 @@ public class VideoNoteIDataBaseFactory implements VideoIDataBase {
                     subscriber.onCompleted();
                 } catch (SQLException e) {
                     subscriber.onError(e);
+                }
+            }
+
+            private void deleteVideoLocally() {
+                if (video.isDeletedVideo()) {
+                    File fileToDelete = new File(video.getVideoPath());
+                    if (fileToDelete.exists()) {
+                        boolean isDeleted = fileToDelete.delete();
+
+                        if (isDeleted) {
+                            //set empty paths for delete video
+                            video.setVideoUrl(EMPTY);
+                            video.setImageUrl(EMPTY);
+                            Log.i(TAG, "file deleted successfully");
+                        }
+                    }
                 }
             }
         });

@@ -20,4 +20,5 @@ public interface VideoIDataBase extends IDataBase {
     Observable<Void> createVideo(VideoDomain video);
 
     Observable<Void> updateVideoList(VideoDomain video);
+
 }

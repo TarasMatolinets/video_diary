@@ -30,7 +30,7 @@ public class DomainToDataTransformer {
         video.setId(videoDomain.getId());
         video.setDescription(videoDomain.getDescription());
         video.setImageUrl(videoDomain.getImageUrl());
-        video.setVideoUrl(videoDomain.getVideoName());
+        video.setVideoUrl(videoDomain.getVideoPath());
 
         return video;
     }

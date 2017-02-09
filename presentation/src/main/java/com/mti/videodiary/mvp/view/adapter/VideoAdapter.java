@@ -17,8 +17,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mti.videodiary.data.storage.dao.Video;
-import com.mti.videodiary.data.transformer.DataToDomainTransformer;
 import com.mti.videodiary.mvp.view.activity.CreateVideoNoteActivity;
 import com.mti.videodiary.mvp.view.fragment.VideoFragment.DeleteVideoNote;
 import com.mti.videodiary.mvp.view.fragment.VideoFragment.EditVideoNote;
@@ -26,9 +24,7 @@ import com.mti.videodiary.mvp.view.fragment.VideoFragment.ShareVideoNote;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -99,21 +95,22 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Bitmap>() {
-            @Override
-            public void call(Bitmap bitmap) {
-                if (bitmap != null) {
-                    holder.imIcon.setImageBitmap(bitmap);
-                    holder.tvNoVideoRecord.setVisibility(GONE);
-                    holder.ivPlay.setVisibility(VISIBLE);
-                    holder.cardView.setVisibility(VISIBLE);
-                } else {
-                    holder.imIcon.setVisibility(GONE);
-                    holder.tvNoVideoRecord.setVisibility(VISIBLE);
-                    holder.ivPlay.setVisibility(GONE);
-                    holder.cardView.setVisibility(VISIBLE);
-                }
-            }
-        });
+                    @Override
+                    public void call(Bitmap bitmap) {
+                        if (bitmap != null) {
+                            holder.imIcon.setVisibility(VISIBLE);
+                            holder.imIcon.setImageBitmap(bitmap);
+                            holder.tvNoVideoRecord.setVisibility(GONE);
+                            holder.ivPlay.setVisibility(VISIBLE);
+                            holder.cardView.setVisibility(VISIBLE);
+                        } else {
+                            holder.imIcon.setVisibility(GONE);
+                            holder.tvNoVideoRecord.setVisibility(VISIBLE);
+                            holder.ivPlay.setVisibility(GONE);
+                            holder.cardView.setVisibility(VISIBLE);
+                        }
+                    }
+                });
     }
 
     @NonNull
@@ -164,8 +161,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         public void playClick() {
             VideoDomain video = mListVideos.get(getAdapterPosition());
 
-            Intent intent = new Intent(ACTION_VIEW, Uri.parse(video.getVideoName()));
-            intent.setDataAndType(Uri.parse(video.getVideoName()), VIDEO_MP4);
+            Intent intent = new Intent(ACTION_VIEW, Uri.parse(video.getVideoPath()));
+            intent.setDataAndType(Uri.parse(video.getVideoPath()), VIDEO_MP4);
             mContext.startActivity(intent);
         }
 
@@ -206,7 +203,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             ContentValues content = new ContentValues(4);
             content.put(DATE_ADDED, System.currentTimeMillis() / 1000);
             content.put(MIME_TYPE, VIDEO_MP4);
-            content.put(DATA, videoForShare.getVideoName());
+            content.put(DATA, videoForShare.getVideoPath());
             ContentResolver resolver = mContext.getContentResolver();
             Uri uri = resolver.insert(EXTERNAL_CONTENT_URI, content);
 

@@ -30,6 +30,9 @@ import com.mti.videodiary.data.helper.UserHelper;
 import com.mti.videodiary.di.IHasComponent;
 import com.mti.videodiary.di.component.ActivityComponent;
 import com.mti.videodiary.mvp.presenter.CreateVideoPresenter;
+import com.mti.videodiary.mvp.view.fragment.VideoFragment.UpdateVideoNoteList;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 
@@ -93,6 +96,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     private ActivityComponent mComponent;
     private VideoDomain mVideoNote;
     private String mRecordedVideoFilePath;
+    private boolean isDeletedVideo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -155,14 +159,26 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         final File file = new File(path);
         Bitmap bMap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MINI_KIND);
         mIvThumbnail.setImageBitmap(bMap);
+        mIvPlay.setVisibility(VISIBLE);
+        mIvCancel.setVisibility(VISIBLE);
     }
 
     public void loadVideoNote(VideoDomain videoDomain) {
-        mRecordedVideoFilePath = videoDomain.getVideoName();
+        mRecordedVideoFilePath = videoDomain.getVideoPath();
         mVideoNote = videoDomain;
         mEtTitle.setText(videoDomain.getTitle());
         mEtDescription.setText(videoDomain.getDescription());
-        setImageToView(videoDomain.getImageUrl());
+
+        if (!TextUtils.isEmpty(videoDomain.getImageUrl())) {
+            setImageToView(videoDomain.getImageUrl());
+            mIvPlay.setVisibility(VISIBLE);
+            mIvCancel.setVisibility(VISIBLE);
+        } else {
+            mIvCancel.setVisibility(GONE);
+            mIvPlay.setVisibility(GONE);
+            mIvThumbnail.setVisibility(GONE);
+            mTvAddVideoNote.setVisibility(VISIBLE);
+        }
     }
 
     @Override
@@ -197,16 +213,10 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                 if (!isEditVideoDaily) {
                     mPresenter.createNewVideoDaily(mRecordedVideoFilePath, mEtTitle.getText().toString(), mEtDescription.getText().toString());
                 } else {
-                    mPresenter.updateVideoNote(mVideoNote.getVideoName(), mEtTitle.getText().toString(), mEtDescription.getText().toString(), mVideoNote.getId());
+                    mPresenter.updateVideoNote(mVideoNote.getVideoPath(), mEtTitle.getText().toString(), mEtDescription.getText().toString(), mVideoNote.getId(), isDeletedVideo);
                 }
                 break;
             case android.R.id.home:
-                int position = getIntent().getIntExtra(KEY_POSITION, DEFAULT_VALUE);
-
-                if (position == DEFAULT_VALUE) {
-                    mPresenter.deleteFile(mRecordedVideoFilePath);
-                }
-
                 runExitAnimation();
                 break;
         }
@@ -221,24 +231,18 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
     @Override
     public void onBackPressed() {
-        int position = getIntent().getIntExtra(KEY_POSITION, DEFAULT_VALUE);
-
-        if (position == DEFAULT_VALUE) {
-            mPresenter.deleteFile(mRecordedVideoFilePath);
-        }
-
         runExitAnimation();
     }
 
     @Override
     public void finish() {
         super.finish();
+
         overridePendingTransition(0, 0);
     }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
     }
 
     @Override
@@ -272,10 +276,11 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                     final File file = new File(path);
                     mRecordedVideoFilePath = file.getAbsolutePath();
 
-                    if(isEditVideoDaily) {
+                    if (isEditVideoDaily) {
                         mVideoNote.setVideoUrl(mRecordedVideoFilePath);
                     }
 
+                    isDeletedVideo = false;
                     mTvAddVideoNote.setVisibility(GONE);
                     mIvThumbnail.setVisibility(VISIBLE);
                     mIvPlay.setVisibility(VISIBLE);
@@ -302,17 +307,14 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     @OnClick(R.id.iv_cancel)
     public void deleteVideoNote() {
         mIvThumbnail.setImageBitmap(null);
-        isShowSave = false;
+        isDeletedVideo = true;
 
         mIvCancel.setVisibility(GONE);
         mIvPlay.setVisibility(GONE);
         mIvThumbnail.setVisibility(GONE);
         mTvAddVideoNote.setVisibility(VISIBLE);
 
-        if (!TextUtils.isEmpty(mRecordedVideoFilePath)) {
-            mPresenter.deleteFile(mRecordedVideoFilePath);
-        }
-
+        isShowSave = true;
         invalidateOptionsMenu();
     }
 
@@ -402,8 +404,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                                public void onAnimationEnd(Animator animation) {
                                    super.onAnimationEnd(animation);
                                    mCardView.setCardBackgroundColor(WHITE);
-                                   mIvPlay.setVisibility(VISIBLE);
-                                   mIvCancel.setVisibility(VISIBLE);
+
                                }
                            }
 
@@ -432,6 +433,9 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     public void runExitAnimation() {
+        UpdateVideoNoteList updateVideoNoteList = new UpdateVideoNoteList();
+        EventBus.getDefault().post(updateVideoNoteList);
+
         final long duration = (long) (ANIM_DURATION * sAnimatorScale);
 
         // No need to set initial values for the reverse animation; the image is at the

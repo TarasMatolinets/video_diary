@@ -11,6 +11,7 @@ public class VideoDomain {
     private String imageUrl;
     private String title;
     private String description;
+    private boolean isDeletedVideo;
 
     public String getImageUrl() {
         return imageUrl;
@@ -32,7 +33,7 @@ public class VideoDomain {
         return id;
     }
 
-    public String getVideoName() {
+    public String getVideoPath() {
         return videoUrl;
     }
 
@@ -50,5 +51,13 @@ public class VideoDomain {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isDeletedVideo() {
+        return isDeletedVideo;
+    }
+
+    public void setDeletedVideo(boolean deletedVideo) {
+        isDeletedVideo = deletedVideo;
     }
 }

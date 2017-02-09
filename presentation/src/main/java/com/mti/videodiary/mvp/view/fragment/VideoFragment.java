@@ -377,5 +377,8 @@ public class VideoFragment extends BaseFragment implements SearchView.OnQueryTex
             this.notePosition = notePosition;
         }
     }
+
+    public static class UpdateVideoNoteList {
+    }
     // endregion
 }

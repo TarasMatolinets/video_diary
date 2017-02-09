@@ -23,12 +23,10 @@ import interactor.UseCaseUpdateVideoNoteList;
 import model.VideoDomain;
 import mti.com.videodiary.R;
 import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.mti.videodiary.data.Constants.FILE_FORMAT;
-import static com.mti.videodiary.data.Constants.KEY_VIDEO_PATH;
 import static com.mti.videodiary.data.Constants.TAG;
 
 /**
@@ -68,7 +66,7 @@ public class CreateVideoPresenter {
         mComposeSubscriptionList.add(subscriber);
     }
 
-    public void updateVideoNote(String videoPath, String title, String description, int videoId) {
+    public void updateVideoNote(String videoPath, String title, String description, int videoId, boolean isDeletedVideo) {
         VideoDomain videoDomain = new VideoDomain();
 
         videoPath = renameFile(videoPath, title);
@@ -78,6 +76,7 @@ public class CreateVideoPresenter {
         videoDomain.setTitle(title);
         videoDomain.setId(videoId);
         videoDomain.setDescription(description);
+        videoDomain.setDeletedVideo(isDeletedVideo);
 
         UseCase useCase = new UseCaseUpdateVideoNoteList(mExecutor, mPostExecutorThread, videoDomain, mDataBase);
         SaveUpdateVideoNoteSubscriber subscriber = new SaveUpdateVideoNoteSubscriber(mView.getString(R.string.video_note_edited_successfully));
@@ -119,22 +118,6 @@ public class CreateVideoPresenter {
         useCase.execute(subscriber);
     }
 
-    public void deleteFile(final String videoFilePath) {
-        Observable.from(new String[]{videoFilePath}).subscribe(new Action1<String>() {
-            @Override
-            public void call(String s) {
-                File fileToDelete = new File(videoFilePath);
-                if (fileToDelete.exists()) {
-                    boolean isDeleted = fileToDelete.delete();
-
-                    if (isDeleted) {
-                        Log.i(TAG, "file deleted successfully");
-                    }
-                }
-            }
-        });
-    }
-
     //region SUBSCRIBER
     private final class SaveUpdateVideoNoteSubscriber extends DefaultSubscriber<Void> {
         private String message;
@@ -149,7 +132,7 @@ public class CreateVideoPresenter {
             videoNoteText.setText(message);
 
             EventBus.getDefault().post(videoNoteText);
-            mView.finish();
+            mView.runExitAnimation();
         }
 
         @Override
