@@ -19,8 +19,8 @@ allprojects {
     }
     ext {
         androidApplicationId = 'mti.com.videodiary'
-        androidVersionCode = 20
-        androidVersionName = "1.0"
+        androidVersionCode = 23
+        androidVersionName = "1.0.1"
     }
 
     tasks.withType(JavaCompile) {

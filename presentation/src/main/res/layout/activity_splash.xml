@@ -14,9 +14,8 @@
         android:clipChildren="false"
         >
 
-        <view
+        <TextView
             android:id="@+id/tv_welcome"
-            class="com.mti.videodiary.mvp.view.customview.SkewableTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -27,9 +26,8 @@
             android:textSize="@dimen/extra_huge"
             android:textStyle="bold"/>
 
-        <view
+        <TextView
             android:id="@+id/tv_title"
-            class="com.mti.videodiary.mvp.view.customview.SkewableTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -42,30 +40,6 @@
             android:textStyle="bold"
             android:visibility="invisible"/>
 
-        <EditText
-            android:id="@+id/et_title"
-            android:layout_width="240dp"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@color/white"
-            android:focusable="true"
-            android:gravity="center"
-            android:inputType="textPersonName"
-            android:textColor="@color/gray"
-            android:textColorHint="@color/gray"
-            android:textSize="@dimen/text_medium"
-            android:visibility="gone"/>
-
-        <ImageButton
-            android:id="@+id/tv_splash_click_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/et_title"
-            android:background="@drawable/ic_keyboard_arrow_right_white"
-            android:gravity="center"
-            android:visibility="gone"
-            tools:ignore="ContentDescription"/>
 
     </RelativeLayout>
 
