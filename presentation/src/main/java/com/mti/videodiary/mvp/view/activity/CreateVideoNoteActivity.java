@@ -109,7 +109,6 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         initListeners();
         initActionBar();
         setDataToView();
-        animateImageView(savedInstanceState);
     }
 
     @Override
@@ -139,6 +138,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     private void setDataToView() {
+
         int position = getIntent().getIntExtra(KEY_POSITION, DEFAULT_VALUE);
 
         mBackground = new ColorDrawable(WHITE);
@@ -150,6 +150,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
             isEditVideoDaily = true;
             mPresenter.getVideoNote(position);
         } else {
+            animateImageView();
             mRecordedVideoFilePath = getIntent().getStringExtra(KEY_VIDEO_PATH);
             setImageToView(mRecordedVideoFilePath);
         }
@@ -159,25 +160,19 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
         final File file = new File(path);
         Bitmap bMap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MINI_KIND);
         mIvThumbnail.setImageBitmap(bMap);
-        mIvPlay.setVisibility(VISIBLE);
-        mIvCancel.setVisibility(VISIBLE);
     }
 
     public void loadVideoNote(VideoDomain videoDomain) {
         mRecordedVideoFilePath = videoDomain.getVideoPath();
         mVideoNote = videoDomain;
+
+        animateImageView();
+
         mEtTitle.setText(videoDomain.getTitle());
         mEtDescription.setText(videoDomain.getDescription());
 
         if (!TextUtils.isEmpty(videoDomain.getImageUrl())) {
             setImageToView(videoDomain.getImageUrl());
-            mIvPlay.setVisibility(VISIBLE);
-            mIvCancel.setVisibility(VISIBLE);
-        } else {
-            mIvCancel.setVisibility(GONE);
-            mIvPlay.setVisibility(GONE);
-            mIvThumbnail.setVisibility(GONE);
-            mTvAddVideoNote.setVisibility(VISIBLE);
         }
     }
 
@@ -332,7 +327,7 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
     }
 
     //region ANIMATION
-    private void animateImageView(Bundle savedInstanceState) {
+    private void animateImageView() {
         Bundle bundle = getIntent().getExtras();
 
         final int thumbnailWidth = bundle.getInt(WIDTH);
@@ -341,28 +336,27 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
 
         // Only run the animation if we're coming from the parent activity, not if
         // we're recreated automatically by the window manager (e.g., device rotation)
-        if (savedInstanceState == null) {
-            ViewTreeObserver observer = mIvThumbnail.getViewTreeObserver();
-            observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                @Override
-                public boolean onPreDraw() {
-                    mIvThumbnail.getViewTreeObserver().removeOnPreDrawListener(this);
 
-                    // Figure out where the thumbnail and full size versions are, relative
-                    // to the screen and each other
-                    int[] screenLocation = new int[2];
-                    mIvThumbnail.getLocationOnScreen(screenLocation);
+        ViewTreeObserver observer = mIvThumbnail.getViewTreeObserver();
+        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                mIvThumbnail.getViewTreeObserver().removeOnPreDrawListener(this);
 
-                    // Scale factors to make the large version the same size as the thumbnail
-                    mWidthScale = (float) thumbnailWidth / mIvThumbnail.getWidth();
-                    mHeightScale = (float) thumbnailHeight / mIvThumbnail.getHeight();
+                // Figure out where the thumbnail and full size versions are, relative
+                // to the screen and each other
+                int[] screenLocation = new int[2];
+                mIvThumbnail.getLocationOnScreen(screenLocation);
 
-                    runEnterAnimation();
+                // Scale factors to make the large version the same size as the thumbnail
+                mWidthScale = (float) thumbnailWidth / mIvThumbnail.getWidth();
+                mHeightScale = (float) thumbnailHeight / mIvThumbnail.getHeight();
 
-                    return true;
-                }
-            });
-        }
+                runEnterAnimation();
+
+                return true;
+            }
+        });
     }
 
     /**
@@ -405,6 +399,15 @@ public class CreateVideoNoteActivity extends BaseActivity implements TextWatcher
                                    super.onAnimationEnd(animation);
                                    mCardView.setCardBackgroundColor(WHITE);
 
+                                   if (!TextUtils.isEmpty(mVideoNote.getImageUrl())) {
+                                       mIvPlay.setVisibility(VISIBLE);
+                                       mIvCancel.setVisibility(VISIBLE);
+                                   } else {
+                                       mIvCancel.setVisibility(GONE);
+                                       mIvPlay.setVisibility(GONE);
+                                       mIvThumbnail.setVisibility(GONE);
+                                       mTvAddVideoNote.setVisibility(VISIBLE);
+                                   }
                                }
                            }
 
