@@ -125,6 +125,10 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
                     }
                     break;
             }
+        }else
+        {
+            setProgressImageVisibility(GONE);
+            setChoiceImageVisibility(VISIBLE);
         }
     }
 
@@ -225,6 +229,7 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
                                 Intent i = new Intent(ACTION_PICK, EXTERNAL_CONTENT_URI);
                                 startActivityForResult(i, RESULT_LOAD_IMAGE);
                                 setProgressImageVisibility(VISIBLE);
+                                setChoiceImageVisibility(GONE);
                             }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

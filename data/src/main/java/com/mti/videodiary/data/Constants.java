@@ -14,6 +14,7 @@ public class Constants {
     public static final String NOTE_DIR = separator + APPLICATION_DIRECTORY + separator + "note";
     public static final String IMAGE_DIR = separator + APPLICATION_DIRECTORY + separator + "image";
     public static final String FILE_FORMAT = ".mp4";
+    public static final String IS_TITLE_LOADED = TAG + "load.title";
     public static String VIDEO_FILE_NAME = separator + "video-dairy" + FILE_FORMAT;
     public static final int RESULT_LOAD_IMAGE = 133;
 

@@ -37,12 +37,16 @@ public class VideoDairySharePreferences {
                 Integer valueInteger = (Integer) value;
                 editor.putInt(key, valueInteger);
                 break;
+            case BOOLEAN:
+                Boolean valueBoolean = (Boolean) value;
+                editor.putBoolean(key, valueBoolean);
+                break;
         }
 
         editor.apply();
     }
 
     public enum SHARE_PREFERENCES_TYPE {
-        STRING, INTEGER
+        STRING, INTEGER, BOOLEAN
     }
 }

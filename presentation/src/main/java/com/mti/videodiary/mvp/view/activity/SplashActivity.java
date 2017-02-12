@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.mti.videodiary.data.Constants;
 import com.mti.videodiary.data.helper.UserHelper;
 import com.mti.videodiary.data.storage.VideoDairySharePreferences;
 import com.mti.videodiary.navigator.Navigator;
@@ -23,6 +24,8 @@ import mti.com.videodiary.R;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.mti.videodiary.data.Constants.IS_TITLE_LOADED;
+import static com.mti.videodiary.data.storage.VideoDairySharePreferences.SHARE_PREFERENCES_TYPE.BOOLEAN;
 
 /**
  * Created by Taras  Matolinets on 04.11.14.
@@ -47,7 +50,13 @@ public class SplashActivity extends BaseActivity implements OnPreDrawListener {
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
 
-        setListeners();
+        boolean isTitleLoaded = mPreferences.getSharedPreferences().getBoolean(IS_TITLE_LOADED, false);
+
+        if (!isTitleLoaded) {
+            setListeners();
+        } else {
+            mNavigator.replaceActivity(SplashActivity.this, MenuActivity.class);
+        }
     }
 
     @Override
@@ -89,6 +98,8 @@ public class SplashActivity extends BaseActivity implements OnPreDrawListener {
         @Override
         public void onAnimationEnd(Animator animation) {
             super.onAnimationEnd(animation);
+            mPreferences.setDataToSharePreferences(IS_TITLE_LOADED, true, BOOLEAN);
+
             mNavigator.replaceActivity(SplashActivity.this, MenuActivity.class);
         }
     };
