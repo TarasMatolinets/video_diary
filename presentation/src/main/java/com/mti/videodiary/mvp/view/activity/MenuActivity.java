@@ -125,10 +125,14 @@ public class MenuActivity extends BaseActivity implements IHasComponent<Activity
                     }
                     break;
             }
-        }else
-        {
+        } else {
+            String picturePath = mPreferences.getSharedPreferences().getString(IMAGE_HEADER_MENU, null);
+
+            if (TextUtils.isEmpty(picturePath)) {
+                setChoiceImageVisibility(VISIBLE);
+            }
+
             setProgressImageVisibility(GONE);
-            setChoiceImageVisibility(VISIBLE);
         }
     }
 
