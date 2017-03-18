@@ -30,6 +30,7 @@ android {
         }
     }
     return void
+    buildToolsVersion '25.0.0'
 }
 
 dependencies {
