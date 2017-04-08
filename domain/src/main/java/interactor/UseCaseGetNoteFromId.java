@@ -11,11 +11,11 @@ import rx.Observable;
  * Use case for get note by id
  */
 
-public class UseCaseGetNoteById extends UseCase {
+public class UseCaseGetNoteFromId extends UseCase {
     private final int mId;
     private final NoteIDataBase mDataBase;
 
-    public UseCaseGetNoteById(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, IDataBase IDataBase, int id) {
+    public UseCaseGetNoteFromId(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, IDataBase IDataBase, int id) {
         super(threadExecutor, postExecutionThread);
         mDataBase = (NoteIDataBase) IDataBase;
         mId = id;

@@ -16,7 +16,7 @@ import executor.ThreadExecutor;
 import interactor.DefaultSubscriber;
 import interactor.UseCase;
 import interactor.UseCaseCreateNote;
-import interactor.UseCaseGetNoteById;
+import interactor.UseCaseGetNoteFromId;
 import interactor.UseCaseUpdateNotesList;
 import model.NoteDomain;
 import mti.com.videodiary.R;
@@ -56,7 +56,7 @@ public class CreateNotePresenter {
     }
 
     public void getNoteByPosition(int position) {
-        UseCase getNoteByPosition = new UseCaseGetNoteById(mExecutor, mPostExecutorThread, mDataBase, position);
+        UseCase getNoteByPosition = new UseCaseGetNoteFromId(mExecutor, mPostExecutorThread, mDataBase, position);
 
         GetNoteByPositionSubscriber subscriber = new GetNoteByPositionSubscriber();
         getNoteByPosition.execute(subscriber);
